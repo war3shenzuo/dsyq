@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration status="trace" monitorInterval="30">
+<properties>
+    <!-- 基本的文件的输出信息的配置 -->
+    <property name="LOG_HOME">${sys:catalina.home}</property>
+    <!-- 日志备份目录 -->
+    <property name="BACKUP_HOME">{LOG_HOME}/backup</property>
+</properties>
+
+
+    <!--先定义所有的appender-->
+    <appenders>
+        <!--这个输出控制台的配置-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!--这个都知道是输出日志的格式-->
+            <PatternLayout pattern="%d{MM-dd HH:mm:ss.SSS} [%-5level]  %msg%xEx%n"/>
+        </Console>
+        
+        <!--这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="RollingFile" fileName="${LOG_HOME}/logs/access.log"
+                     filePattern="${LOG_HOME}/log/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.access.log.gz">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss z} [%-5level]  %msg%xEx%n"/>
+            <SizeBasedTriggeringPolicy size="5MB"/>
+        </RollingFile>
+        
+        <RollingFile name="ErrorRollingFile" fileName="${LOG_HOME}/logs/error.log"
+                     filePattern="${LOG_HOME}/log/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.error.log.gz">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss z} [%-5level]  %msg%xEx%n"/>
+            <SizeBasedTriggeringPolicy size="5MB"/>
+        </RollingFile>
+        
+    </appenders>
+    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
+    <loggers>
+        <!--建立一个默认的root的logger-->
+        <root level="DEBUG">
+            <appender-ref ref="Console"/>
+        </root>
+        <Logger name="accessLogger" additivity="TRUE" level="ALL">
+        	<appender-ref ref="RollingFile"/>
+        </Logger>
+        <Logger name="errorLogger" additivity="TRUE" level="ALL">
+        	<appender-ref ref="ErrorRollingFile" />
+        </Logger>
+        
+<!--         <logger name="com.etop.management.dao" level="DEBUG"> -->
+<!-- 			<AppenderRef ref="Console" /> -->
+<!-- 		</logger>  -->
+    </loggers>
+</configuration>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopTrainTeacherDao">
+
+    <sql id="Base_Column_List" >
+        t1.id,t1.name,t1.photo,t1.profile,t1.course_id
+    </sql>
+
+    <sql id="Example_Where_Clause_Object">
+        <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="name != null and name != '' " >
+            and t1.name =  #{name}
+        </if>
+        <if test="photo != null" >
+            and t1.photo =  #{photo}
+        </if>
+        <if test="profile != null" >
+            and t1.profile =  #{profile}
+        </if>
+        <if test="courseId != null" >
+            and t1.course_id =  #{courseId}
+        </if>
+    </sql>
+
+    <insert id="insert">
+        insert into etop_train_teacher(id,name,photo,profile,course_id)
+            values(uuid(),#{name},#{photo},#{profile},#{courseId})
+    </insert>
+
+    <update id="update">
+        update etop_train_teacher
+        <set>
+            <if test="name != null and name != ''">
+                name=#{name},
+            </if>
+            <if test="photo != null  ">
+                photo=#{photo},
+            </if>
+            <if test="profile != null  ">
+                profile=#{profile},
+            </if>
+            <if test="courseId != null  ">
+                course_id=#{courseId},
+            </if>
+        </set>
+        where
+            id = #{id}
+    </update>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM
+            etop_train_teacher
+        WHERE
+            id IN
+        <foreach collection="ids" item="ids" index="index" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <select id="select" resultType="com.etop.management.bean.EtopTrainTeacher">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_train_teacher t1
+        <where>
+            <include refid="Example_Where_Clause_Object"/>
+        </where>
+    </select>
+
+    <select id="getEtopTrainTeacherInfoById" resultType="com.etop.management.bean.EtopTrainTeacher">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_train_teacher t1
+        WHERE
+            t1.id = #{id}
+    </select>
+    
+        <select id="selectNum" resultType="java.lang.Integer">
+        SELECT
+            IFNULL(COUNT(*), 0) AS teacherNum
+        FROM
+            etop_train_teacher
+        WHERE
+            course_id = #{id}
+    </select>
+</mapper>

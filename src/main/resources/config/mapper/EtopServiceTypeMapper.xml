@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopServiceTypeDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.entity.EtopServiceType" >
+	<result column="title" property="title"/>
+	<result column="descript" property="descript"/>
+	<result column="service_code" property="serviceCode"/>
+	<result column="service_name" property="serviceName"/>
+	<result column="activated" property="activated"/>
+	<result column="item" property="item"/>
+</resultMap>
+       
+<!-- etop_service_type table all fields -->
+<sql id="Base_Column_List" >
+	 title,descript,service_code,service_name,activated,item,imgUrl
+	 
+</sql>
+ 
+<sql id="Base_Column_List_Name" >
+
+	 est.title,est.descript,est.service_code,est.service_name,est.activated,est.item,est.imgUrl
+	 
+</sql>  
+   
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="condition.title != null and condition.title != ''" >
+	    and title =  #{condition.title}
+	</if>
+	
+			<if test="nocondition.title != null and nocondition.title != ''" >
+	    and title not in  (#{nocondition.title})
+	</if>
+	
+		<if test="condition.descript != null and condition.descript != ''" >
+	    and descript =  #{condition.descript}
+	</if>
+	
+			<if test="nocondition.descript != null and nocondition.descript != ''" >
+	    and descript not in  (#{nocondition.descript})
+	</if>
+	
+		<if test="condition.serviceCode != null and condition.serviceCode != ''" >
+	    and service_code =  #{condition.serviceCode}
+	</if>
+	
+			<if test="nocondition.serviceCode != null and nocondition.serviceCode != ''" >
+	    and service_code not in  (#{nocondition.serviceCode})
+	</if>
+	
+		<if test="condition.serviceName != null and condition.serviceName != ''" >
+	    and service_name =  #{condition.serviceName}
+	</if>
+	
+			<if test="nocondition.serviceName != null and nocondition.serviceName != ''" >
+	    and service_name not in  (#{nocondition.serviceName})
+	</if>
+	
+		<if test="condition.activated != null and condition.activated != ''" >
+	    and activated =  #{condition.activated}
+	</if>
+	
+			<if test="nocondition.activated != null and nocondition.activated != ''" >
+	    and activated not in  (#{nocondition.activated})
+	</if>
+	
+		<if test="condition.item != null and condition.item != ''" >
+	    and item =  #{condition.item}
+	</if>
+	
+			<if test="nocondition.item != null and nocondition.item != ''" >
+	    and item not in  (#{nocondition.item})
+	</if>
+	
+</trim>
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="title != null" >
+	    and title =  #{title}
+	</if>
+	
+		<if test="descript != null" >
+	    and descript =  #{descript}
+	</if>
+	
+		<if test="serviceCode != null" >
+	    and service_code =  #{serviceCode}
+	</if>
+	
+		<if test="serviceName != null" >
+	    and service_name =  #{serviceName}
+	</if>
+	
+		<if test="activated != null" >
+	    and activated =  #{activated}
+	</if>
+	
+		<if test="item != null" >
+	    and item =  #{item}
+	</if>
+	
+</trim>
+</sql>   
+
+<!-- 插入记录 -->
+<insert id="add" parameterType="com.etop.management.entity.EtopServiceType" >
+  insert into etop_service_type(title,descript,service_code,service_name,activated,item,imgUrl)
+ values(#{title},#{descript},#{serviceCode},#{serviceName},#{activated},#{item},#{imgUrl})
+</insert>
+
+<!-- 批量插入记录 -->
+<insert id="adds" parameterType="com.etop.management.entity.EtopServiceType" >
+  insert into etop_service_type(title,descript,service_code,service_name,activated,item,imgUrl)
+  values
+  <foreach collection="list" item="item" index="index" separator="," > 
+  	(#{item.title},#{item.descript},#{item.serviceCode},#{item.serviceName},#{item.activated},#{item.item},#{item.imgUrl})
+  </foreach>
+</insert>
+
+<!-- 根据id，修改记录-->  
+ <update id="update" parameterType="com.etop.management.entity.EtopServiceType" >
+  update etop_service_type set descript=#{descript},service_code=#{serviceCode},title=#{title},activated=#{activated},item=#{item},imgUrl=#{imgUrl} where service_name=#{serviceName}
+ </update>
+ 
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="updateBySelective" parameterType="com.etop.management.entity.EtopServiceType" >
+	update etop_service_type set 
+	<trim  suffixOverrides="," >
+	<if test="descript != null  ">
+		descript=#{descript},
+	</if>
+	<if test="serviceCode != null  ">
+		service_code=#{serviceCode},
+	</if>
+	<if test="serviceName != null  ">
+		service_name=#{serviceName},
+	</if>
+	<if test="activated != null  ">
+		activated=#{activated},
+	</if>
+	<if test="item != null  ">
+		item=#{item},
+	</if>
+	<if test="imgUrl !=null">
+		imgUrl=#{imgUrl},
+	</if>
+	</trim>
+	<include refid="Example_Where_Clause_Object"/>
+</update>
+
+<!-- 删除记录 -->
+<delete id="delete" parameterType="com.etop.management.entity.EtopServiceType">
+	delete 	 from etop_service_type
+	<include refid="Example_Where_Clause_Object"/>
+</delete>
+ 
+<!-- 根据id查询  -->
+<select id="queryById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_service_type where title = #{title}
+</select>
+
+<select id="queryObject" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopServiceType">
+	select <include refid="Base_Column_List" />
+	from etop_service_type
+	<include refid="Example_Where_Clause_Object"/>
+</select>
+
+<!--  列表总数-->
+<select id="queryByCount" resultType="java.lang.Integer"  parameterType="com.etop.management.bean.Criteria">
+	select count(1) from etop_service_type 
+	<include refid="Example_Where_Clause"/>
+</select>
+  	
+<!-- 查询列表 -->
+<select id="queryByList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+	select 
+	<include refid="Base_Column_List"/>
+	from etop_service_type 
+	<include refid="Example_Where_Clause"/>
+	<if test="otherCondition != null" >
+	    #{otherCondition}
+	</if>
+	
+	<if test="orderByClause != null and orderByClause != ''" >
+       order by  ${orderByClause}
+    </if>
+    <if test="limitClause != null and limitClause != ''" >
+       ${limitClause}
+    </if>
+</select>
+
+<select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</select>
+
+<insert id="myDefinedAdd" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</insert>
+
+<update id="myDefinedUpdate" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</update>  	
+
+<delete id="myDefinedDelete" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</delete>  	
+
+<select id="queryByListwithPGId" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopServiceType">
+
+	select 
+	
+	<include refid="Base_Column_List_Name"/>
+	
+	from etop_service_type  est
+	
+	<choose>
+		<when test="parkgroupId != null and parkgroupId != ''">
+			join etop_service_parkgroup esp
+		
+			on est.service_code  =esp.service_code
+			
+			where esp.parkgroup_id =#{parkgroupId} and activated=1
+		</when>
+		<otherwise>
+		 
+		</otherwise>
+	</choose>
+     order by est.activated desc ,est.title desc
+</select>
+
+<insert id="bindParkGroup">
+	insert  into  etop_service_parkgroup(id,parkgroup_id,service_code) values
+	
+	<foreach collection="list" item="param" separator=",">
+	
+		(#{param.id},#{param.parkGroupId},#{param.type})
+	
+	</foreach>
+</insert>
+
+<delete id="unbindParkGroup" parameterType="map">
+	delete from etop_service_parkgroup where parkgroup_id=#{parkGroupId} 
+	
+	<if test="#{types.size()>0}">
+	
+		and  service_code in
+		
+		<foreach collection="types" item="type" open="(" separator="," close=")">
+		
+			#{type}
+		
+		</foreach>
+	
+	</if>
+	
+</delete>
+
+<update id="activeOrClosePark" parameterType="com.etop.management.entity.EtopServiceType">
+	update etop_service_type set activated=#{activated} where service_code=#{serviceCode}
+
+</update>
+
+</mapper>   

@@ -1,0 +1,1014 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.ContractReportDao">
+
+    <select id="search" resultType="com.etop.management.bean.ContractReport">
+        SELECT
+            t6.park AS parkName,
+            IFNULL(SUM(t6.amount), 0) AS amount,
+            IFNULL(SUM(t6.amount_paid), 0) AS amount_paid,
+            IFNULL(
+                SUM(t6.amount) - SUM(t6.amount_paid),
+                0
+            ) AS arrearsAmount,
+            IFNULL(SUM(t6.overdue_fine), 0) AS overdue_fine,
+            IFNULL(SUM(t6.account_remission), 0) AS account_remission,
+			IFNULL(SUM(t6.overdue_remission), 0) AS overdue_remissions
+        FROM
+            (
+                SELECT
+                    t1.park,
+                    t1.building,
+                    t1.contract_category,
+                    t2.created_time,
+                    IFNULL(SUM(t2.amount), 0) AS amount,
+                    IFNULL(SUM(t2.amount_paid), 0) AS amount_paid,
+                    IFNULL(SUM(t2.overdue_fine), 0) AS overdue_fine,
+                    IFNULL(SUM(t2.account_remission), 0) AS account_remission,
+					IFNULL(SUM(t2.overdue_remission), 0) AS overdue_remission
+                FROM
+                    etop_contract t1
+                LEFT JOIN etop_bill t2 ON t1.contract_no = t2.bill_no_out
+				WHERE
+					t2.audit_status = 2
+				AND t1.contract_category !=2
+				AND t2.bill_type = 1
+                <if test="parkId != null and parkId != ''">
+                    AND t1.ref_park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t2.created_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t2.created_time < #{end}
+                        ]]>
+                </if>
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                            AND t2.deadline >= #{start}
+                        ]]>
+                </if>
+                <if test="endTime != null and endTime != ''">
+                    <![CDATA[
+                            AND t2.deadline < #{end}
+                        ]]>
+                </if>
+                GROUP BY
+                   t2.bill_source
+                UNION
+					SELECT
+							t3.park_name,
+							t2.building_no,
+							t1.bill_source,
+							t1.created_time,
+							IFNULL(SUM(t1.amount), 0) AS amount,
+							IFNULL(SUM(t1.amount_paid), 0) AS amount_paid,
+							IFNULL(SUM(t1.overdue_fine), 0) AS overdue_fine,
+							IFNULL(SUM(t1.account_remission), 0) AS account_remission,
+							IFNULL(SUM(t1.overdue_remission), 0) AS overdue_remission
+						FROM
+							etop_bill t1
+						LEFT JOIN etop_service t2 ON t1.bill_no_out = t2.service_id
+						INNER JOIN etop_park t3 ON t2.club_id = t3.id
+						WHERE
+							t1.audit_status = 2
+							AND t1.bill_type = 1
+					<if test="parkId != null and parkId != ''">
+							AND t1.park_id = #{parkId}
+					</if>
+					<if test="start != null and start != ''">
+							<![CDATA[
+											AND t1.created_time >= #{start}
+									]]>
+					</if>
+					<if test="end != null and end != ''">
+							<![CDATA[
+											AND t1.created_time < #{end}
+									]]>
+					</if>
+					<if test="startTime != null and startTime != ''">
+							<![CDATA[
+											AND t1.deadline >= #{start}
+									]]>
+					</if>
+					<if test="endTime != null and endTime != ''">
+							<![CDATA[
+											AND t1.deadline < #{end}
+									]]>
+					</if>
+					<!-- UNION
+				SELECT
+					T.park_name,
+					T.build_name,
+					T.bill_source,
+					T.created_time,
+					T.amount,
+					T.amount_paid,
+					T.overdue_fine,
+					T.account_remission,
+					T.overdue_remission
+			FROM
+				(
+					SELECT DISTINCT
+						t1.*, t3.build_name,
+						t2.park_name
+					FROM
+						etop_bill t1
+					INNER JOIN etop_park t2 ON t1.park_id = t2.id
+					INNER JOIN etop_floor t3 ON t3.park_id = t2.id
+					WHERE
+						 bill_source = '0'
+					AND bill_status != 2
+					AND audit_status = 2
+						 <if test="parkId != null and parkId != ''">
+			            AND t1.park_id = #{parkId}
+			        </if>
+			        <if test="start != null and start != ''">
+			            <![CDATA[
+			                    AND t1.created_time >= #{start}
+			                ]]>
+			        </if>
+			        <if test="end != null and end != ''">
+			            <![CDATA[
+			                    AND t1.created_time < #{end}
+			                ]]>
+			        </if>
+			        <if test="startTime != null and startTime != ''">
+			            <![CDATA[
+			                            AND t1.deadline >= #{start}
+			                        ]]>
+			        </if>
+			        <if test="endTime != null and endTime != ''">
+			            <![CDATA[
+			                            AND t1.deadline < #{end}
+			                        ]]>
+			        </if>
+					GROUP BY
+						t1.bill_id
+				) T -->
+            ) t6
+	            
+    </select>
+
+    <select id="searchAmount" resultType="com.etop.management.bean.ContractReport">
+        SELECT
+            t1.building,
+            t1.contract_category,
+            t2.created_time,
+            IFNULL(SUM(t2.amount), 0) AS amount,
+            IFNULL(SUM(t2.amount_paid), 0) AS amount_paid,
+            IFNULL(SUM(t2.amount) - SUM(t2.amount_paid),0) AS arrears,
+            IFNULL(SUM(t2.account_remission), 0) AS account_remission,
+			IFNULL(SUM(t2.overdue_remission), 0) AS overdue_remission,
+            t1.park AS parkName,
+            t2.bill_source
+        FROM
+            etop_contract t1
+        INNER JOIN etop_bill t2 ON t1.contract_no = t2.bill_no_out
+        WHERE
+             t2.audit_status = 2
+        AND t2.bill_type = 1
+        <if test="parkId != null and parkId != ''">
+            AND t1.ref_park_id = #{parkId}
+        </if>
+        <if test="start != null and start != ''">
+            <![CDATA[
+                    AND t2.created_time >= #{start}
+                ]]>
+        </if>
+        <if test="end != null and end != ''">
+            <![CDATA[
+                    AND t2.created_time < #{end}
+                ]]>
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+                            AND t2.deadline >= #{start}
+                        ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+                            AND t2.deadline < #{end}
+                        ]]>
+        </if>
+        GROUP BY
+            t2.bill_source
+            UNION
+		SELECT
+				t2.building_no,
+				t1.bill_source,
+				t1.created_time,
+				IFNULL(SUM(t1.amount), 0) AS amount,
+				IFNULL(SUM(t1.amount_paid), 0) AS amount_paid,
+				IFNULL(SUM(t1.amount) - SUM(t1.amount_paid),0) AS arrears,
+				IFNULL(SUM(t1.account_remission), 0) AS account_remission,
+				IFNULL(SUM(t1.overdue_remission), 0) AS overdue_remission,
+				t3.park_name,
+				t1.bill_source
+			FROM
+				etop_bill t1
+			LEFT JOIN etop_service t2 ON t1.bill_no_out = t2.service_id
+			INNER JOIN etop_park t3 ON t2.club_id = t3.id
+			WHERE
+				t1.audit_status = 2
+				AND t1.bill_type = 1
+        <if test="parkId != null and parkId != ''">
+            AND t1.park_id = #{parkId}
+        </if>
+        <if test="start != null and start != ''">
+            <![CDATA[
+                    AND t1.created_time >= #{start}
+                ]]>
+        </if>
+        <if test="end != null and end != ''">
+            <![CDATA[
+                    AND t1.created_time < #{end}
+                ]]>
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+                            AND t1.deadline >= #{start}
+                        ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+                            AND t1.deadline < #{end}
+                        ]]>
+        </if>
+	GROUP BY
+		t1.bill_source
+		<!-- UNION
+		SELECT
+			T.build_name,
+			T.bill_source,
+			T.created_time,
+			T.amount,
+			T.amount_paid,
+			(T.amount - T.amount_paid) AS arrears,
+			T.account_remission,
+			T.overdue_remission,
+			T.park_name,
+			T.bill_source
+		FROM
+			(
+				SELECT DISTINCT
+					t1.*, t3.build_name,
+					t2.park_name
+				FROM
+					etop_bill t1
+				INNER JOIN etop_park t2 ON t1.park_id = t2.id
+				INNER JOIN etop_floor t3 ON t3.park_id = t2.id
+				WHERE
+					 bill_source = '0'
+				AND bill_status != 2
+				AND audit_status = 2
+					 <if test="parkId != null and parkId != ''">
+		            AND t1.park_id = #{parkId}
+		        </if>
+		        <if test="start != null and start != ''">
+		            <![CDATA[
+		                    AND t1.created_time >= #{start}
+		                ]]>
+		        </if>
+		        <if test="end != null and end != ''">
+		            <![CDATA[
+		                    AND t1.created_time < #{end}
+		                ]]>
+		        </if>
+		        <if test="startTime != null and startTime != ''">
+		            <![CDATA[
+		                            AND t1.deadline >= #{start}
+		                        ]]>
+		        </if>
+		        <if test="endTime != null and endTime != ''">
+		            <![CDATA[
+		                            AND t1.deadline < #{end}
+		                        ]]>
+		        </if>
+				GROUP BY
+					t1.bill_id
+			) T -->
+		
+    </select>
+
+    <select id="searchFloor" resultType="com.etop.management.bean.ContractReport">
+        SELECT
+            t6.id,
+            t6.park_name,
+            t6.build_name AS building,
+            IFNULL(SUM(t6.amount), 0) AS amount,
+            IFNULL(SUM(t6.amount_paid), 0) AS amount_paid,
+            IFNULL(SUM(t6.account_remission), 0) AS account_remission,
+			IFNULL(SUM(t6.overdue_remission), 0) AS overdue_remission,
+            IFNULL(
+                SUM(t6.amount) - SUM(t6.amount_paid) -SUM(t6.account_remission)-SUM(t6.overdue_remission),
+                0
+            ) AS arrearsAmount,
+            IFNULL(SUM(t6.overdue_fine), 0) AS overdue_fine
+        FROM
+            (
+                SELECT
+                    t2.park_name,
+                    t1.build_name,
+                    t5.amount,
+                    t5.amount_paid,
+                    t5.overdue_fine,
+                    t5.account_remission,
+                    t5.overdue_remission,
+                    t5.bill_id,
+                    IFNULL(t5.audit_status, 2) AS audit_status,
+                    t1.id
+                FROM
+                    etop_floor t1
+                INNER JOIN etop_park t2 ON t1.park_id = t2.id
+                LEFT JOIN etop_floor_room t3 ON t3.ref_floor_id = t1.id
+                LEFT JOIN etop_contract t4 ON t3.id = t4.ref_room_id
+                LEFT JOIN etop_bill t5 ON t4.contract_no = t5.bill_no_out
+                WHERE
+                    t1.build_type = 'floor'
+                    AND t5.bill_type = 1
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t5.created_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t5.created_time < #{end}
+                        ]]>
+                </if>
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                                    AND t5.deadline >= #{start}
+                                ]]>
+                </if>
+                <if test="endTime != null and endTime != ''">
+                    <![CDATA[
+                                    AND t5.deadline < #{end}
+                                ]]>
+                </if>
+			                UNION
+				SELECT
+					t2.park_name,
+					t1.build_name,
+					t5.amount,
+					t5.amount_paid,
+					t5.overdue_fine,
+					t5.account_remission,
+                    t5.overdue_remission,
+					t5.bill_id,
+					IFNULL(t5.audit_status, 2) AS audit_status,
+				t1.id
+				FROM
+					etop_floor t1
+				INNER JOIN etop_park t2 ON t1.park_id = t2.id
+				LEFT JOIN etop_floor_room t3 ON t3.ref_floor_id = t1.id
+				LEFT JOIN etop_service t4 ON t3.id =t4.room_id
+				LEFT JOIN etop_bill t5 ON t5.bill_no_out = t4.service_id
+				WHERE
+					t1.build_type = 'floor'
+					AND t5.bill_type = 1
+				<if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t5.created_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t5.created_time < #{end}
+                        ]]>
+                </if>
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                                    AND t5.deadline >= #{start}
+                                ]]>
+                </if>
+                <if test="endTime != null and endTime != ''">
+                    <![CDATA[
+                                    AND t5.deadline < #{end}
+                                ]]>
+                </if>
+                <!-- UNION
+				SELECT DISTINCT
+					t2.park_name,
+					t1.build_name,
+					t5.amount,
+					t5.amount_paid,
+					t5.overdue_fine,
+					t5.account_remission,
+                    t5.overdue_remission,
+					t5.bill_id,
+					IFNULL(t5.audit_status, 2) AS audit_status,
+					t1.id
+				FROM
+					etop_floor t1
+				INNER JOIN etop_park t2 ON t1.park_id = t2.id
+				LEFT JOIN etop_floor_room t3 ON t3.ref_floor_id = t1.id
+				LEFT JOIN etop_bill t5 ON t5.park_id = t2.id
+				WHERE
+					t1.build_type = 'floor'
+				AND t5.bill_source = '0'
+				AND t5.bill_status != 2
+				AND t5.audit_status = 2
+				<if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t5.created_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t5.created_time < #{end}
+                        ]]>
+                </if>
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                                    AND t5.deadline >= #{start}
+                                ]]>
+                </if>
+                <if test="endTime != null and endTime != ''">
+                    <![CDATA[
+                                    AND t5.deadline < #{end}
+                                ]]>
+                </if> -->
+            ) t6
+        WHERE
+            t6.audit_status = 2
+        GROUP BY
+            t6.id
+        order by
+            t6.build_name
+    </select>
+
+    <select id="searchAmountFloor" resultType="com.etop.management.bean.ContractReport">
+        SELECT
+            t5.park_name AS parkName,
+            t1.building,
+            t2.created_time,
+            IFNULL(SUM(t2.amount), 0) AS amount,
+            IFNULL(SUM(t2.account_remission), 0) AS account_remission,
+			IFNULL(SUM(t2.overdue_remission), 0) AS overdue_remission,
+            t2.bill_source,
+            t3.ref_floor_id AS id
+        FROM
+            etop_contract t1
+        INNER JOIN etop_bill t2 ON t1.contract_no = t2.bill_no_out
+        INNER JOIN etop_floor_room t3 ON t1.ref_room_id = t3.id
+        INNER JOIN etop_floor t4 ON t4.id = t3.ref_floor_id
+        INNER JOIN etop_park t5 ON t1.ref_park_id = t5.id
+        WHERE
+            t4.build_type = 'floor'
+        AND t2.audit_status = 2
+        AND t2.bill_type = 1
+        <if test="parkId != null and parkId != ''">
+            AND t1.ref_park_id = #{parkId}
+        </if>
+        <if test="start != null and start != ''">
+            <![CDATA[
+                    AND t2.created_time >= #{start}
+                ]]>
+        </if>
+        <if test="end != null and end != ''">
+            <![CDATA[
+                    AND t2.created_time < #{end}
+                ]]>
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+                            AND t2.deadline >= #{start}
+                        ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+                            AND t2.deadline < #{end}
+                        ]]>
+        </if>
+        GROUP BY
+            t2.bill_source,
+            t3.ref_floor_id
+            UNION
+			SELECT
+				t5.park_name AS parkName,
+				t1.building_no,
+				t2.created_time,
+				IFNULL(SUM(t2.amount), 0) AS amount,
+				IFNULL(SUM(t2.account_remission), 0) AS account_remission,
+				IFNULL(SUM(t2.overdue_remission), 0) AS overdue_remission,
+				t2.bill_source,
+				t3.ref_floor_id AS id
+			FROM
+				etop_service t1
+			INNER JOIN etop_bill t2 ON t1.service_id = t2.bill_no_out
+			INNER JOIN etop_floor_room t3 ON t1.room_id = t3.id
+			INNER JOIN etop_floor t4 ON t4.id = t3.ref_floor_id
+			INNER JOIN etop_park t5 ON t1.club_id = t5.id
+			WHERE
+				t4.build_type = 'floor'
+			AND t2.audit_status = 2
+			AND t2.bill_type = 1
+		<if test="parkId != null and parkId != ''">
+		            AND t1.club_id = #{parkId}
+		        </if>
+		        <if test="start != null and start != ''">
+		            <![CDATA[
+		                    AND t2.created_time >= #{start}
+		                ]]>
+		        </if>
+		        <if test="end != null and end != ''">
+		            <![CDATA[
+		                    AND t2.created_time < #{end}
+		                ]]>
+		        </if>
+		        <if test="startTime != null and startTime != ''">
+		            <![CDATA[
+		                            AND t2.deadline >= #{start}
+		                        ]]>
+		        </if>
+		        <if test="endTime != null and endTime != ''">
+		            <![CDATA[
+		                            AND t2.deadline < #{end}
+		                        ]]>
+		        </if>
+			GROUP BY
+				t2.bill_source,
+				t3.ref_floor_id
+			<!-- UNION
+			SELECT
+				T.park_name,
+				T.build_name,
+				T.created_time,
+				T.amount,
+				T.account_remission,
+				T.overdue_remission,
+				T.bill_source,
+				T.id
+			FROM
+				(
+					SELECT DISTINCT
+						t1.*, t3.build_name,
+						t2.park_name,
+						t3.id
+					FROM
+						etop_bill t1
+					INNER JOIN etop_park t2 ON t1.park_id = t2.id
+					INNER JOIN etop_floor t3 ON t3.park_id = t2.id
+					WHERE
+						t1.park_id = #{parkId}
+					AND bill_source = '0'
+					AND bill_status != 2
+					AND audit_status = 2
+					GROUP BY
+						t1.bill_id
+				) T -->
+    </select>
+
+    <select id="searchStorey" resultType="com.etop.management.bean.ContractReport">
+        SELECT
+            t6.ref_storey_id AS id,
+            t6.park_name,
+            t6.floor AS building,
+            t6.storey AS floor,
+            IFNULL(SUM(t6.amount), 0) AS amount,
+            IFNULL(SUM(t6.account_remission), 0) AS account_remission,
+			IFNULL(SUM(t6.overdue_remission), 0) AS overdue_remission,
+            IFNULL(SUM(t6.amount_paid), 0) AS amount_paid,
+            IFNULL(
+                SUM(t6.amount) - SUM(t6.amount_paid)-SUM(t6.account_remission)-SUM(t6.overdue_remission),
+                0
+            ) AS arrearsAmount,
+            IFNULL(SUM(t6.overdue_fine), 0) AS overdue_fine
+            FROM
+            (
+                SELECT
+                    t2.park_name,
+                    t7.build_name floor,
+                    t1.build_name storey,
+                    t4.room,
+                    t5.amount,
+                    t5.account_remission,
+					t5.overdue_remission,
+                    t5.amount_paid,
+                    t5.overdue_fine,
+                    t5.bill_id,
+                    t1.id,
+                    t3.ref_storey_id,
+                    IFNULL(t5.audit_status, 2) AS audit_status
+                FROM
+                    etop_floor t1
+                INNER JOIN etop_park t2 ON t1.park_id = t2.id
+                INNER JOIN etop_floor t7 ON t1.parent_id = t7.id
+                LEFT JOIN etop_floor_room t3 ON t3.ref_storey_id = t1.id
+                LEFT JOIN etop_contract t4 ON t3.id = t4.ref_room_id
+                LEFT JOIN etop_bill t5 ON t4.contract_no = t5.bill_no_out
+                WHERE
+                    t1.build_type = 'storey'
+                    AND t5.bill_type = 1
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t5.created_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t5.created_time < #{end}
+                        ]]>
+                </if>
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                            AND t5.deadline >= #{start}
+                        ]]>
+                </if>
+                <if test="endTime != null and endTime != ''">
+                    <![CDATA[
+                            AND t5.deadline < #{end}
+                        ]]>
+                </if>
+                UNION
+				SELECT
+							t2.park_name,
+							t7.build_name floor,
+							t1.build_name storey,
+							t4.room_no,
+							t5.amount,
+							t5.account_remission,
+							t5.overdue_remission,
+							t5.amount_paid,
+							t5.overdue_fine,
+							t5.bill_id,
+							t1.id,
+							t3.ref_storey_id,
+							IFNULL(t5.audit_status, 2) AS audit_status
+						FROM
+							etop_floor t1
+						INNER JOIN etop_park t2 ON t1.park_id = t2.id
+						INNER JOIN etop_floor t7 ON t1.parent_id = t7.id
+						LEFT JOIN etop_floor_room t3 ON t3.ref_storey_id = t1.id
+						LEFT JOIN etop_service t4 ON t3.id =t4.room_id
+						LEFT JOIN etop_bill t5 ON t4.service_id = t5.bill_no_out
+						WHERE
+							t1.build_type = 'storey'
+							AND t5.bill_type = 1
+					    <if test="parkId != null and parkId != ''">
+		                    AND t1.park_id = #{parkId}
+		                </if>
+		                <if test="start != null and start != ''">
+		                    <![CDATA[
+		                            AND t5.created_time >= #{start}
+		                        ]]>
+		                </if>
+		                <if test="end != null and end != ''">
+		                    <![CDATA[
+		                            AND t5.created_time < #{end}
+		                        ]]>
+		                </if>
+		                <if test="startTime != null and startTime != ''">
+		                    <![CDATA[
+		                            AND t5.deadline >= #{start}
+		                        ]]>
+		                </if>
+		                <if test="endTime != null and endTime != ''">
+		                    <![CDATA[
+		                            AND t5.deadline < #{end}
+		                        ]]>
+		                </if>
+				            ) t6
+				        WHERE
+				            t6.audit_status = 2
+				        GROUP BY
+				            t6.id
+				        ORDER BY
+				        t6.floor,t6.storey
+    </select>
+
+    <select id="searchArea" resultType="com.etop.management.bean.ContractReport">
+        SELECT
+            t6.ref_area_id AS id,
+            t6.park_name,
+            t6.floor AS building,
+            t6.storey AS floor,
+            t6.area AS block,
+            IFNULL(SUM(t6.amount), 0) AS amount,
+            IFNULL(SUM(t6.amount_paid), 0) AS amount_paid,
+            IFNULL(SUM(t6.account_remission), 0) AS account_remission,
+			IFNULL(SUM(t6.overdue_remission), 0) AS overdue_remission,
+            IFNULL(
+                SUM(t6.amount) - SUM(t6.amount_paid)-SUM(t6.account_remission)-SUM(t6.overdue_remission),
+                0
+            ) AS arrearsAmount,
+            IFNULL(SUM(t6.overdue_fine), 0) AS overdue_fine
+        FROM
+            (
+                SELECT
+                    t2.park_name,
+                    t8.build_name floor,
+                    t7.build_name storey,
+                    t1.build_name area,
+                    t5.amount,
+                    t5.amount_paid,
+                    t5.account_remission,
+					t5.overdue_remission,
+                    t5.overdue_fine,
+                    t5.bill_id,
+                    t1.id,
+                    t3.ref_area_id,
+                    IFNULL(t5.audit_status, 2) AS audit_status
+                FROM
+                    etop_floor t1
+                INNER JOIN etop_park t2 ON t1.park_id = t2.id
+                INNER JOIN etop_floor t7 ON t1.parent_id = t7.id
+                INNER JOIN etop_floor t8 ON t7.parent_id = t8.id
+                LEFT JOIN etop_floor_room t3 ON t3.ref_area_id = t1.id
+                LEFT JOIN etop_contract t4 ON t3.id = t4.ref_room_id
+                LEFT JOIN etop_bill t5 ON t4.contract_no = t5.bill_no_out
+                WHERE
+                    t1.build_type = 'area'
+                    AND t5.bill_type = 1
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t5.created_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t5.created_time < #{end}
+                        ]]>
+                </if>
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                                    AND t5.deadline >= #{start}
+                                ]]>
+                </if>
+                <if test="endTime != null and endTime != ''">
+                    <![CDATA[
+                                    AND t5.deadline < #{end}
+                                ]]>
+                </if>
+                UNION
+                SELECT
+                    t2.park_name,
+                    t8.build_name floor,
+                    t7.build_name storey,
+                    t1.build_name area,
+                    t5.amount,
+                    t5.amount_paid,
+                    t5.account_remission,
+					t5.overdue_remission,
+                    t5.overdue_fine,
+                    t5.bill_id,
+                    t1.id,
+                    t3.ref_area_id,
+                    IFNULL(t5.audit_status, 2) AS audit_status
+                FROM
+                    etop_floor t1
+                INNER JOIN etop_park t2 ON t1.park_id = t2.id
+                INNER JOIN etop_floor t7 ON t1.parent_id = t7.id
+                INNER JOIN etop_floor t8 ON t7.parent_id = t8.id
+                LEFT JOIN etop_floor_room t3 ON t3.ref_area_id = t1.id
+                LEFT JOIN etop_service t4 ON t3.id =t4.room_id
+				LEFT JOIN etop_bill t5 ON t4.service_id = t5.bill_no_out
+                WHERE
+                    t1.build_type = 'area'
+                    AND t5.bill_type = 1
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t5.created_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t5.created_time < #{end}
+                        ]]>
+                </if>
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                                    AND t5.deadline >= #{start}
+                                ]]>
+                </if>
+                <if test="endTime != null and endTime != ''">
+                    <![CDATA[
+                                    AND t5.deadline < #{end}
+                                ]]>
+                </if>
+            ) t6
+        WHERE
+            t6.audit_status = 2
+        GROUP BY
+            t6.id
+        ORDER BY
+        t6.floor,t6.storey,t6.area
+    </select>
+
+    <select id="searchAmountStorey" resultType="com.etop.management.bean.ContractReport">
+        SELECT
+            t5.park_name,
+            t1.building,
+            t1.floor,
+            t2.created_time,
+            IFNULL(SUM(t2.amount),0) AS amount,
+            IFNULL(SUM(t2.account_remission),0) AS account_remission,
+            IFNULL(SUM(t2.overdue_remission),0) AS overdue_remission,
+            t2.bill_source,
+            t3.ref_storey_id AS id
+        FROM
+            etop_contract t1
+        INNER JOIN etop_bill t2 ON t1.contract_no = t2.bill_no_out
+        INNER JOIN etop_floor_room t3 ON t1.ref_room_id = t3.id
+        INNER JOIN etop_floor t4 ON t4.id = t3.ref_floor_id
+        INNER JOIN etop_park t5 ON t1.ref_park_id = t5.id
+        WHERE
+            t4.build_type = 'floor'
+        AND t2.audit_status = 2
+        AND t2.bill_type = 1
+        <if test="parkId != null and parkId != ''">
+            AND t1.ref_park_id = #{parkId}
+        </if>
+        <if test="start != null and start != ''">
+            <![CDATA[
+                    AND t2.created_time >= #{start}
+                ]]>
+        </if>
+        <if test="end != null and end != ''">
+            <![CDATA[
+                    AND t2.created_time < #{end}
+                ]]>
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+                            AND t2.deadline >= #{start}
+                        ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+                            AND t2.deadline < #{end}
+                        ]]>
+        </if>
+        GROUP BY
+            t2.bill_source,
+            t3.ref_storey_id
+            UNION
+				SELECT
+					t5.park_name,
+					t1.building_no,
+					t1.storey,
+					t2.created_time,
+					IFNULL(SUM(t2.amount), 0) AS amount,
+					IFNULL(SUM(t2.account_remission),0) AS account_remission,
+            		IFNULL(SUM(t2.overdue_remission),0) AS overdue_remission,
+					t2.bill_source,
+					t3.ref_storey_id AS id
+				FROM
+					etop_service t1
+				INNER JOIN etop_bill t2 ON t1.service_id = t2.bill_no_out
+				INNER JOIN etop_floor_room t3 ON t1.room_id = t3.id
+				INNER JOIN etop_floor t4 ON t4.id = t3.ref_floor_id
+				INNER JOIN etop_park t5 ON t1.club_id = t5.id
+				WHERE
+					t4.build_type = 'floor'
+				AND t2.audit_status = 2
+				AND t2.bill_type = 1
+			<if test="parkId != null and parkId != ''">
+			            AND t1.club_id = #{parkId}
+			        </if>
+			        <if test="start != null and start != ''">
+			            <![CDATA[
+			                    AND t2.created_time >= #{start}
+			                ]]>
+			        </if>
+			        <if test="end != null and end != ''">
+			            <![CDATA[
+			                    AND t2.created_time < #{end}
+			                ]]>
+			        </if>
+			        <if test="startTime != null and startTime != ''">
+			            <![CDATA[
+			                            AND t2.deadline >= #{start}
+			                        ]]>
+			        </if>
+			        <if test="endTime != null and endTime != ''">
+			            <![CDATA[
+			                            AND t2.deadline < #{end}
+			                        ]]>
+			        </if>
+				GROUP BY
+					t2.bill_source,
+					t3.ref_floor_id
+    </select>
+
+    <select id="searchAmountArea" resultType="com.etop.management.bean.ContractReport">
+        SELECT
+            t5.park_name,
+            t1.building,
+            t1.floor,
+            t1.block,
+            t2.created_time,
+            IFNULL(SUM(t2.amount),0) AS amount,
+            IFNULL(SUM(t2.account_remission),0) AS account_remission,
+            IFNULL(SUM(t2.overdue_remission),0) AS overdue_remission,
+            t2.bill_source,
+            t3.ref_area_id AS id
+        FROM
+            etop_contract t1
+        INNER JOIN etop_bill t2 ON t1.contract_no = t2.bill_no_out
+        INNER JOIN etop_floor_room t3 ON t1.ref_room_id = t3.id
+        INNER JOIN etop_floor t4 ON t4.id = t3.ref_floor_id
+        INNER JOIN etop_park t5 ON t1.ref_park_id = t5.id
+        WHERE
+            t4.build_type = 'floor'
+            AND t2.audit_status = 2
+            AND t2.bill_type = 1
+        <if test="parkId != null and parkId != ''">
+            AND t1.ref_park_id = #{parkId}
+        </if>
+        <if test="start != null and start != ''">
+            <![CDATA[
+                    AND t2.created_time >= #{start}
+                ]]>
+        </if>
+        <if test="end != null and end != ''">
+            <![CDATA[
+                    AND t2.created_time < #{end}
+                ]]>
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+                            AND t2.deadline >= #{start}
+                        ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+                            AND t2.deadline < #{end}
+                        ]]>
+        </if>
+        GROUP BY
+            t2.bill_source,
+            t3.ref_area_id
+        UNION
+        SELECT
+			t5.park_name,
+			t1.building_no,
+			t1.storey,
+			t1.zone_no,
+			t2.created_time,
+			IFNULL(SUM(t2.amount), 0) AS amount,
+			IFNULL(SUM(t2.account_remission),0) AS account_remission,
+            IFNULL(SUM(t2.overdue_remission),0) AS overdue_remission,
+			t2.bill_source,
+			t3.ref_area_id AS id
+		FROM
+				etop_service t1
+			INNER JOIN etop_bill t2 ON t1.service_id = t2.bill_no_out
+			INNER JOIN etop_floor_room t3 ON t1.room_id = t3.id
+			INNER JOIN etop_floor t4 ON t4.id = t3.ref_floor_id
+			INNER JOIN etop_park t5 ON t1.club_id = t5.id
+		WHERE
+			t4.build_type = 'floor'
+		AND t2.audit_status = 2
+		AND t2.bill_type = 1
+        <if test="parkId != null and parkId != ''">
+            AND t1.club_id = #{parkId}
+        </if>
+        <if test="start != null and start != ''">
+            <![CDATA[
+                    AND t2.created_time >= #{start}
+                ]]>
+        </if>
+        <if test="end != null and end != ''">
+            <![CDATA[
+                    AND t2.created_time < #{end}
+                ]]>
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+                            AND t2.deadline >= #{start}
+                        ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+                            AND t2.deadline < #{end}
+                        ]]>
+        </if>
+        GROUP BY
+            t2.bill_source,
+            t3.ref_area_id
+    </select>
+</mapper>

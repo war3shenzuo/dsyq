@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.ParkGroupDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.bean.ParkGroup" >
+	<result column="id" property="id"/>
+	<result column="park_group_name" property="parkGroupName"/>
+	<result column="park_group_describe" property="parkGroupDescribe"/>
+	<result column="approval" property="approval"/>
+	<result column="activated" property="activated"/>
+	<result column="create_at" property="createAt"/>
+	<result column="park_group_code" property="parkGroupCode"/>
+	<result column="introduce" property="introduce"/>
+	<result column="park_count" property="parkCount"/>
+	<result column="park_group_img" property="parkGroupImg"/>
+	<result column="park_group_type" property="parkGroupType"/>
+	<result column="sld" property="sld"/>
+	<result column="logo" property="logo"/>
+	<result column="link" property="link"/>
+</resultMap>
+
+<resultMap id="SettledResultMap" type="com.etop.management.bean.Settled" >
+	<result column="id" property="id"/>
+	<result column="open_time" property="openTime"/>
+	<result column="park_name" property="parkName"/>
+	<result column="address" property="address"/>
+	<result column="belong_unit" property="belongUnit"/>
+	<result column="operate_unit" property="operateUnit"/>
+	<result column="park_type" property="parkType"/>
+	<result column="park_size" property="parkSize"/>
+	<result column="rental_rate" property="rentalRate"/>
+	<result column="mobile" property="mobile"/>
+	<result column="contacts" property="contacts"/>
+	<result column="apply_time" property="applyTime"/>
+	<result column="email" property="email"/>
+	<result column="qq" property="qq"/>
+	<result column="wechat" property="wechat"/>
+	<result column="city" property="city"/>
+</resultMap>
+       
+<!-- etop_park_group table all fields -->
+<sql id="Base_Column_List" >
+	 id,park_group_name,park_group_describe,approval,activated,create_at,park_group_code,settled_id,park_count,park_group_img,introduce,park_group_type,sld,logo,link
+</sql>
+
+<!-- 根据id查询  -->
+<select id="getParkGroupInfo"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_park_group where id = #{id}
+</select>
+
+<!-- 根据id查询  -->
+<select id="getParkGroupInfoByCode"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_park_group where park_group_code = #{id}
+</select>
+
+<!-- 查询列表 -->
+<select id="getParkGroupList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.ParkGroup">
+	select 
+	<include refid="Base_Column_List"/>
+	from etop_park_group 
+	where 1 = 1
+	<if test="parkGroupName != null and parkGroupName!='' ">
+		and park_group_name like '%${parkGroupName}%'
+	</if>
+	<if test="activated != null and activated!= '' ">
+		and activated=#{activated}
+	</if>
+    order by create_at desc
+</select>
+
+<!-- 查询列表 -->
+<select id="getParkGroupListForControl" resultMap="BaseResultMap"  parameterType="String">
+	select  id,park_group_name
+	from etop_park_group 
+</select>
+
+<!-- 插入记录 -->
+<insert id="addParkGroup" parameterType="com.etop.management.bean.ParkGroup" >
+  insert into etop_park_group(id,park_group_name,park_group_describe,approval,activated,create_at,park_group_code,settled_id,park_count,park_group_img,introduce,park_group_type,sld,logo,link)
+ values(#{id},#{parkGroupName},#{parkGroupDescribe},#{approval},#{activated},#{createAt},#{parkGroupCode},#{settledId},#{parkCount},#{parkGroupImg},#{introduce},#{parkGroupType},#{sld},#{logo},#{link})
+</insert>
+
+<!-- 插入入驻信息 -->
+<insert id="addSettled" parameterType="com.etop.management.bean.Settled" >
+  insert into etop_settled(id,open_time,park_name,address,belong_unit,operate_unit,park_type,park_size,rental_rate,mobile,contacts,apply_time,email,qq,wechat,city)
+ values(#{id},#{openTime},#{parkName},#{address},#{belongUnit},#{operateUnit},#{parkType},#{parkSize},#{rentalRate},#{mobile},#{contacts},#{applyTime},#{email},#{qq},#{wechat},#{city})
+</insert>
+
+
+<!-- 修改记录，只修改只不为空的字段 -->
+<update id="updateParkGroup" parameterType="com.etop.management.bean.ParkGroup" >
+	update etop_park_group set 
+	<trim  suffixOverrides="," >
+	<if test="parkGroupName != null  ">
+		park_group_name=#{parkGroupName},
+	</if>
+	<if test="parkGroupDescribe != null  ">
+		park_group_describe=#{parkGroupDescribe},
+	</if>
+	<if test="parkGroupCode != null  ">
+		park_group_code=#{parkGroupCode},
+	</if>
+	<if test="parkCount != null  ">
+		park_count=#{parkCount},
+	</if>
+	<if test="parkGroupImg != null  ">
+		park_group_img=#{parkGroupImg},
+	</if>
+	<if test="introduce != null  ">
+		introduce=#{introduce},
+	</if>
+	<if test="approval != null  ">
+		approval=#{approval},
+	</if>
+	<if test="parkGroupType != null  ">
+		park_group_type=#{parkGroupType},
+	</if>
+	<if test="logo != null  ">
+		logo=#{logo},
+	</if>
+	<if test="link != null  ">
+		link=#{link},
+	</if>
+	</trim>
+	where id = #{id}
+</update>
+ 
+ <!-- 激活/关闭园区组-->  
+ <update id="stopParkGroup" parameterType="com.etop.management.bean.ParkGroup" >
+  update etop_park_group set activated=#{activated} where id=#{id}
+ </update>
+ 
+ <!-- 查询入驻列表 -->
+<select id="getSettledList" resultMap="SettledResultMap"  parameterType="com.etop.management.bean.Settled">
+	select 
+	es.id,es.open_time,es.park_name,es.address,es.belong_unit,es.operate_unit,es.park_type,es.park_size,es.rental_rate,es.mobile,es.contacts,es.apply_time,es.email,es.qq,es.wechat,es.city
+	from etop_settled es
+	left join etop_park_group epg on es.id = epg.settled_id
+	where 1=1 
+	<if test="parkName != null  and parkName!=''">
+	and park_name like '%${parkName}%'
+	</if>
+	and epg.id is null
+    order by apply_time desc
+</select>
+
+ <!-- 查询列表 -->
+<select id="getSettledInfo" resultMap="SettledResultMap"  parameterType="String">
+	select 
+	id,open_time,park_name,address,belong_unit,operate_unit,park_type,park_size,rental_rate,mobile,contacts,apply_time,email,qq,wechat,city
+	from etop_settled 
+	where id = #{settledId}
+</select>
+
+ <!-- 激活/关闭园区组用户-->  
+ <update id="stopGroupUser" parameterType="Map" >
+  update etop_user set 
+  activated=#{activated}
+  where id in
+  <foreach item="item" index="index" collection="userList" open="(" separator="," close=")">  
+		 #{item}  
+  </foreach > 
+ </update>
+ 
+ <!-- 激活/关闭园区组下园区-->  
+ <update id="stopPark" parameterType="Map" >
+  update etop_park set 
+  activated=#{activated}
+  where park_group_id =#{parkGroupId}
+ </update>
+ 
+	 <select id="getPresentationByParkGroupId"  resultType="com.etop.management.bean.ParkGroupPresentation" parameterType="Map">
+		 SELECT
+			*
+		FROM
+			etop_park_group_presentation
+		WHERE
+            park_group_id = #{parkGroupId}
+	 
+	 </select>
+	 
+     <delete id="deletePresentation" parameterType="string">
+		DELETE
+		FROM
+			etop_park_group_presentation
+		WHERE
+		   id = #{id}
+	</delete>
+	
+	
+		  <select id="getPresentationInfoById" resultType="com.etop.management.bean.ParkGroupPresentation" parameterType="Map">
+	
+		SELECT
+			*,park_group_img parkGroupPreimg
+		FROM
+			etop_park_group_presentation
+		WHERE
+		   id = #{id}
+
+        </select>
+        
+        
+	            <update id="updatePresentation"  parameterType="com.etop.management.bean.ParkGroupPresentation">
+        update  
+        
+				etop_park_group_presentation
+        set
+		<trim suffixOverrides=",">
+            <if test="presentation != null  ">
+                presentation=#{presentation},
+            </if>
+            <if test="title != null  ">
+                title=#{title},
+            </if>
+            <if test="content != null  ">
+                content=#{content},
+            </if>
+            <if test="parkGroupPreimg != null  ">
+                park_group_img=#{parkGroupPreimg},
+            </if>
+
+        </trim>
+            
+        where park_group_id=#{parkGroupId}
+
+         AND id = #{id}
+
+        
+    </update>
+    
+        <insert id="add" parameterType="com.etop.management.bean.ParkGroupPresentation">
+    INSERT INTO
+		etop_park_group_presentation
+		(id,park_group_id,presentation,title,content,park_group_img)
+	VALUES
+		(#{id},#{parkGroupId},#{presentation},#{title},#{content},#{parkGroupPreimg})
+    </insert>
+    
+    
+    <!-- 查询列表 -->
+	<select id="getParkGroupListForControl2" resultMap="BaseResultMap"  parameterType="String">
+		select  id,park_group_name
+		from etop_park_group 
+		where activated ='1'
+	</select>
+</mapper>   

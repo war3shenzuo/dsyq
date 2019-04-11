@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopBillRuleDao">
+
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.entity.EtopBillRule" >
+	<result column="id" property="id"/>
+	<result column="ref_park_id" property="refParkId"/>
+	<result column="bill_date" property="billDate"/>
+	<result column="payment_date" property="paymentDate"/>
+	<result column="bill_period" property="billPeriod"/>
+		
+</resultMap>
+       
+<!-- etop_park table all fields -->
+<sql id="Base_Column_List" >
+	 id,ref_park_id,bill_date,payment_date,bill_period	 
+</sql>
+
+<sql id="insert_value">
+
+	#{refParkId},#{billDate},#{paymentDate},#{billPeriod}
+
+</sql>
+
+<select id="getBillRuleById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_bill_rule where id = #{id}
+</select>
+
+<select id="getBillRuleList" resultMap="BaseResultMap">
+
+	select <include refid="Base_Column_List" /> 
+	 from etop_bill_rule 
+	 
+	 <if test="refParkId!=null and refParkId!=''">
+	 
+	 	where ref_park_id=#{refParkId}
+	 
+	 </if>
+
+</select>
+
+<delete id="deleteBillRule" parameterType="string">
+
+	delete from etop_bill_rule where id=#{id}
+
+</delete>
+
+<insert id="createBillRule" parameterType="com.etop.management.entity.EtopBillRule">
+
+insert into etop_bill_rule (<include refid="Base_Column_List" />)
+values
+(#{id},<include refid="insert_value" />)
+
+</insert>
+
+<update id="updateBillRule" parameterType="com.etop.management.entity.EtopBillRule">
+
+
+	update etop_bill_rule set 
+		
+	bill_date=#{billDate},payment_date=#{paymentDate},bill_period=#{billPeriod}
+		
+	where id=#{id}
+
+
+</update>
+</mapper>
+

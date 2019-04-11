@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.BalanceStatisticsDao">
+
+    <select id="select" resultType="com.etop.management.bean.BalanceStatistics">
+        SELECT
+            t6.park,
+            IFNULL(SUM(t6.amount), 0) AS amount,
+            IFNULL(SUM(t6.amount_paid), 0) AS amount_paid,
+            IFNULL(SUM(t6.overdue_fine), 0) AS overdue_fine,
+            IFNULL(
+            SUM(t6.amount - t6.amount_paid),
+            0
+            ) AS arrears
+        FROM
+        (
+            SELECT
+                IFNULL(SUM(t2.amount), 0) AS amount,
+                IFNULL(SUM(t2.amount_paid), 0) AS amount_paid,
+                IFNULL(SUM(t2.overdue_fine), 0) AS overdue_fine,
+                IFNULL(
+                    SUM(t2.amount - t2.amount_paid),
+                    0
+                    ) AS arrears,
+                t1.park
+            FROM
+                etop_contract t1
+            LEFT JOIN etop_bill t2 ON t1.contract_no = t2.bill_no_out
+            WHERE
+                t4.build_type = 'floor'
+            <if test="parkId != null and parkId != ''">
+                AND t1.ref_park_id = #{parkId}
+            </if>
+            <if test="start != null and start != ''">
+                <![CDATA[
+                        AND t2.created_time >= #{start}
+                    ]]>
+            </if>
+            <if test="end != null and end != ''">
+                <![CDATA[
+                        AND t2.created_time < #{end}
+                    ]]>
+            </if>
+            GROUP BY
+                t1.building
+        ) t6
+    </select>
+
+    <select id="searchByFloor" resultType="com.etop.management.bean.BalanceStatistics">
+        SELECT
+            IFNULL(SUM(t6.amount), 0) AS amount,
+            IFNULL(SUM(t6.amount_paid), 0) AS amount_paid,
+            IFNULL(SUM(t6.overdue_fine), 0) AS overdue_fine,
+            IFNULL(
+                SUM(t6.amount - t6.amount_paid),
+                0
+            ) AS arrears,
+            t6.park_name AS park,
+            t6.build_name AS building
+        FROM
+            (
+                SELECT
+                    t2.park_name,
+                    t4.floor,
+                    t4.block,
+                    t4.room,
+                    t1.build_name,
+                    t5.amount,
+                    t5.amount_paid,
+                    t5.overdue_fine,
+                    t5.bill_id,
+                    t1.id
+                FROM
+                    etop_floor t1
+                INNER JOIN etop_park t2 ON t1.park_id = t2.id
+                LEFT JOIN etop_floor_room t3 ON t3.ref_floor_id = t1.id
+                LEFT JOIN etop_contract t4 ON t3.id = t4.ref_room_id
+                LEFT JOIN etop_bill t5 ON t4.contract_no = t5.bill_no_out
+                WHERE
+                    t1.build_type = 'floor'
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t5.created_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t5.created_time < #{end}
+                        ]]>
+                </if>
+            ) t6
+        GROUP BY
+            t6.id
+    </select>
+
+    <select id="searchByStorey" resultType="com.etop.management.bean.BalanceStatistics">
+        SELECT
+            t6.park_name AS park,
+            t6.floor AS building,
+            t6.storey AS floor,
+            t6.id,
+            t6.roomId,
+            IFNULL(SUM(t6.amount), 0) AS amount,
+            IFNULL(SUM(t6.amount_paid), 0) AS amount_paid,
+            IFNULL(SUM(t6.overdue_fine), 0) AS overdue_fine,
+            IFNULL(
+                SUM(t6.amount - t6.amount_paid),
+                0
+                ) AS arrears
+        FROM
+            (
+                SELECT
+                    t2.park_name,
+                    t7.build_name floor,
+                    t1.build_name storey,
+                    t5.amount,
+                    t5.amount_paid,
+                    t5.overdue_fine,
+                    t5.bill_id,
+                    t1.id,
+                    t3.id AS roomId,
+                    t3.ref_storey_id
+                FROM
+                    etop_floor t1
+                INNER JOIN etop_park t2 ON t1.park_id = t2.id
+                INNER JOIN etop_floor t7 ON t1.parent_id = t7.id
+                LEFT JOIN etop_floor_room t3 ON t3.ref_storey_id = t1.id
+                LEFT JOIN etop_contract t4 ON t3.id = t4.ref_room_id
+                LEFT JOIN etop_bill t5 ON t4.contract_no = t5.bill_no_out
+            WHERE
+                t1.build_type = 'storey'
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t5.created_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t5.created_time < #{end}
+                        ]]>
+                </if>
+            ) t6
+        GROUP BY
+        t6.id
+    </select>
+
+    <select id="searchByArea" resultType="com.etop.management.bean.BalanceStatistics">
+        SELECT
+            IFNULL(SUM(t6.amount), 0) AS amount,
+            IFNULL(SUM(t6.amount_paid), 0) AS amount_paid,
+            IFNULL(SUM(t6.overdue_fine), 0) AS overdue_fine,
+            IFNULL(
+            SUM(t6.amount - t6.amount_paid),
+            0
+            ) AS arrears,
+            t6.park_name AS park,
+            t6.floor AS building,
+            t6.storey AS floor,
+            t6.area AS block,
+            t6.id,
+            t6.roomId
+        FROM
+            (
+                SELECT
+                t2.park_name,
+                t8.build_name floor,
+                t7.build_name storey,
+                t1.build_name area,
+                t5.amount,
+                t5.amount_paid,
+                t5.overdue_fine,
+                t5.bill_id,
+                t1.id,
+                t3.id AS roomId,
+                t3.ref_area_id
+                FROM
+                etop_floor t1
+                INNER JOIN etop_park t2 ON t1.park_id = t2.id
+                INNER JOIN etop_floor t7 ON t1.parent_id = t7.id
+                INNER JOIN etop_floor t8 ON t7.parent_id = t8.id
+                LEFT JOIN etop_floor_room t3 ON t3.ref_area_id = t1.id
+                LEFT JOIN etop_contract t4 ON t3.id = t4.ref_room_id
+                LEFT JOIN etop_bill t5 ON t4.contract_no = t5.bill_no_out
+            WHERE
+                t1.build_type = 'area'
+            <if test="parkId != null and parkId != ''">
+                AND t1.park_id = #{parkId}
+            </if>
+            <if test="start != null and start != ''">
+                <![CDATA[
+                        AND t5.created_time >= #{start}
+                    ]]>
+            </if>
+            <if test="end != null and end != ''">
+                <![CDATA[
+                        AND t5.created_time < #{end}
+                    ]]>
+            </if>
+            ) t6
+        GROUP BY
+            t6.id
+    </select>
+
+    <select id="selectBill" resultType="com.etop.management.bean.BalanceStatistics">
+        SELECT
+            t1.company_name,
+            t3.park_name,
+            IFNULL(SUM(t1.amount), 0) AS amount,
+            IFNULL(SUM(t1.amount_paid), 0) AS amount_paid,	
+            IFNULL(SUM(t1.overdue_fine)-SUM(t1.overdue_remission), 0) AS overdue_fine,
+            IFNULL(
+                SUM(t1.amount) - SUM(t1.amount_paid),
+                0
+            ) AS arrears,
+            t1.park_id,
+            t1.bill_source,
+            t1.bill_id,
+            t1.company_id,
+            t1.created_time,
+            t1.deadline
+        FROM
+            etop_bill t1
+        LEFT JOIN etop_company t2 ON t1.company_id = t2.company_id
+        INNER JOIN etop_park t3 ON t1.park_id = t3.id
+        WHERE
+            t1.audit_status = 2
+        AND t1.bill_status != 2
+        AND t1.bill_type = 1
+        AND t1.park_id = #{parkId}
+        <if test="start != null and start != ''">
+            <![CDATA[
+                    AND t1.created_time >= #{start}
+                ]]>
+        </if>
+        <if test="end != null and end != ''">
+            <![CDATA[
+                    AND t1.created_time < #{end}
+                ]]>
+        </if>
+        <if test="startTime != null and startTime != ''">
+            <![CDATA[
+                    AND t1.deadline >= #{startTime}
+                ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+            <![CDATA[
+                    AND t1.deadline < #{endTime}
+                ]]>
+        </if>
+        GROUP BY
+            t1.company_id,
+            t1.bill_source
+    </select>
+
+    <select id="selectTotalBill" resultType="com.etop.management.bean.BalanceStatistics">
+        SELECT
+            t4.company_name,
+            t4.park_name,
+            IFNULL(SUM(t4.amount), 0) AS amount,
+            IFNULL(SUM(t4.amount_paid), 0) AS amount_paid,
+            IFNULL(SUM(t4.overdue_fine), 0) AS overdue_fine,
+            IFNULL(
+                SUM(t4.amount) - SUM(t4.amount_paid),
+                0
+            ) AS arrears,
+            t4.park_id,
+            t4.company_id
+        FROM
+            (
+                SELECT
+                    t1.company_name,
+                    t3.park_name,
+                    IFNULL(SUM(t1.amount), 0) AS amount,
+                    IFNULL(SUM(t1.amount_paid), 0) AS amount_paid,
+                    IFNULL(SUM(t1.overdue_fine)-SUM(t1.overdue_remission), 0) AS overdue_fine,
+                    IFNULL(
+                        SUM(t1.amount) - SUM(t1.amount_paid),
+                        0
+                    ) AS arrears,
+                    t1.park_id,
+                    t1.bill_source,
+                    t1.bill_id,
+                    t1.company_id,
+                    t1.created_time,
+                    t1.deadline
+                FROM
+                    etop_bill t1
+                LEFT JOIN etop_company t2 ON t1.company_id = t2.company_id
+                INNER JOIN etop_park t3 ON t1.park_id = t3.id
+                WHERE
+                    t1.audit_status = 2
+                AND t1.bill_status != 2
+                AND t1.bill_type = 1
+                AND t1.park_id = #{parkId}
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t1.created_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t1.created_time < #{end}
+                        ]]>
+                </if>
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                            AND t1.deadline >= #{startTime}
+                        ]]>
+                </if>
+                <if test="endTime != null and endTime != ''">
+                    <![CDATA[
+                            AND t1.deadline < #{endTime}
+                        ]]>
+                </if>
+                GROUP BY
+                    t1.company_id,
+                    t1.bill_source
+            ) t4
+        GROUP BY
+            t4.company_id
+    </select>
+
+    <select id="getTatalAmount" resultType="com.etop.management.bean.BalanceStatistics">
+        SELECT
+            t5.park_id,
+            t5.park_name,
+            IFNULL(SUM(t5.amount), 0) AS amount,
+            IFNULL(SUM(t5.amount_paid), 0) AS amount_paid,
+            IFNULL(SUM(t5.overdue_fine), 0) AS overdue_fine,
+            IFNULL(SUM(t5.arrears), 0) AS arrears
+        FROM
+            (
+                SELECT
+                    t4.company_name,
+                    t4.park_name,
+                    IFNULL(SUM(t4.amount), 0) AS amount,
+                    IFNULL(SUM(t4.amount_paid), 0) AS amount_paid,
+                    IFNULL(SUM(t4.overdue_fine), 0) AS overdue_fine,
+                    IFNULL(
+                        SUM(t4.amount) - SUM(t4.amount_paid),
+                        0
+                    ) AS arrears,
+                    t4.park_id,
+                    t4.company_id
+                FROM
+                    (
+                        SELECT
+                            t1.company_name,
+                            t3.park_name,
+                            IFNULL(SUM(t1.amount), 0) AS amount,
+                            IFNULL(SUM(t1.amount_paid), 0) AS amount_paid,
+                            IFNULL(SUM(t1.overdue_fine)-SUM(t1.overdue_remission), 0) AS overdue_fine,
+                            IFNULL(
+                                SUM(t1.amount) - SUM(t1.amount_paid),
+                                0
+                            ) AS arrears,
+                            t1.park_id,
+                            t1.bill_source,
+                            t1.bill_id,
+                            t1.company_id,
+                            t1.created_time,
+                            t1.deadline
+                        FROM
+                            etop_bill t1
+                        LEFT JOIN etop_company t2 ON t1.company_id = t2.company_id
+                        INNER JOIN etop_park t3 ON t1.park_id = t3.id
+                        WHERE
+                            t1.audit_status = 2
+                        AND t1.bill_status != 2
+                        AND t1.bill_type = 1
+                        <if test="isAllPark != null and isAllPark != ''">
+                            AND t1.park_id = #{parkId}
+                        </if>
+                        <if test="start != null and start != ''">
+                            <![CDATA[
+                                            AND t1.created_time >= #{start}
+                                        ]]>
+                        </if>
+                        <if test="end != null and end != ''">
+                            <![CDATA[
+                                            AND t1.created_time < #{end}
+                                        ]]>
+                        </if>
+                        <if test="startTime != null and startTime != ''">
+                            <![CDATA[
+                                            AND t1.deadline >= #{startTime}
+                                        ]]>
+                        </if>
+                        <if test="endTime != null and endTime != ''">
+                            <![CDATA[
+                                            AND t1.deadline < #{endTime}
+                                        ]]>
+                        </if>
+                        GROUP BY
+                            t1.company_id,
+                            t1.bill_source
+                    ) t4
+                GROUP BY
+                    t4.company_id
+            ) t5
+    </select>
+
+    <select id="getDiffBillAmount" resultType="com.etop.management.bean.BalanceStatistics">
+        SELECT
+            t4.bill_source,
+			IFNULL(SUM(t4.amount), 0) AS amount,
+			IFNULL(SUM(t4.amount_paid), 0) AS amount_paid,
+			IFNULL(SUM(t4.arrears), 0) AS arrears,
+			IFNULL(SUM(t4.overdue_fine), 0) AS overdue_fine
+        FROM
+            (
+                SELECT
+                    t1.company_name,
+                    t3.park_name,
+                    IFNULL(SUM(t1.amount), 0) AS amount,
+                    IFNULL(SUM(t1.amount_paid), 0) AS amount_paid,
+                    IFNULL(SUM(t1.overdue_fine)-SUM(t1.overdue_remission), 0) AS overdue_fine,
+                    IFNULL(
+                        SUM(t1.amount) - SUM(t1.amount_paid),
+                        0
+                    ) AS arrears,
+                    t1.park_id,
+                    t1.bill_source,
+                    t1.bill_id,
+                    t1.company_id,
+                    t1.created_time,
+                    t1.deadline
+                FROM
+                    etop_bill t1
+                LEFT JOIN etop_company t2 ON t1.company_id = t2.company_id
+                INNER JOIN etop_park t3 ON t1.park_id = t3.id
+                WHERE
+                    t1.audit_status = 2
+                AND t1.bill_status != 2
+                AND t1.bill_type = 1
+                <if test="isAllPark != null and isAllPark != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t1.created_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t1.created_time < #{end}
+                        ]]>
+                </if>
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                            AND t1.deadline >= #{startTime}
+                        ]]>
+                </if>
+                <if test="endTime != null and endTime != ''">
+                    <![CDATA[
+                            AND t1.deadline < #{endTime}
+                        ]]>
+                </if>
+                GROUP BY
+                    t1.company_id,
+                    t1.bill_source
+            ) t4
+        GROUP BY
+            t4.bill_source
+    </select>
+
+</mapper>

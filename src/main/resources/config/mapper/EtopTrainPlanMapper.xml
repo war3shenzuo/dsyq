@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopTrainPlanDao">
+
+    <sql id="Base_Column_List" >
+        t1.id,t1.course_id,t1.train_date,t1.train_type,t1.create_type,t1.status,t1.title,t1.charge,t1.department,t1.target,t1.park_id,t1.expect_people,
+        t1.expect_date,t1.expect_place,t1.cycle,t1.remind_date,t1.created_at,t1.created_by,t1.updated_at,t1.updated_by
+    </sql>
+
+    <sql id="Example_Where_Clause_Object">
+        <if test="id != null" >
+            and id =  #{id}
+        </if>
+        <if test="courseId != null" >
+            and course_id =  #{courseId}
+        </if>
+        <if test="trainDate != null" >
+            and train_date =  #{trainDate}
+        </if>
+        <if test="trainType != null" >
+            and train_type =  #{trainType}
+        </if>
+        <if test="createType != null" >
+            and create_type =  #{createType}
+        </if>
+        <if test="status != null" >
+            and status =  #{status}
+        </if>
+        <if test="title != null and title !='' " >
+            and title like CONCAT('%',#{title},'%')
+        </if>
+        <if test="charge != null and charge !='' " >
+            and charge like CONCAT('%',#{charge},'%')
+        </if>
+        <if test="department != null" >
+            and department =  #{department}
+        </if>
+        <if test="target != null" >
+            and target =  #{target}
+        </if>
+        <if test="parkId != null" >
+            and park_id =  #{parkId}
+        </if>
+        <if test="expectPeople != null" >
+            and expect_people =  #{expectPeople}
+        </if>
+        <if test="expectDate != null" >
+            and expect_date =  #{expectDate}
+        </if>
+        <if test="expectPlace != null" >
+            and expect_place =  #{expectPlace}
+        </if>
+        <if test="cycle != null" >
+            and cycle =  #{cycle}
+        </if>
+        <if test="remindDate != null" >
+            and remind_date =  #{remindDate}
+        </if>
+        <if test="createdAt != null" >
+            and created_at =  #{createdAt}
+        </if>
+        <if test="createdBy != null" >
+            and created_by =  #{createdBy}
+        </if>
+        <if test="updatedAt != null" >
+            and updated_at =  #{updatedAt}
+        </if>
+        <if test="updatedBy != null" >
+            and updated_by =  #{updatedBy}
+        </if>
+    </sql>
+
+    <insert id="insert">
+        insert into etop_train_plan(id,course_id,train_date,train_type,create_type,status,title,charge,department,
+        target,park_id,expect_people,expect_date,expect_place,cycle,remind_date,created_at,created_by,updated_at,updated_by)
+        values(uuid(),uuid(),#{trainDate},#{trainType},#{createType},#{status},#{title},#{charge},#{department},
+        #{target},#{parkId},#{expectPeople},#{expectDate},#{expectPlace},#{cycle},#{remindDate},sysdate(),#{createdBy},sysdate(),#{updatedBy})
+    </insert>
+
+    <update id="update">
+        update etop_train_plan
+            <set>
+                <if test="courseId != null  ">
+                    course_id=#{courseId},
+                </if>
+                <if test="trainDate != null  ">
+                    train_date=#{trainDate},
+                </if>
+                <if test="trainType != null  ">
+                    train_type=#{trainType},
+                </if>
+                <if test="createType != null" >
+                    create_type =  #{createType}
+                </if>
+                <if test="status != null  ">
+                    status=#{status},
+                </if>
+                <if test="title != null  ">
+                    title=#{title},
+                </if>
+                <if test="charge != null  ">
+                    charge=#{charge},
+                </if>
+                <if test="department != null  ">
+                    department=#{department},
+                </if>
+                <if test="target != null  ">
+                    target=#{target},
+                </if>
+                <if test="parkId != null" >
+                    park_id =  #{parkId}
+                </if>
+                <if test="expectPeople != null  ">
+                    expect_people=#{expectPeople},
+                </if>
+                <if test="expectDate != null  ">
+                    expect_date=#{expectDate},
+                </if>
+                <if test="expectPlace != null  ">
+                    expect_place=#{expectPlace},
+                </if>
+                <if test="cycle != null  ">
+                    cycle=#{cycle},
+                </if>
+                <if test="remindDate != null  ">
+                    remind_date=#{remindDate},
+                </if>
+                <if test="createdAt != null  ">
+                    created_at=#{createdAt},
+                </if>
+                <if test="createdBy != null  ">
+                    created_by=#{createdBy},
+                </if>
+                <if test="updatedAt != null  ">
+                    updated_at=#{updatedAt},
+                </if>
+                <if test="updatedBy != null  ">
+                    updated_by=#{updatedBy},
+                </if>
+            </set>
+        where
+            course_id = #{courseId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+            etop_train_plan
+        WHERE
+            id = #{id}
+    </delete>
+
+    <select id="search" resultType="com.etop.management.bean.EtopTrainPlan">
+        SELECT
+            t2.course_status,
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_train_plan t1
+        LEFT JOIN etop_offline_training t2 ON t1.course_id = t2.id
+        <where>
+            <include refid="Example_Where_Clause_Object"/>
+        </where>
+    </select>
+
+    <select id="getEtopTrainPlanInfoById" resultType="com.etop.management.bean.EtopTrainPlan">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_train_plan t1
+        WHERE
+            t1.course_id = #{id}
+    </select>
+
+    <select id="getList" resultType="com.etop.management.bean.EtopTrainPlan">
+        SELECT
+           <include refid="Base_Column_List"/>
+        FROM
+            etop_train_plan t1
+        WHERE
+            t1.status = 4
+    </select>
+
+</mapper>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.FuncDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.bean.Func" >
+	<result column="id" property="id"/>
+	<result column="func_name" property="funcName"/>
+	<result column="func_code" property="funcCode"/>
+	<result column="func_describe" property="funcDescribe"/>
+	<result column="activated" property="activated"/>
+	<result column="load_url" property="loadUrl"/>
+	<result column="parent_id" property="parentId"/>
+	<result column="sort_id" property="sortId"/>
+	<result column="icon" property="icon"/>
+	<result column="is_read" property="isRead"/>
+</resultMap>
+       
+<!-- etop_func table all fields -->
+<sql id="Base_Column_List" >
+	 ef.id,ef.func_name,ef.func_code,ef.func_describe,ef.activated,ef.load_url,ef.parent_id,ef.sort_id,icon
+</sql>
+   
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="id != null" >
+	    and ef.id =  #{id}
+	</if>
+	
+		<if test="funcName != null" >
+	    and ef.func_name =  #{funcName}
+	</if>
+	
+		<if test="funcCode != null" >
+	    and ef.func_code =  #{funcCode}
+	</if>
+	
+		<if test="funcDescribe != null" >
+	    and ef.func_describe =  #{funcDescribe}
+	</if>
+	
+		<if test="activated != null" >
+	    and ef.activated =  #{activated}
+	</if>
+	
+		<if test="loadUrl != null" >
+	    and ef.load_url =  #{loadUrl}
+	</if>
+	
+		<if test="parentId != null" >
+	    and ef.parent_id =  #{parentId}
+	</if>
+	
+		<if test="sortId != null" >
+	    and ef.sort_id =  #{sortId}
+	</if>
+	
+</trim>
+</sql>   
+
+<!-- 插入记录 -->
+<insert id="addFunc" parameterType="com.etop.management.bean.Func" >
+  insert into etop_func(id,func_name,func_code,func_describe,activated,load_url,parent_id,sort_id)
+ values(#{id},#{funcName},#{funcCode},#{funcDescribe},#{activated},#{loadUrl},#{parentId},#{sortId})
+</insert>
+ 
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="updateFunc" parameterType="com.etop.management.bean.Func" >
+	update etop_func set 
+	<trim  suffixOverrides="," >
+	<if test="funcName != null  ">
+		func_name=#{funcName},
+	</if>
+	<if test="funcCode != null  ">
+		func_code=#{funcCode},
+	</if>
+	<if test="funcDescribe != null  ">
+		func_describe=#{funcDescribe},
+	</if>
+	<if test="activated != null  ">
+		activated=#{activated},
+	</if>
+	<if test="loadUrl != null  ">
+		load_url=#{loadUrl},
+	</if>
+	<if test="parentId != null  ">
+		parent_id=#{parentId},
+	</if>
+	<if test="sortId != null  ">
+		sort_id=#{sortId},
+	</if>
+	</trim>
+	where id = #{id}
+</update>
+
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="activeOrClosePark" parameterType="com.etop.management.bean.Func" >
+	update etop_func set 
+	activated=#{activated}
+	where id = #{id}
+</update>
+ 
+<!-- 根据id查询  -->
+<select id="getFuncInfo"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_func ef where ef.id = #{id}
+</select>
+
+<select id="getFuncList" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Func">
+	select <include refid="Base_Column_List" />
+	from etop_func ef
+	<include refid="Example_Where_Clause_Object"/>
+</select>
+
+<select id="getFuncListByRoleId" resultMap="BaseResultMap" parameterType="String">
+	select DISTINCT <include refid="Base_Column_List" />,efr.is_read
+	from etop_func_role efr 
+	left join etop_func ef on ef.id = efr.func_id 
+	where role_id in
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+		 #{item}  
+	</foreach> 
+	and ef.activated =1
+	group by ef.id
+	order by ef.sort_id
+</select>
+
+<select id="getFuncListByCompany" resultMap="BaseResultMap" parameterType="String">
+	select  <include refid="Base_Column_List" />
+	from etop_func ef
+	where ef.id in('c10000','c20000','c30000','c40000','c10001','c20001','c30001','c40001')
+	and ef.activated =1
+	order by ef.sort_id
+</select>
+
+<select id="getFuncListByPersonal" resultMap="BaseResultMap" parameterType="String">
+	select  <include refid="Base_Column_List" />
+	from etop_func ef
+	where ef.id in('c50000','c50001','c60000','c60001','c60002','c60003')
+	and ef.activated =1
+	order by ef.sort_id
+</select>
+
+<select id="getFuncParkGroupList" resultMap="BaseResultMap" parameterType="String">
+	select  <include refid="Base_Column_List" />
+	from etop_func ef
+	where ef.id like '%b%'
+	and ef.activated =1
+	order by ef.sort_id
+</select>
+
+<select id="getFuncListByRoleIdNoParentId" resultMap="BaseResultMap" parameterType="String">
+	select <include refid="Base_Column_List" />,efr.is_read
+	from etop_func_role efr 
+	left join etop_func ef on ef.id = efr.func_id 
+	where role_id in
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+		 #{item}  
+	</foreach> 
+	and ef.activated =1
+	and (ef.parent_id is not null or ef.parent_id!='')
+	order by sort_id
+</select>
+
+<select id="getFuncListRead" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Func">
+	select <include refid="Base_Column_List" />
+	from etop_func_role efr 
+	left join etop_func ef on ef.id = efr.func_id 
+	where role_id in
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+		 #{item}  
+	</foreach> 
+	and efr.is_read = 1
+	and ef.activated =1
+	order by sort_id
+</select>
+
+<select id="getFuncisRead"  resultType="String"   parameterType="string">
+	 select efr.is_read
+	 from etop_func_role efr 
+	 left join etop_func tf on tf.id = efr.func_id
+	 where efr.role_id = #{roleId}
+	 and tf.load_url =#{url}
+</select>
+
+<select id="getfuncParentId"  resultType="String"   parameterType="string">
+	select DISTINCT ef.parent_id from  etop_func ef
+	where ef.id in
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+		 #{item}  
+	</foreach> 
+	and ef.parent_id not in
+	<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+		 #{item}  
+	</foreach>  
+	and( ef.parent_id is not null and ef.parent_id!='')
+</select>
+
+
+
+</mapper>   

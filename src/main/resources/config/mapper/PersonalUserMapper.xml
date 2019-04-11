@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.PersonalUserDao">
+
+    <sql id="Base_Column_List" >
+        t1.employees_id,t1.employees_name,t1.employees_sex,t1.birth,t1.address,t1.card,t1.mobile,t1.email,t1.wechat,
+        t1.otherContact,t1.company_id,t1.company_name,t1.employees_status,t1.department,t1.jobs,t1.hiredate,t1.start_time,
+        t1.end_time,t1.graduate,t1.start_date,t1.over_date,t1.school_name,t1.professional,t1.degree,t1.remark,t1.documents,
+        t1.work_time,t1.over_time,t1.company,t1.dapart,t1.position,t1.note,t1.created_at,t1.created_by,t1.updated_at,t1.updated_by
+    </sql>
+
+         <select id="getExperienceByemployeesId" resultType="com.etop.management.bean.Workexperience" parameterType="Map">
+
+				SELECT
+					*
+				FROM
+					etop_work_experience
+				WHERE
+				   employees_id = #{employeesId}
+
+        </select>
+ 
+ 
+        <update id="updateUserInfo"  parameterType="com.etop.management.bean.PersonalInfomation">
+        update  etop_employees AS t1
+
+        set
+            <if test="employeesName != null  ">
+                t1.employees_name=#{employeesName},
+            </if>
+            <if test="employeesSex != null  ">
+                t1.employees_sex=#{employeesSex},
+            </if>
+            <if test="birth != null  ">
+                t1.birth=#{birth},
+            </if>
+            <if test="address != null  ">
+                t1.address=#{address},
+            </if>
+            <if test="card != null  ">
+                t1.card=#{card},
+            </if>
+            <if test="mobile != null  ">
+                t1.mobile=#{mobile},
+            </if>
+            <if test="email != null  ">
+                t1.email=#{email},
+            </if>
+            <if test="wechat != null  ">
+                t1.wechat=#{wechat},
+            </if>
+            <if test="otherContact != null  ">
+                t1.otherContact=#{otherContact},
+            </if>
+            <if test="companyName != null  ">
+                t1.company_name=#{companyName},
+            </if>
+            <if test="department != null  ">
+                t1.department=#{department},
+            </if>
+            <if test="jobs != null  ">
+                t1.jobs=#{jobs},
+            </if>
+            <if test="hiredate != null  ">
+                t1.hiredate=#{hiredate},
+            </if>
+            <if test="startTime != null  ">
+                t1.start_time=#{startTime},
+            </if>
+            <if test="endTime != null  ">
+                t1.end_time=#{endTime},
+            </if>
+            <if test="graduate != null  ">
+                t1.graduate=#{graduate},
+            </if>
+            <if test="startDate != null  ">
+                t1.start_date=#{startDate},
+            </if>
+            <if test="overDate != null  ">
+                t1.over_date=#{overDate},
+            </if>
+            <if test="schoolName != null  ">
+                t1.school_name=#{schoolName},
+            </if>
+            <if test="professional != null  ">
+                t1.professional=#{professional},
+            </if>
+            <if test="degree != null  ">
+                t1.degree=#{degree},
+            </if>
+            <if test="remark != null  ">
+                t1.remark=#{remark},
+            </if>
+            <if test="documents != null  ">
+                t1.documents=#{documents},
+            </if>
+            <if test="workTime != null  ">
+                t1.work_time=#{workTime},
+            </if>
+            <if test="overTime != null  ">
+                t1.over_time=#{overTime},
+            </if>
+            <if test="company != null  ">
+                t1.company=#{company},
+            </if>
+            <if test="dapart != null  ">
+                t1.dapart=#{dapart},
+            </if>
+            <if test="position != null  ">
+                t1.position=#{position},
+            </if>
+            <if test="note != null  ">
+                t1.note=#{note},
+            </if>
+            <if test="updatedAt != null  ">
+                t1.updated_at=#{updatedAt},
+            </if>
+            <if test="updatedBy != null  ">
+                t1.updated_by=#{updatedBy}
+            </if>
+            <if test="cardImg != null and cardImg !=''">
+                t1.card_img=#{cardImg}
+            </if>
+            
+        where t1.employees_id=#{employeesId}
+        
+    </update>
+    
+    <insert id="add" parameterType="com.etop.management.bean.Workexperience">
+    INSERT INTO
+		etop_work_experience
+		(id,employees_id,work_name,depart,positions,work_start,work_end)
+	VALUES
+		(#{id},#{employeesId},#{workName},#{depart},#{positions},#{workStart},#{workEnd})
+    </insert>
+            <update id="updateUserExperience"  parameterType="com.etop.management.bean.Workexperience">
+        update  
+        
+				etop_work_experience as b
+        set
+		<trim suffixOverrides=",">
+            <if test="workName != null  ">
+                b.work_name=#{workName},
+            </if>
+            <if test="depart != null  ">
+                b.depart=#{depart},
+            </if>
+            <if test="positions != null  ">
+                b.positions=#{positions},
+            </if>
+            <if test="workStart != null  ">
+                b.work_start=#{workStart},
+            </if>
+            <if test="workEnd != null  ">
+                b.work_end=#{workEnd},
+            </if>
+        </trim>
+            
+        where b.employees_id=#{employeesId}
+
+         AND b.id = #{id}
+
+        
+    </update>
+    
+	  <select id="getExperienceInfoById" resultType="com.etop.management.bean.Workexperience" parameterType="Map">
+	
+		SELECT
+			*
+		FROM
+			etop_work_experience
+		WHERE
+		   id = #{id}
+
+        </select>
+        
+    <delete id="deleteExperience" parameterType="string">
+		DELETE
+		FROM
+			etop_work_experience
+		WHERE
+		   id = #{id}
+	</delete>
+</mapper>

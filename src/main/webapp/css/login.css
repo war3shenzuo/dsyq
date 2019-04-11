@@ -1,0 +1,173 @@
+/**login**/
+.loginbox{ margin:0px auto; padding:30px 0px 20px 0px; width:1000px; }
+.loginbox:after{ clear:both; content:"."; display:block; height:0; visibility:hidden;}
+.login-main-section{ padding:20px 20px 60px 40px; float:left; width:450px;}
+.login-main-section h1{ font-size:22px; font-weight:normal;}
+.login-main-section .user-login-close{ font-size:14px; padding:20px 0px;}
+.login-aux-section{ border-left:1px solid #eee; float:left; font-size:14px; margin:80px 0px 0px 0px; padding:0px 0px 0px 70px; width:400px;}
+.login-aux-section .reg-btns{ padding-top:10px;}
+.form-login{ padding:20px 0px 0px 0px;}
+.form-login dl{ padding:10px 0px;}
+.form-login dl dt{ float:left; font-size:14px; padding:4px 12px 0px 0px; text-align:right; width:130px;}
+.form-login dl dd{ padding-left:142px; }
+.form-login dl dd input.text{ font-size:14px; height:32px; line-height:32px; width:240px; }
+.form-login dl dd input.text-verifycode{ width:80px;}
+.form-login dl dd .verifycode{}
+.form-login dl dd .verifycode img{ height:32px; vertical-align:middle;}
+.form-login dl dd .verifycode .fresh{ background:#f6f6f6; border:1px solid #aaa; display:inline-block; font-size:14px; font-family:"微软雅黑"; height:32px; line-height:32px; width:39px; text-align:center;  vertical-align:top; overflow:hidden;}
+.form-login dl dd .verifycode .fresh:hover{ text-decoration:none;}
+.form-login dl dd .remember{ margin-right:20px;}
+.login-apps{ padding:30px 0px 0px 0px;}
+.login-apps .header{ color:#888; font-size:12px;}
+.login-apps .section{ font-size:12px; padding:10px 0px 0px 0px;}
+.login-apps .section a.app-login{ background:#fff; background-position:6px center; background-repeat:no-repeat; border:1px solid #e6e6e6; display:inline-block; font-size:18px; height:36px; line-height:36px; margin-right:10px;  padding:6px 16px 6px 52px;  -webkit-border-radius:4px; -moz-border-radius:4px; border-radius:4px;}
+.login-apps .section a.app-login:hover{ background-color:#fafafa; border-color:#01b402; color:#01b402; text-decoration:none;}
+.login-apps .section a.app-weixin{ background-image:url("../images/icon-app-weixin.png"); width:150px;}
+.login-apps .section a.app-qq{ background-image:url("../images/icon-app-qq.png"); margin:10px 0px 0px 0px; width:150px;}
+
+
+/*新用户注册*/
+.reg{ margin:0px auto; padding:30px 0px 20px 0px; width:1000px; }
+.reg:after{ clear:both; content:"."; display:block; height:0; visibility:hidden;}
+.reg-main-section{ padding:20px 20px 60px 20px; float:left; width:560px;}
+.reg-main-section h1{ font-size:22px; font-family:"微软雅黑"; font-weight:normal;}
+.reg-main-section .user-reg-close{ font-size:14px; padding:20px 0px;}
+.reg-aux-section{ border-left:1px solid #eee; float:left; font-size:14px; margin:70px 0px 0px 0px; padding:0px 0px 0px 60px; width:300px;}
+.reg-aux-section .login-btns{ padding-top:10px;}
+.t-normal {color:#b2b2b2; padding:0px 0px 0px 0px;}
+.t-normal.hightLigth,
+.t-normal:hover{color:#4d4d4d;}
+
+
+.form-reg{ padding:20px 0px 0px 0px;}
+.form-reg dl{ padding:10px 0px;}
+.form-reg dl dt{ float:left; font-size:14px; padding:4px 12px 0px 0px; text-align:right; width:130px;}
+.form-reg dl dd{ padding-left:142px; }
+.form-reg dl dd input.text{ font-size:14px; height:32px; line-height:32px; }
+.form-reg dl dd input.text-login{width:240px;}
+.form-reg dl dd input.text-verifycode{ width:80px;}
+.form-reg dl dd input.text-mobile-code{ width:100px;}
+.form-reg dl dd .get-mobile-code{ background:#f6f6f6; border:1px solid #aaa; display:inline-block; font-size:14px; height:34px; line-height:32px; width:138px; text-align:center;  vertical-align:top; overflow:hidden;}
+.form-reg dl dd .get-mobile-code:hover{ text-decoration:none;}
+.form-reg dl dd .get-mobile-code i{ font-style:normal;}
+.form-reg dl dd .get-mobile-code.disabled{ border-color:#bbb; color:#888;}
+.form-reg dl dd .verifycode img{ height:32px; vertical-align:middle;}
+.form-reg dl dd .verifycode .fresh{ background:#f6f6f6; border:1px solid #aaa; display:inline-block; font-size:14px; height:32px; line-height:32px; width:39px; text-align:center;  vertical-align:top; overflow:hidden;}
+.form-reg dl dd .verifycode .fresh:hover{ text-decoration:none;}
+
+
+/*
+* 各种按钮
+*/
+.btn {
+	font-size:14px; font-weight:bold; line-height:18px;
+	padding:4px 15px!important;
+	padding:4px 17px\0 !important;
+	*padding:2px 4px !important;
+	_padding:2px 4px !important;
+}
+button,input[type="button"],input[type="reset"],input[type="submit"] { cursor:pointer; -webkit-appearance:button;}
+.btn,.btn:visited {
+	background-color:#eee;
+	background-image:-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #F6F6F6), color-stop(100%, #E6E6E6));
+	background-image:-webkit-linear-gradient(#F6F6F6,#E6E6E6);
+	background-image:-moz-linear-gradient(#F6F6F6,#E6E6E6);
+	background-image:-o-linear-gradient(#F6F6F6,#E6E6E6);
+	background-image:linear-gradient(#F6F6F6,#E6E6E6);
+	-webkit-box-shadow:#fff 0px 1px 0px inset; -moz-box-shadow:#fff 0px 1px 0px inset; box-shadow:#fff 0px 1px 0px inset;
+	border:1px solid #aaa; border-bottom-color:#888; color:#555; font-family:"微软雅黑"; text-shadow:0px 1px 0px #f8f8f8; -webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px;
+	display:inline-block; position:relative;
+}
+.btn:hover {
+	background-color:#ddd;
+	background-image:-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e8e8e8), color-stop(100%, #d8d8d8));
+	background-image:-webkit-linear-gradient(#e8e8e8,#d8d8d8);
+	background-image:-moz-linear-gradient(#e8e8e8,#d8d8d8);
+	background-image:-o-linear-gradient(#e8e8e8,#d8d8d8);
+	background-image:linear-gradient(#e8e8e8,#d8d8d8);
+	-webkit-box-shadow:rgba(0,0,0,0.3) 0 1px 3px,#fff 0px 1px 0px inset; -moz-box-shadow:rgba(0,0,0,0.3) 0 1px 3px,#fff 0px 1px 0px inset; box-shadow:rgba(0,0,0,0.3) 0 1px 3px,#fff 0px 1px 0px inset;
+	border-color:#888; border-bottom-color:#666; color:#333; text-decoration:none;
+}
+/**按钮颜色-状态**/
+.btn-primary,.btn-primary:visited {
+	background-color:#37548e;
+	background-image:-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #3e5e9c), color-stop(100%, #304a80));
+	background-image:-webkit-linear-gradient(#3e5e9c,#304a80);
+	background-image:-moz-linear-gradient(#3e5e9c,#304a80);
+	background-image:-o-linear-gradient(#3e5e9c,#304a80);
+	background-image:linear-gradient(#3e5e9c,#304a80);
+	-webkit-box-shadow:#6783bb 0 1px 0 inset;
+	-moz-box-shadow:#6783bb 0 1px 0 inset;
+	box-shadow:#6783bb 0 1px 0 inset;
+	border:1px solid #273c67;
+	border-bottom-color:#22355d;
+	color:#eee;
+	text-shadow:0px 1px 0px #2e467c;
+}
+.btn-primary:hover {
+	/* background-color:#2c4475; */
+	background-image:-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%,#314b81), color-stop(100%,#22345b));
+	background-image:-webkit-linear-gradient(#314b81,#22345b);
+	background-image:-moz-linear-gradient(#314b81,#22345b);
+	background-image:-o-linear-gradient(#314b81,#22345b);
+	/* background-image:linear-gradient(#314b81,#22345b); */
+	-webkit-box-shadow:rgba(0, 0, 0, 0.5) 0 1px 3px,#48659e 0 1px 0 inset;
+	-moz-box-shadow:rgba(0, 0, 0, 0.5) 0 1px 3px,#48659e 0 1px 0 inset;
+	/* box-shadow:rgba(0, 0, 0, 0.5) 0 1px 3px,#48659e 0 1px 0 inset; */
+	border-color:#1a2a4b;
+	border-bottom-color:#152441;
+	color:#fff;
+}
+/*
+* 表单 input check radio textarea select button
+*/
+input[type="radio"],
+input[type="checkbox"] {
+	margin:0px 5px 0px 0px; padding:0px; position:relative; vertical-align:middle;
+	}
+input.text,
+textarea.textarea {
+	background-color:#fcfcfc; border:1px solid #aaa;
+	-webkit-box-shadow:inset 0px 1px 1px rgba(0,0,0,0.075);
+	-moz-box-shadow:inset 0px 1px 1px rgba(0,0,0,0.075);
+	box-shadow:inset 0px 1px 1px rgba(0,0,0,0.075);
+	color:#333; font-size:12px;
+	padding:0px 5px 0px 5px;
+	-webkit-transition:border linear .2s,box-shadow linear .2s;
+	-moz-transition:border linear .2s,box-shadow linear .2s;
+	-o-transition:border linear .2s,box-shadow linear .2s;
+	transition:border linear .2s,box-shadow linear .2s;
+	width:240px;
+	}
+input.text {height:26px; line-height:26px;}
+input.text-long {width:400px;}
+input.text-short {width:160px;}
+input.text-short-mini {width:80px;}
+input.text-mini {height:18px; line-height:18px; width:114px;}
+input.text-fileurl {width:300px;}
+input.text-filename {width:120px;}
+input.text-imageurl {border:1px dashed #bbb; width:272px;}
+input.text-large {font-size:14px; height:32px; line-height:32px;}
+input.text-err,
+textarea.textarea-err { background-color:#fffafa; border-color:#d80000; -webkit-box-shadow:inset 0px 1px 1px rgba(225,0,0,0.175); -moz-box-shadow:inset 0px 1px 1px rgba(225,0,0,0.175); box-shadow:inset 0px 1px 1px rgba(225,0,0,0.175);}
+iframe.iframe-upload{ width:160px; display:inline; height:30px; overflow:hidden; vertical-align:middle;}
+input.text-file{
+	background-color:#fcfcfc; border:1px solid #aaa; height:26px; line-height:26px; width:156px;
+	padding:0px 0px!important;
+	padding:0px 0px\0 !important;
+	*padding:2px 0px !important;
+	_padding:2px 0px !important;
+	}
+.btn-large {
+	-webkit-border-radius:4px; -moz-border-radius:4px; border-radius:4px; font-size:16px; line-height:22px;
+	padding:5px 24px!important;
+	padding:6px 26px\0 !important;
+	*padding:3px 9px !important;
+	_padding:4px 9px !important;
+}
+a.btn-large {
+	padding:6px 27px!important;
+	padding:6px 26px\0 !important;
+	*padding:6px 28px !important;
+	_padding:7px 28px !important;
+}

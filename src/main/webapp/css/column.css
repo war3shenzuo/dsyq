@@ -1,0 +1,92 @@
+.applbox{width: 780px; height: auto;overflow: hidden;margin: 0 auto;margin-bottom: 40px;}
+.applbox h1{ margin: 110px 0 60px 0; font-size: 32px; color: #000;text-align: center;font-weight: 500;}
+.applbox table{ margin: 20px auto 60px auto;font-weight:bold;}
+.applbox td{ height: 50px; line-height: 50px; font-size: 15px; color: rgb(161,161,161);}
+.applbox td p{ display: inline-block; width: 80px;}
+.applbox td input{ width: 245px;height: 28px; margin:0 32px 0 22px; text-indent: 10px;}
+.applbox .midsub{width:200px;margin:0 auto}
+.applbox #sub{width: 168px;border:none;outline:none;height: 48px; border-radius: 22px; font-size: 24px ;color: #fff; background: #ee770f; display: block;}
+.applbox #sub:hover{color:red;}
+
+.hr{ 
+	height:1px;
+	border:none;
+	border-top:1px solid #555555;
+	}
+
+
+
+*{
+			margin:0;
+			 paddign:0;
+		}
+		#wrap{
+			overflow:hidden;
+			width: 1400px;
+			 height: auto;
+			margin:0 auto;
+			 margin-bottom: 40px;
+			 margin-top:50px;
+		
+		}
+			.le{
+				float:left;
+				width:780px;
+				height:auto;
+				overflow:hidden;
+				margin-left:8%;
+				margin-right: 20px;
+			}
+			.le a{ 
+				text-decoration: none;
+				display:block;
+				color:white;
+				background-color: #ee770f;
+				width: 168px;
+				height: 48px;
+				border-radius: 22px;
+				line-height: 48px; 
+				text-align: center;
+				font-size: 24px ;
+				margin:20px 0px;
+				letter-spacing: 13px;
+			}
+			.le h1{
+				margin:20px 0px;
+			}
+			.le a:hover{
+				color:red;
+			}
+			.rt{
+				width:460px;
+				height:500px;
+				float:left;
+				border:1px #E3E3E3 solid;
+				box-shadow:0px 1px 1px 1px gainsboro;
+				margin-top: 91px;
+				
+				
+			}
+			.rt h2{
+				background-color:grey;
+				color:white;
+				padding:10px;
+				font-size:30px;
+				
+			}
+			.rt p{
+				padding:10px;
+				font-size:16px;
+				letter-spacing:1px;
+			}
+			.text{
+				width:470px;
+				height:270px;
+				padding:10px;
+				font-size:18px;
+			}
+			.rt .scroll{
+				overflow:auto;
+				width:460px;
+				height:430px;
+			}

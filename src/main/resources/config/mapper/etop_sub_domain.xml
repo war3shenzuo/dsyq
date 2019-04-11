@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.website.dao.EtopSubDomainDao">
+	<select id="findById" parameterType="string" resultType="com.etop.website.bean.EtopSubDomain">
+		SELECT * FROM etop_sub_domain WHERE host_name=#{_parameter}
+	</select>
+	<select id="list" parameterType="map" resultType="com.etop.website.bean.EtopSubDomain">
+		SELECT t1.*,t2.park_group_name
+		FROM etop_sub_domain t1 LEFT JOIN etop_park_group t2
+		ON t1.park_group_id=t2.id
+	</select>
+	<insert id="add" parameterType="com.etop.website.bean.EtopSubDomain">
+		INSERT INTO
+		etop_sub_domain(host_name, park_group_id)
+		VALUES(#{hostName}, #{parkGroupId})
+	</insert>
+	<update id="delete" parameterType="string">
+		DELETE FROM etop_sub_domain WHERE host_name=#{_parameter}
+	</update>
+	<update id="deletes" parameterType="string">
+		DELETE FROM etop_sub_domain
+		WHERE host_name IN
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+</mapper>

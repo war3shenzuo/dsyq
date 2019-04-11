@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.RoleDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.bean.Role" >
+	<result column="id" property="id"/>
+	<result column="role_code" property="roleCode"/>
+	<result column="role_name" property="roleName"/>
+	<result column="role_escribe" property="roleEscribe"/>
+	<result column="role_type" property="roleType"/>
+	<result column="activated" property="activated"/>
+	<result column="parent_id" property="parentId"/>
+	<result column="create_at" property="createAt"/>
+	<result column="def_func" property="defFunc"/>
+	<result column="park_id" property="parkId"/>
+	<result column="park_name" property="parkName"/>
+	<result column="role_approval" property="roleApproval"/>
+	
+</resultMap>
+       
+<!-- etop_role table all fields -->
+<sql id="Base_Column_List" >
+	 er.id,er.role_code,er.role_name,er.role_escribe,er.role_type,er.activated,er.parent_id,er.create_at,er.def_func,park_id,role_approval
+	 
+</sql>
+ 
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="id != null and id!=''" >
+	    and er.id =  #{id}
+	</if>
+	
+		<if test="roleCode != null and roleCode!=''" >
+	    and er.role_code =  #{roleCode}
+	</if>
+	
+		<if test="roleName != null and roleName!=''" >
+	    and er.role_name =  #{roleName}
+	</if>
+	
+		<if test="roleEscribe != null" >
+	    and er.role_escribe =  #{roleEscribe}
+	</if>
+	
+		<if test="roleType != null" >
+	    and er.role_type =  #{roleType}
+	</if>
+	
+		<if test="activated != null" >
+	    and er.activated =  #{activated}
+	</if>
+	
+		<if test="parentId != null" >
+	    and er.parent_id =  #{parentId}
+	</if>
+	
+		<if test="createAt != null" >
+	    and er.create_at =  #{createAt}
+	</if>
+	
+		<if test="defFunc != null" >
+	    and er.def_func =  #{defFunc}
+	</if>
+	
+		<if test="parkId != null and parkId!=''" >
+	    and er.park_id =  #{parkId}
+	</if>
+	
+</trim>
+</sql>   
+
+<!-- 插入记录 -->
+<insert id="addRole" parameterType="com.etop.management.bean.Role" >
+  insert into etop_role(id,role_code,role_name,role_escribe,role_type,activated,parent_id,create_at,def_func,park_id,role_approval)
+ values(#{id},#{roleCode},#{roleName},#{roleEscribe},#{roleType},#{activated},#{parentId},#{createAt},#{defFunc},#{parkId},#{roleApproval})
+</insert>
+
+
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="updateRole" parameterType="com.etop.management.bean.Role" >
+	update etop_role set 
+	<trim  suffixOverrides="," >
+	<if test="roleCode != null  ">
+		role_code=#{roleCode},
+	</if>
+	<if test="roleName != null  ">
+		role_name=#{roleName},
+	</if>
+	<if test="roleEscribe != null  ">
+		role_escribe=#{roleEscribe},
+	</if>
+	<if test="roleType != null  ">
+		role_type=#{roleType},
+	</if>
+	<if test="activated != null  ">
+		activated=#{activated},
+	</if>
+	<if test="parentId != null  ">
+		parent_id=#{parentId},
+	</if>
+	<if test="createAt != null  ">
+		create_at=#{createAt},
+	</if>
+	<if test="defFunc != null  ">
+		def_func=#{defFunc},
+	</if>
+	<if test="parkId != null  ">
+		park_id=#{parkId},
+	</if>
+	<if test="roleApproval != null  ">
+		role_approval=#{roleApproval},
+	</if>
+	</trim>
+	where id = #{id}
+</update>
+ 
+
+<!-- 根据id查询  -->
+<select id="getRoleInfo"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> ,ep.park_name
+	 from etop_role er
+	 left join etop_park ep on ep.id = er.park_id
+	 where er.id = #{id}
+</select>
+
+<!-- 根据id查询  -->
+<select id="getParentRole"  resultType="String" parameterType="string">
+	 select er.id
+	 from etop_role er 
+	 where er.park_id=#{value}
+	 and (er.parent_id is null or er.parent_id='')
+</select>
+
+<select id="getRoleList" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Role">
+	select <include refid="Base_Column_List" />,ep.park_name
+	from etop_role er 
+	left join etop_park ep on ep.id = er.park_id
+	<include refid="Example_Where_Clause_Object"/>
+	and (ep.park_group_id = #{parkGroupId}
+	or er.park_id = #{parkGroupId})
+	order by role_type
+</select>
+
+<select id="getRoleListByParentId" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Role">
+	select <include refid="Base_Column_List" />
+	from etop_role er 
+	where er.parent_id =#{parentId}
+	
+</select>
+
+ <!-- 修改激活/关闭 -->
+<update id="activeOrCloseRole" parameterType="com.etop.management.bean.EtopUser" >
+	update etop_role set activated = #{activated}
+	where id = #{id}
+</update>
+
+<update id="delReadFuncForRole" parameterType="String" >
+	update etop_func_role set is_read = '0'
+	where role_id = #{value}
+</update>
+
+<update id="addReadFuncForRole" parameterType="Map" >
+	update etop_func_role set is_read = '1'
+	where role_id = #{roleId}
+	and func_id in
+	<foreach item="item" index="index" collection="funcId" open="(" separator="," close=")">  
+	 #{item}  
+	</foreach> 
+</update>
+
+<!-- 批量插入绑定功能 -->
+<insert id="addFuncForRole" parameterType="Map" >
+  insert into etop_func_role(id,role_id,func_id,is_read)
+  values
+  <foreach collection="list" item="item" index="index" separator="," > 
+  	(#{item.id},#{item.roleId},#{item.funcId},#{item.isRead})
+  </foreach>
+</insert>
+
+<delete id="delFuncForRoles" parameterType="Map" >
+ 		delete from etop_func_role	where 
+		<foreach item="funcId" collection="funcIds" separator="or">
+			 (role_id = #{roleId} and func_id= #{funcId})
+		</foreach>
+ </delete>
+ 
+ <delete id="delFuncForRole" parameterType="Map" >
+  		delete from etop_func_role		
+  		where role_id = #{roleId}
+ </delete>
+ 
+ <insert id="addUserForRole"  parameterType="Map"  >
+	insert into  etop_user_role
+      (id,role_id,user_id)values( #{id},#{roleId},#{userId})
+</insert>
+
+<delete id="delUserForRole" parameterType="Map" >
+  		delete from etop_user_role	
+  		where role_id = #{roleId}
+  		and user_id = #{userId}
+ </delete>
+ 
+ <!-- 查询用户的角色  -->
+<select id="getUserRoleList"  resultMap="BaseResultMap" parameterType="string">
+	select eus.role_id,er.role_name,er.id,er.role_approval
+	from etop_user_role eus 
+	left join etop_role er  on( er.id = eus.role_id)
+	where eus.user_id = #{userId}
+</select>
+
+
+<!-- 插入记录 -->
+<insert id="addDefaultRole" parameterType="com.etop.management.bean.Role" >
+  insert into etop_role(id,role_approval,role_code,role_name,role_escribe,role_type,activated,parent_id,create_at,park_id,def_func)
+  values
+	 (uuid(),'tz,kh,ht,rw','${roleCode}yz','园长','园长','2','1',#{parentId},now(),#{parkId},'b100000,b100010,b100020,b900000,b900010,b900021,b300000,b300010,b300020,b400000,b400010,b400020,b500000,b500010,b500021,b500040,b500050,b500070,b600000,b600010,b800000,b800010,b800021,b1000000,b1000010,b1000020,b1000030,b1100000,b1100010,b1100020,b1200000,b1200010,b1200020,b1300000,b1300010,b1300020,b1400000,b1400010,b1400020,b1500000,b1500010,b1500020'),
+	 (uuid(),'kh,ht','${roleCode}zs','招商','招商','2','1',#{parentId},now(),#{parkId},'b100001,b100011,b100020,b900000,b900021,b300000,b300011,b300021,b400001,b400011,b400021,b500000,b500010,b600000,b600010'),
+	 (uuid(),'kh,ht,rw,jmsq,yqsq,qs','${roleCode}yy','运营','运营','2','1',#{parentId},now(),#{parkId},'b100000,b100010,b100020,b900000,b900021,b300000,b300010,b300020,b400000,b400011,b500000,b500010,b500040,b500050,b600000,b600010,b800000,b800010,b800020,b1100000,b1100011,b1100021,b1200000,b1200010,b1200020,b1300000,b1300011,b1300021,b1500000,b1500011,b1500021,b1000000,b1000031'),	 
+	 (uuid(),'qs,ht,hr','${roleCode}rs','人事','人事','2','1',#{parentId},now(),#{parkId},'b100000,b100010,b100020,b900000,b900021,b300000,b300010,b300020,b400000,b400010,b500000,b500010,b600000,b600010,b1000000,b1000011,b1000021,b1400000,b1400011,b1400021'), 
+	 (uuid(),'qs,ht','${roleCode}xz','行政','行政','2','1',#{parentId},now(),#{parkId},'b100000,b100010,b100020,b900000,b900011,b900021,b300000,b300010,b300020,b400000,b400010,b500000,b500010,b600000,b600010'),
+	 (uuid(),'cw,kh,ht,zf','${roleCode}cw','财务','财务','2','1',#{parentId},now(),#{parkId},'b100000,b100010,b100020,b900000,b900021,b300000,b300010,b300020,b400000,b400010,b500000,b500011,b500031,b500041,b500051,b500061,b500070,b600000,b600011,b800000,b800010,b800020'),
+	 (uuid(),'qs,rw,ht','${roleCode}wx','维修','维修','2','1',#{parentId},now(),#{parkId},'b100000,b100010,b100020,b900000,b900021,b300000,b300010,b300020,b400000,b400010,b500000,b500010,b600000,b600010,b1200000,b1200011,b1200021,b800000,b800011,b800020')
+</insert>
+
+ <!-- 查询用户的角色  -->
+<select id="getJurisdiction"  resultType="String" parameterType="Map">
+		select  id
+	    from etop_role er
+		where er.park_id = #{parkId}
+		and er.role_approval like '%${juriId}%'
+</select>
+
+
+
+</mapper>   

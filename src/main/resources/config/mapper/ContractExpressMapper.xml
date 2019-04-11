@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.ContractExpressDao">
+
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.bean.ContractExpress" >
+	<result column="id" property="id"/>
+	<result column="ref_contract_id" property="refContractId"/>
+	<result column="lost_bill_Price" property="lostBillPrice"/>
+	<result column="incomplete_bill_price" property="incompleteBillPrice"/>
+	<result column="bill_date" property="billDate"/>
+	<result column="payment_date" property="paymentDate"/>
+	<result column="bill_period" property="billPeriod"/>
+	<result column="last_bill_date" property="lastBillDate"/>	
+    <result column="created_at" property="createdAt"/>
+    <result column="created_by" property="createdBy"/>
+    <result column="updated_at" property="updatedAt"/>
+    <result column="updated_by" property="updatedBy"/>
+		
+</resultMap>
+       
+<!-- etop_park table all fields -->
+<sql id="Base_Column_List" >
+	 id,ref_contract_id,
+	 lost_bill_Price,incomplete_bill_price,
+	 bill_date,payment_date,bill_period,last_bill_date,
+	 <include refid="com.etop.management.dao.CommonsDao.AUDIT_INFO_COLUMNS"/>
+</sql>
+
+<sql id="insert_value">
+
+	#{refContractId},
+	#{lostBillPrice},#{incompleteBillPrice},
+	#{billDate},#{paymentDate},#{billPeriod},#{lastBillDate},
+	<include refid="com.etop.management.dao.CommonsDao.INSERT_WITH_AUDIT_INFO_COLUMNS"/>
+
+</sql>
+
+<select id="getContractExpressById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract_express where id = #{id}
+</select>
+
+<select id="getContractExpressByRefContractId"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract_express where ref_contract_id = #{refContractId}
+</select>
+
+
+<delete id="deleteContractExpress" parameterType="string">
+
+	delete from etop_contract_express where id=#{id}
+
+</delete>
+<delete id="deleteContractExpressByRefContractId" parameterType="string">
+
+	delete from etop_contract_express where ref_contract_id=#{refContractId}
+
+</delete>
+
+
+<insert id="createContractExpress" parameterType="com.etop.management.bean.ContractExpress">
+
+insert into etop_contract_express (<include refid="Base_Column_List" />)
+values
+(#{id},<include refid="insert_value" />)
+
+</insert>
+
+<update id="updateContractExpress" parameterType="com.etop.management.bean.ContractExpress">
+
+
+	update etop_contract_express set 
+	
+	ref_contract_id=#{refContractId},
+	
+	lost_bill_Price=#{lostBillPrice},incomplete_bill_price=#{incompleteBillPrice},
+		
+	bill_date=#{billDate},payment_date=#{paymentDate},bill_period=#{billPeriod},
+	updated_at=#{updatedAt},updated_by=#{updatedBy}
+	
+	where id=#{id}
+
+
+</update>
+</mapper>
+

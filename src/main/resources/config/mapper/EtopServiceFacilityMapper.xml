@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopServiceFacilityDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.entity.EtopServiceFacility" >
+	<result column="id" property="id"/>
+	<result column="service_id" property="serviceId"/>
+	<result column="facility_id" property="facilityId"/>
+	<result column="appointmentBeginTime" property="appointmentBeginTime"/>
+	<result column="appointmentEndTime" property="appointmentEndTime"/>
+	<result column="totalPrices" property="totalPrices"/>
+	<result column="duration" property="duration"/>
+</resultMap>
+       
+<!-- etop_service_facility table all fields -->
+<sql id="Base_Column_List" >
+	 id,service_id,facility_id,appointmentBeginTime,appointmentEndTime,totalPrices,duration
+	 
+</sql>
+   
+   
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="condition.id != null and condition.id != ''" >
+	    and id =  #{condition.id}
+	</if>
+	
+			<if test="nocondition.id != null and nocondition.id != ''" >
+	    and id not in  (#{nocondition.id})
+	</if>
+	
+		<if test="condition.serviceId != null and condition.serviceId != ''" >
+	    and service_id =  #{condition.serviceId}
+	</if>
+	
+			<if test="nocondition.serviceId != null and nocondition.serviceId != ''" >
+	    and service_id not in  (#{nocondition.serviceId})
+	</if>
+	
+		<if test="condition.facilityId != null and condition.facilityId != ''" >
+	    and facility_id =  #{condition.facilityId}
+	</if>
+	
+			<if test="nocondition.facilityId != null and nocondition.facilityId != ''" >
+	    and facility_id not in  (#{nocondition.facilityId})
+	</if>
+	
+		<if test="condition.appointmentBeginTime != null and condition.appointmentBeginTime != ''" >
+	    and appointmentBeginTime =  #{condition.appointmentBeginTime}
+	</if>
+	
+			<if test="nocondition.appointmentBeginTime != null and nocondition.appointmentBeginTime != ''" >
+	    and appointmentBeginTime not in  (#{nocondition.appointmentBeginTime})
+	</if>
+	
+		<if test="condition.appointmentEndTime != null and condition.appointmentEndTime != ''" >
+	    and appointmentEndTime =  #{condition.appointmentEndTime}
+	</if>
+	
+			<if test="nocondition.appointmentEndTime != null and nocondition.appointmentEndTime != ''" >
+	    and appointmentEndTime not in  (#{nocondition.appointmentEndTime})
+	</if>
+		<if test="condition.totalPrices != null and condition.totalPrices != ''" >
+	    and totalPrices =  #{condition.totalPrices}
+	</if>
+	
+			<if test="nocondition.totalPrices != null and nocondition.totalPrices != ''" >
+	    and totalPrices not in  (#{nocondition.totalPrices})
+	</if>
+		<if test="condition.duration != null and condition.duration != ''" >
+	    and duration =  #{condition.duration}
+	</if>
+	
+			<if test="nocondition.duration != null and nocondition.duration != ''" >
+	    and duration not in  (#{nocondition.duration})
+	</if>
+	
+</trim>
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="id != null" >
+	    and id =  #{id}
+	</if>
+	
+		<if test="serviceId != null" >
+	    and service_id =  #{serviceId}
+	</if>
+	
+		<if test="facilityId != null" >
+	    and facility_id =  #{facilityId}
+	</if>
+	
+		<if test="appointmentBeginTime != null" >
+	    and appointmentBeginTime =  #{appointmentBeginTime}
+	</if>
+	
+		<if test="appointmentEndTime != null" >
+	    and appointmentEndTime =  #{appointmentEndTime}
+	</if>
+		<if test="totalPrices != null" >
+	    and totalPrices =  #{totalPrices}
+	</if>
+	
+		<if test="duration != null" >
+	    and duration =  #{duration}
+	</if>
+	
+</trim>
+</sql>   
+
+<!-- 插入记录 -->
+<insert id="add" parameterType="com.etop.management.entity.EtopServiceFacility" >
+  insert into etop_service_facility(id,service_id,facility_id,appointmentBeginTime,appointmentEndTime,totalPrices,duration)
+ values(#{id},#{serviceId},#{facilityId},#{appointmentBeginTime},#{appointmentEndTime},#{totalPrices},#{duration})
+</insert>
+
+<!-- 批量插入记录 -->
+<insert id="adds" parameterType="com.etop.management.entity.EtopServiceFacility" >
+  insert into etop_service_facility(id,service_id,facility_id,appointmentBeginTime,appointmentEndTime,totalPrices,duration)
+  values
+  <foreach collection="list" item="item" index="index" separator="," > 
+  	(#{item.id},#{item.serviceId},#{item.facilityId},#{item.appointmentBeginTime},#{item.appointmentEndTime},#{totalPrices},#{duration})
+  </foreach>
+</insert>
+
+<!-- 根据id，修改记录-->  
+ <update id="update" parameterType="com.etop.management.entity.EtopServiceFacility" >
+  update etop_service_facility set service_id=#{serviceId},facility_id=#{facilityId},appointmentBeginTime=#{appointmentBeginTime},appointmentEndTime=#{appointmentEndTime} where id=#{id}
+ </update>
+ 
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="updateBySelective" parameterType="com.etop.management.entity.EtopServiceFacility" >
+	update etop_service_facility set 
+	<trim  suffixOverrides="," >
+	<if test="serviceId != null  ">
+		service_id=#{serviceId},
+	</if>
+	<if test="facilityId != null  ">
+		facility_id=#{facilityId},
+	</if>
+	<if test="appointmentBeginTime != null  ">
+		appointmentBeginTime=#{appointmentBeginTime},
+	</if>
+	<if test="appointmentEndTime != null  ">
+		appointmentEndTime=#{appointmentEndTime},
+	</if>
+	</trim>
+	<include refid="Example_Where_Clause_Object"/>
+</update>
+
+<!-- 删除记录 -->
+<delete id="delete" parameterType="com.etop.management.entity.EtopServiceFacility">
+	delete 	 from etop_service_facility
+	<include refid="Example_Where_Clause_Object"/>
+</delete>
+ 
+<!-- 根据id查询  -->
+<select id="queryById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_service_facility where id = #{id}
+</select>
+<!-- 根据服务Id查询 -->
+<select id="queryByServiceId" resultType="map" parameterType="string" >
+	select esf.appointmentBeginTime as beginTime,esf.appointmentEndTime as endTime,ef.*, 
+
+	(case  when  1478587290000 > esf.appointmentEndTime  then 1 else 0 end)  as expirationTime,esf.duration,esf.totalPrices
+		
+		
+	from  etop_service_facility esf
+		
+	join  etop_facility ef
+
+    on ef.id = esf.facility_id where esf.service_id = #{serviceId}
+	 
+</select>
+
+<select id="queryObject" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopServiceFacility">
+	select <include refid="Base_Column_List" />
+	from etop_service_facility
+	<include refid="Example_Where_Clause_Object"/>
+</select>
+
+<!--  列表总数-->
+<select id="queryByCount" resultType="java.lang.Integer"  parameterType="com.etop.management.bean.Criteria">
+	select count(1) from etop_service_facility 
+	<include refid="Example_Where_Clause"/>
+</select>
+  	
+<!-- 查询列表 -->
+<select id="queryByList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+	select 
+	<include refid="Base_Column_List"/>
+	from etop_service_facility 
+	<include refid="Example_Where_Clause"/>
+	<if test="otherCondition != null" >
+	    #{otherCondition}
+	</if>
+	
+	<if test="orderByClause != null and orderByClause != ''" >
+       order by  ${orderByClause}
+    </if>
+    <if test="limitClause != null and limitClause != ''" >
+       ${limitClause}
+    </if>
+</select>
+
+<select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</select>
+
+<insert id="myDefinedAdd" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</insert>
+
+<update id="myDefinedUpdate" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</update>  	
+
+<delete id="myDefinedDelete" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</delete>  	
+
+<select id="checkAppointTime" parameterType="com.etop.management.entity.EtopServiceFacility" resultType="int">
+
+	select  count(*) from etop_service_facility  esf
+
+	JOIN etop_service es ON esf.service_id = es.service_id
+
+	where  facility_id= #{facilityId}
+	
+	and	service_status != 201
+	
+	and service_status != 301
+	
+	and ((#{appointmentBeginTime}>=appointmentBeginTime  and  #{appointmentBeginTime} &lt; appointmentEndTime) 
+	
+	|| (#{appointmentEndTime}>appointmentBeginTime and #{appointmentEndTime} &lt; appointmentEndTime)
+	
+	|| (#{appointmentBeginTime} &lt;= appointmentBeginTime and #{appointmentEndTime} > appointmentEndTime)
+	)
+
+</select>
+
+<select id="getTime" parameterType="com.etop.management.entity.EtopServiceFacility" resultType="com.etop.management.entity.EtopServiceFacility">
+
+	select  * from etop_facility 
+
+	where  id= #{facilityId}
+
+
+</select>
+
+	<select id="calculateFacility" resultType="com.etop.management.entity.EtopServiceFacility" parameterType="Map">
+	
+			SELECT
+<!-- 				ef.facilityName AS facilityName, -->
+				IFNULL(SUM(totalPrices),0)  AS money,
+				IFNULL(SUM(duration) ,0)AS num
+			FROM
+			 	etop_service es
+			JOIN etop_service_facility esf ON esf.service_id = es.service_id
+			JOIN etop_facility ef ON esf.facility_id = ef.id
+			where  es.club_id = #{clubId}
+				<if test="companyName != null and companyName != ''">
+				AND 
+				   es.company_name like '%${companyName}%'
+				</if>
+				<if test="serviceStatus != null  and serviceStatus != ''">
+					and es.service_status=#{serviceStatus}
+				</if>
+				<if test="facilityName != null  and facilityName != ''">
+			   		 AND facilityName=#{facilityName}
+				</if>
+				<if test="facilityId != null">
+					and ef.id=#{facilityId}
+				</if>
+				<if test="serviceNo != null and serviceNo != ''">
+					AND
+					   es.service_no = #{serviceNo}
+				</if>
+				<if test="applyTime != null and applyTime != ''" >
+					AND
+						es.apply_time >= #{applyTime}       
+			    </if> 
+				<if test="facilityType != null and facilityType != '' ">
+					and ef.facilityType like '%${facilityType}%'
+				</if>
+				
+				<if test="facilityName != null and facilityName != '' ">
+					and ef.facilityName like '%${facilityName}%'
+				</if>
+				
+		 		<if test="beginTime != null and beginTime != '' ">
+					and esf.appointmentBeginTime >= #{beginTime}
+				</if>
+				
+				<if test="endTime != null and endTime != '' ">
+					and esf.appointmentEndTime &lt;= #{endTime}
+				</if> 
+				<if test="expirationTime != null and expirationTime != '' ">
+					and (case  when  #{currentTime} > esf.appointmentEndTime  then 1 else 0 end) = #{expirationTime}
+					
+				</if>
+		<!-- 			GROUP BY -->
+		<!-- 				ef.facilityName -->
+	</select>
+</mapper>   

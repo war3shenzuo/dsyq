@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopServiceRecruitmentDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.entity.EtopServiceRecruitment" >
+	<result column="recruitment_id" property="recruitmentId"/>
+	<result column="service_id" property="serviceId"/>
+	<result column="job_name" property="jobName"/>
+	<result column="department" property="department"/>
+	<result column="position" property="position"/>
+	<result column="duties" property="duties"/>
+	<result column="salary" property="salary"/>
+	<result column="insurance" property="insurance"/>
+	<result column="benefit" property="benefit"/>
+	<result column="work_age" property="workAge"/>
+	<result column="education" property="education"/>
+	<result column="political_feature" property="politicalFeature"/>
+	<result column="sexual" property="sexual"/>
+	<result column="age" property="age"/>
+	<result column="marriage" property="marriage"/>
+	<result column="childbearing" property="childbearing"/>
+	<result column="other_require" property="otherRequire"/>
+</resultMap>
+       
+<!-- etop_service_recruitment table all fields -->
+<sql id="Base_Column_List" >
+	 recruitment_id,service_id,job_name,department,position,duties,salary,insurance,benefit,work_age,education,political_feature,sexual,age,marriage,childbearing,other_require
+	 
+</sql>
+   
+   
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="condition.recruitmentId != null and condition.recruitmentId != ''" >
+	    and recruitment_id =  #{condition.recruitmentId}
+	</if>
+	
+			<if test="nocondition.recruitmentId != null and nocondition.recruitmentId != ''" >
+	    and recruitment_id not in  (#{nocondition.recruitmentId})
+	</if>
+	
+		<if test="condition.serviceId != null and condition.serviceId != ''" >
+	    and service_id =  #{condition.serviceId}
+	</if>
+	
+			<if test="nocondition.serviceId != null and nocondition.serviceId != ''" >
+	    and service_id not in  (#{nocondition.serviceId})
+	</if>
+	
+		<if test="condition.jobName != null and condition.jobName != ''" >
+	    and job_name =  #{condition.jobName}
+	</if>
+	
+			<if test="nocondition.jobName != null and nocondition.jobName != ''" >
+	    and job_name not in  (#{nocondition.jobName})
+	</if>
+	
+		<if test="condition.department != null and condition.department != ''" >
+	    and department =  #{condition.department}
+	</if>
+	
+			<if test="nocondition.department != null and nocondition.department != ''" >
+	    and department not in  (#{nocondition.department})
+	</if>
+	
+		<if test="condition.position != null and condition.position != ''" >
+	    and position =  #{condition.position}
+	</if>
+	
+			<if test="nocondition.position != null and nocondition.position != ''" >
+	    and position not in  (#{nocondition.position})
+	</if>
+	
+		<if test="condition.duties != null and condition.duties != ''" >
+	    and duties =  #{condition.duties}
+	</if>
+	
+			<if test="nocondition.duties != null and nocondition.duties != ''" >
+	    and duties not in  (#{nocondition.duties})
+	</if>
+	
+		<if test="condition.salary != null and condition.salary != ''" >
+	    and salary =  #{condition.salary}
+	</if>
+	
+			<if test="nocondition.salary != null and nocondition.salary != ''" >
+	    and salary not in  (#{nocondition.salary})
+	</if>
+	
+		<if test="condition.insurance != null and condition.insurance != ''" >
+	    and insurance =  #{condition.insurance}
+	</if>
+	
+			<if test="nocondition.insurance != null and nocondition.insurance != ''" >
+	    and insurance not in  (#{nocondition.insurance})
+	</if>
+	
+		<if test="condition.benefit != null and condition.benefit != ''" >
+	    and benefit =  #{condition.benefit}
+	</if>
+	
+			<if test="nocondition.benefit != null and nocondition.benefit != ''" >
+	    and benefit not in  (#{nocondition.benefit})
+	</if>
+	
+		<if test="condition.workAge != null and condition.workAge != ''" >
+	    and work_age =  #{condition.workAge}
+	</if>
+	
+			<if test="nocondition.workAge != null and nocondition.workAge != ''" >
+	    and work_age not in  (#{nocondition.workAge})
+	</if>
+	
+		<if test="condition.education != null and condition.education != ''" >
+	    and education =  #{condition.education}
+	</if>
+	
+			<if test="nocondition.education != null and nocondition.education != ''" >
+	    and education not in  (#{nocondition.education})
+	</if>
+	
+		<if test="condition.politicalFeature != null and condition.politicalFeature != ''" >
+	    and political_feature =  #{condition.politicalFeature}
+	</if>
+	
+			<if test="nocondition.politicalFeature != null and nocondition.politicalFeature != ''" >
+	    and political_feature not in  (#{nocondition.politicalFeature})
+	</if>
+	
+		<if test="condition.sexual != null and condition.sexual != ''" >
+	    and sexual =  #{condition.sexual}
+	</if>
+	
+			<if test="nocondition.sexual != null and nocondition.sexual != ''" >
+	    and sexual not in  (#{nocondition.sexual})
+	</if>
+	
+		<if test="condition.age != null and condition.age != ''" >
+	    and age =  #{condition.age}
+	</if>
+	
+			<if test="nocondition.age != null and nocondition.age != ''" >
+	    and age not in  (#{nocondition.age})
+	</if>
+	
+		<if test="condition.marriage != null and condition.marriage != ''" >
+	    and marriage =  #{condition.marriage}
+	</if>
+	
+			<if test="nocondition.marriage != null and nocondition.marriage != ''" >
+	    and marriage not in  (#{nocondition.marriage})
+	</if>
+	
+		<if test="condition.childbearing != null and condition.childbearing != ''" >
+	    and childbearing =  #{condition.childbearing}
+	</if>
+	
+			<if test="nocondition.childbearing != null and nocondition.childbearing != ''" >
+	    and childbearing not in  (#{nocondition.childbearing})
+	</if>
+	
+		<if test="condition.otherRequire != null and condition.otherRequire != ''" >
+	    and other_require =  #{condition.otherRequire}
+	</if>
+	
+			<if test="nocondition.otherRequire != null and nocondition.otherRequire != ''" >
+	    and other_require not in  (#{nocondition.otherRequire})
+	</if>
+	
+</trim>
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="recruitmentId != null" >
+	    and recruitment_id =  #{recruitmentId}
+	</if>
+	
+		<if test="serviceId != null" >
+	    and service_id =  #{serviceId}
+	</if>
+	
+		<if test="jobName != null" >
+	    and job_name =  #{jobName}
+	</if>
+	
+		<if test="department != null" >
+	    and department =  #{department}
+	</if>
+	
+		<if test="position != null" >
+	    and position =  #{position}
+	</if>
+	
+		<if test="duties != null" >
+	    and duties =  #{duties}
+	</if>
+	
+		<if test="salary != null" >
+	    and salary =  #{salary}
+	</if>
+	
+		<if test="insurance != null" >
+	    and insurance =  #{insurance}
+	</if>
+	
+		<if test="benefit != null" >
+	    and benefit =  #{benefit}
+	</if>
+	
+		<if test="workAge != null" >
+	    and work_age =  #{workAge}
+	</if>
+	
+		<if test="education != null" >
+	    and education =  #{education}
+	</if>
+	
+		<if test="politicalFeature != null" >
+	    and political_feature =  #{politicalFeature}
+	</if>
+	
+		<if test="sexual != null" >
+	    and sexual =  #{sexual}
+	</if>
+	
+		<if test="age != null" >
+	    and age =  #{age}
+	</if>
+	
+		<if test="marriage != null" >
+	    and marriage =  #{marriage}
+	</if>
+	
+		<if test="childbearing != null" >
+	    and childbearing =  #{childbearing}
+	</if>
+	
+		<if test="otherRequire != null" >
+	    and other_require =  #{otherRequire}
+	</if>
+	
+</trim>
+</sql>   
+
+<!-- 插入记录 -->
+<insert id="add" parameterType="com.etop.management.entity.EtopServiceRecruitment" >
+  insert into etop_service_recruitment(recruitment_id,service_id,job_name,department,position,duties,salary,insurance,benefit,work_age,education,political_feature,sexual,age,marriage,childbearing,other_require)
+ values(#{recruitmentId},#{serviceId},#{jobName},#{department},#{position},#{duties},#{salary},#{insurance},#{benefit},#{workAge},#{education},#{politicalFeature},#{sexual},#{age},#{marriage},#{childbearing},#{otherRequire})
+</insert>
+
+<!-- 批量插入记录 -->
+<insert id="adds" parameterType="com.etop.management.entity.EtopServiceRecruitment" >
+  insert into etop_service_recruitment(recruitment_id,service_id,job_name,department,position,duties,salary,insurance,benefit,work_age,education,political_feature,sexual,age,marriage,childbearing,other_require)
+  values
+  <foreach collection="list" item="item" index="index" separator="," > 
+  	(#{item.recruitmentId},#{item.serviceId},#{item.jobName},#{item.department},#{item.position},#{item.duties},#{item.salary},#{item.insurance},#{item.benefit},#{item.workAge},#{item.education},#{item.politicalFeature},#{item.sexual},#{item.age},#{item.marriage},#{item.childbearing},#{item.otherRequire})
+  </foreach>
+</insert>
+
+<!-- 根据id，修改记录-->  
+ <update id="update" parameterType="com.etop.management.entity.EtopServiceRecruitment" >
+  update etop_service_recruitment set service_id=#{serviceId},job_name=#{jobName},department=#{department},position=#{position},duties=#{duties},salary=#{salary},insurance=#{insurance},benefit=#{benefit},work_age=#{workAge},education=#{education},political_feature=#{politicalFeature},sexual=#{sexual},age=#{age},marriage=#{marriage},childbearing=#{childbearing},other_require=#{otherRequire} where recruitment_id=#{recruitmentId}
+ </update>
+ 
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="updateBySelective" parameterType="com.etop.management.entity.EtopServiceRecruitment" >
+	update etop_service_recruitment set 
+	<trim  suffixOverrides="," >
+	<if test="serviceId != null  ">
+		service_id=#{serviceId},
+	</if>
+	<if test="jobName != null  ">
+		job_name=#{jobName},
+	</if>
+	<if test="department != null  ">
+		department=#{department},
+	</if>
+	<if test="position != null  ">
+		position=#{position},
+	</if>
+	<if test="duties != null  ">
+		duties=#{duties},
+	</if>
+	<if test="salary != null  ">
+		salary=#{salary},
+	</if>
+	<if test="insurance != null  ">
+		insurance=#{insurance},
+	</if>
+	<if test="benefit != null  ">
+		benefit=#{benefit},
+	</if>
+	<if test="workAge != null  ">
+		work_age=#{workAge},
+	</if>
+	<if test="education != null  ">
+		education=#{education},
+	</if>
+	<if test="politicalFeature != null  ">
+		political_feature=#{politicalFeature},
+	</if>
+	<if test="sexual != null  ">
+		sexual=#{sexual},
+	</if>
+	<if test="age != null  ">
+		age=#{age},
+	</if>
+	<if test="marriage != null  ">
+		marriage=#{marriage},
+	</if>
+	<if test="childbearing != null  ">
+		childbearing=#{childbearing},
+	</if>
+	<if test="otherRequire != null  ">
+		other_require=#{otherRequire},
+	</if>
+	</trim>
+	<include refid="Example_Where_Clause_Object"/>
+</update>
+
+<!-- 删除记录 -->
+<delete id="delete" parameterType="com.etop.management.entity.EtopServiceRecruitment">
+	delete 	 from etop_service_recruitment
+	<include refid="Example_Where_Clause_Object"/>
+</delete>
+ 
+<!-- 根据id查询  -->
+<select id="queryById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_service_recruitment where recruitment_id = #{recruitmentId}
+</select>
+
+<select id="queryByServiceId" resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_service_recruitment where service_id =#{serviceId}
+</select>
+
+<select id="queryObject" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopServiceRecruitment">
+	select <include refid="Base_Column_List" />
+	from etop_service_recruitment
+	<include refid="Example_Where_Clause_Object"/>
+</select>
+
+<!--  列表总数-->
+<select id="queryByCount" resultType="java.lang.Integer"  parameterType="com.etop.management.bean.Criteria">
+	select count(1) from etop_service_recruitment 
+	<include refid="Example_Where_Clause"/>
+</select>
+  	
+<!-- 查询列表 -->
+<select id="queryByList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+	select 
+	<include refid="Base_Column_List"/>
+	from etop_service_recruitment 
+	<include refid="Example_Where_Clause"/>
+	<if test="otherCondition != null" >
+	    #{otherCondition}
+	</if>
+	
+	<if test="orderByClause != null and orderByClause != ''" >
+       order by  ${orderByClause}
+    </if>
+    <if test="limitClause != null and limitClause != ''" >
+       ${limitClause}
+    </if>
+</select>
+
+<select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</select>
+
+<insert id="myDefinedAdd" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</insert>
+
+<update id="myDefinedUpdate" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</update>  	
+
+<delete id="myDefinedDelete" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</delete>  	
+
+
+		<!-- 人员代招维护-->
+        <select id="makeRecruitment" resultType="com.etop.website.bean.ServiceQuotation" parameterType="Map">
+
+				SELECT
+					*
+				FROM
+				    etop_service_quotation
+				WHERE type='person'   
+				<if test="parkId != null and parkId != ''">
+				AND
+				   park_id =#{parkId}
+				</if>
+				<if test="quotationName != null and quotationName != ''">
+				AND 
+				   quotation_name like '%${quotationName}%'
+				</if>
+				<if test="category != null and category != ''">
+				AND
+				   category like '%${category}%'
+				GROUP BY 
+                   category
+				</if> 
+        </select>
+        <select id="makeRecruitmentGroup" resultType="com.etop.website.bean.ServiceQuotation" parameterType="Map">
+
+				SELECT
+					*
+				FROM
+				    etop_service_quotation
+				WHERE type='person'   
+				<if test="parkId != null and parkId != ''">
+				AND
+				   park_id =#{parkId}
+				</if>
+				<if test="quotationName != null and quotationName != ''">
+				AND 
+				   quotation_name like '%${quotationName}%'
+				</if>
+				<if test="category != null and category != ''">
+				AND
+				   category like '%${category}%'
+				</if> 
+				GROUP BY 
+                   category
+        </select>
+        
+        <!-- 人员代招详情-->
+        <select id="querysByServiceId" resultType="com.etop.management.bean.Etopservice" parameterType="string">
+			SELECT
+				*
+			FROM
+				etop_service es
+			JOIN etop_service_recruitment esr
+			ON es.service_id = esr.service_id
+			JOIN etop_service_business esb
+			ON esb.service_id = es.service_id
+			JOIN etop_service_quotation esq
+			ON esq.quotation_id = esb.quotation_id
+			WHERE
+			 es.service_id = #{serviceId}
+		</select>
+</mapper>   

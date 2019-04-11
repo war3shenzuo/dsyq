@@ -1,0 +1,81 @@
+			*{
+				margin:0;
+				padding:0;
+			}
+			.wrap{
+				width:1155px;
+				margin:0 auto;
+			}
+			
+			.title1{
+				padding:15px 0;
+			}
+			.span1{
+				font-size:35px;
+				font-weight:bold;
+				display:inline-block;
+			
+			}
+			/*这个是xueyuanreport的类css属性*/
+			.underborder{
+				padding-bottom:20px;
+				display:block;
+				border-bottom:1px solid #E4E1E1;
+			}
+			.span2{
+				float:right;
+				color:grey;
+				font-size:15px;
+				margin-top:10px;
+			}
+			.p1{
+				font-size:20px;
+				font-weight: bold;
+				padding:20px;
+				border-bottom:1px solid #E4E1E1;
+			}
+			.details{
+				padding:20px;
+				font-size:20px;
+				padding-bottom:100px;
+				border-bottom:1px solid #E4E1E1;
+				}
+			.details .span3{
+				font-size:20px;
+				color:darkgrey;
+				margin-left:20px;
+			}
+			.details .p2{
+				margin:20px 0;
+			}
+			.details .p3{
+				color:darkgrey;
+				margin-bottom:20px;
+				line-height: 25px;
+			}
+			.details .btn{
+				margin-top:60px;
+			}
+			.details .btn a{
+				color:white;
+				text-decoration: none;
+				display:inline-block;
+				margin-right:35px;
+				font-size:30px;
+				background-color:#ee770f;
+				border-radius: 50px;
+			}
+			.details .btn a:hover{
+				color:red;
+			}
+			.details .btn .btna1{
+				padding:10px 55px;
+			}
+			.details .btn .btna2{
+				padding:10px 40px;
+			}
+			
+			.bigImgContent{width:758px;height:460px;text-align:center; vertical-align:middle; overflow:hidden; margin:0 auto;}
+.bigImgContent a{ display:table-cell; *display:inline-block; vertical-align:middle; *font-size:504px; width:758px;height:504px; overflow:hidden;}
+.bigImgContent img{vertical-align:middle; max-height:460px; max-width:758px; display:inline;}
+			

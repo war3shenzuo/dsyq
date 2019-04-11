@@ -1,0 +1,960 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EnergyCostDao">
+
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.bean.EnergyCost" >
+	<result column="id" property="id"/>
+	<result column="ref_bill_id" property="refBillId"/>
+	<result column="is_billed" property="isBilled"/>
+	<result column="energy_category" property="energyCategory"/>
+	<result column="energy_type" property="energyType"/>
+	<result column="ref_building_id" property="refBuildingId"/>
+	<result column="active_room_count" property="activeRoomCount"/>
+	<result column="ref_item_id" property="refItemId"/>
+	<result column="record" property="record"/>
+	<result column="amount" property="amount"/>
+	<result column="days" property="days"/>
+	<result column="daily_amount" property="daily_amount"/>	
+	<result column="share_amount" property="shareAmount"/>
+	<result column="record_date" property="recordDate"/>	
+    <result column="created_at" property="createdAt"/>
+    <result column="created_by" property="createdBy"/>
+    <result column="updated_at" property="updatedAt"/>
+    <result column="updated_by" property="updatedBy"/>
+		
+</resultMap>
+       
+<!-- etop_park table all fields -->
+<sql id="Base_Column_List" >
+	 id,ref_bill_id,energy_category,energy_type,ref_item_id,ref_building_id,
+	 record,amount,days,daily_amount,share_amount,record_date,is_billed,active_room_count,
+	 <include refid="com.etop.management.dao.CommonsDao.AUDIT_INFO_COLUMNS"/>
+</sql>
+
+<sql id="insert_value">
+
+	#{refBillId},#{energyCategory},#{energyType},#{refItemId},#{refBuildingId},
+	#{record},#{amount},#{days},#{dailyAmount},#{shareAmount},#{recordDate},#{isBilled},#{activeRoomCount},
+	<include refid="com.etop.management.dao.CommonsDao.INSERT_WITH_AUDIT_INFO_COLUMNS"/>
+
+</sql>
+
+<select id="getRoomEditListByRecordDate" resultType="com.etop.management.model.EnergyModel" parameterType="map">
+
+select b.id as refItemId,b.room_num as itemName,
+
+a.record as record,a.record_date as recordDate,a.is_billed as isBilled
+
+from etop_floor_room b left join 
+
+(select * from  etop_energy_cost c 
+
+where c.record_date=#{recordDate} 
+
+and c.energy_type=#{energyType} 
+
+<if test="isBilled != null">
+
+and c.is_billed=#{isBilled}
+</if>
+) a 
+
+on  a.ref_item_id=b.id
+
+where b.activated=1 
+
+<if test="currentRecordDate !=null and currentRecordDate !='' ">
+	and b.created_at &lt;=#{currentRecordDate}
+</if>
+
+
+<if test="refBuildingId !=null and refBuildingId !='' ">
+
+	and b.ref_floor_id=#{refBuildingId}
+
+</if>
+<if test="refBlockId !=null and refBlockId !='' ">
+
+	and b.ref_area_id=#{refBlockId}
+
+</if>
+
+order by b.room_num asc;
+
+</select>
+
+<select id="getRoomLastEditListByRecordDate" resultType="com.etop.management.model.EnergyModel" parameterType="map">
+
+select b.id as refItemId,b.room_num as itemName,
+
+a.record as record,a.record_date as recordDate,a.is_billed as isBilled
+
+from etop_floor_room b left join 
+
+(select * from  etop_energy_cost c 
+
+where c.record_date=#{recordDate} 
+
+and c.energy_type=#{energyType} 
+
+<if test="isBilled != null">
+
+and c.is_billed=#{isBilled}
+</if>
+) a 
+
+on  a.ref_item_id=b.id
+
+where 1=1 
+
+<if test="refRoomIds != null">
+		and b.id IN
+        <foreach collection="refRoomIds" item="refRoomIds" index="index" open="(" separator="," close=")">
+            #{refRoomIds}
+        </foreach>   
+</if>
+
+
+
+
+<!-- b.activated=1  -->
+
+<!-- <if test="currentRecordDate !=null and currentRecordDate !='' "> -->
+<!-- 	and b.created_at &lt;=#{currentRecordDate} -->
+<!-- </if> -->
+<!-- and b.ref_area_id=#{refBlockId} -->
+
+order by b.room_num asc;
+
+</select>
+
+<select id="getRoomEditList"  resultType="com.etop.management.model.EnergyModel" parameterType="map">
+	
+select a.id as refItemId,a.room_num as itemName,c.record as lastRecord,c.record_date as lastRecordDate 
+
+from etop_floor_room a 
+
+left join 
+
+(
+	select a.* from etop_energy_cost a,
+
+	(select ref_item_id,max(record_date) record_date from etop_energy_cost 
+
+		where energy_category=0 
+		
+		and is_billed=1 
+		
+		and energy_type=#{energyType} 
+		
+		group by ref_item_id
+
+	) b 
+
+	where 
+	
+	a.ref_item_id = b.ref_item_id 
+	
+	and a.record_date = b.record_date 
+	
+	
+	order by a.record_date desc
+	
+) c 
+
+on a.id=c.ref_item_id
+
+where a.ref_area_id=#{refBlockId} 
+
+and a.activated=1
+<!-- and a.floor_status=1 -->
+
+and a.created_at &lt;=#{today}
+
+order by a.room_num asc
+	
+	
+</select>
+
+
+
+
+<select id="getEnergyModelsByRecordDate" resultType="com.etop.management.model.EnergyModel">
+
+select 
+
+c.id,
+
+c.record as record,c.record_date as record_date,
+
+c.energy_type as energyType,c.ref_item_id as refItemId,d.room_num as itemName 
+
+from (
+
+(select * from etop_energy_cost a 
+
+where a.ref_item_id=#{refItemId}  and a.energy_category=#{energyCategory} and a.energy_type=#{energyType}
+
+and a.record_date > #{recordDate} order by a.record_date asc limit 1)
+
+union
+
+(select * from etop_energy_cost b 
+
+where b.ref_item_id=#{refItemId}  and b.energy_category=#{energyCategory} and b.energy_type=#{energyType}
+
+and b.record_date &lt; #{recordDate} order by b.record_date desc limit 1)
+
+) c left join etop_floor_room d on c.ref_item_id=d.id
+
+
+
+</select>
+
+<select id="getBuildingEditList"  resultType="com.etop.management.model.EnergyModel" parameterType="string">
+
+select 
+	
+	a.id as refItemId,a.build_name as itemName,c.record as lastRecord,
+	c.record_date as lastRecordDate,
+	
+	a.energy_enter_type as energyEnterType,
+	a.energy_enter_day as energyEnterDay
+	
+	
+	
+	 from etop_floor a
+
+left join 
+
+	(
+		select a.* from etop_energy_cost a,
+		
+		(
+			select 
+				
+				ref_item_id,max(record_date) record_date 
+				
+				from etop_energy_cost 
+				
+				where energy_category=1 and energy_type=${energyType} 
+				
+				group by ref_item_id
+				
+		) b 
+				
+		where a.ref_item_id = b.ref_item_id and a.record_date = b.record_date 
+		
+		order by a.record_date desc
+		
+	) c
+
+	on c.ref_item_id=a.id
+
+	where a.park_id=#{refParkId} and  a.build_type='floor'
+
+	order by a.build_name asc
+
+</select>
+
+<insert id="createEnergyCost" parameterType="com.etop.management.bean.EnergyCost">
+
+insert into etop_energy_cost (<include refid="Base_Column_List" />)
+values
+(#{id},<include refid="insert_value" />)
+
+</insert>
+
+<update id="updateEnergyCost" parameterType="com.etop.management.bean.EnergyCost">
+
+update etop_energy_cost set 
+
+active_room_count=#{activeRoomCount},
+record=#{record},record_date=#{recordDate},
+amount=#{amount},days=#{days},daily_amount=#{dailyAmount},
+share_amount=#{shareAmount},
+ref_bill_id=#{refBillId},is_billed=#{isBilled},
+updated_at=#{updatedAt},updated_by=#{updatedBy}
+
+where id=#{id}
+
+
+</update>
+
+
+
+<update id="updateEnergyCostBillId">
+
+update etop_energy_cost set 
+
+ref_bill_id=#{refBillId},is_billed=1
+
+where ref_item_id=#{refRoomId} 
+
+and energy_category=0 
+
+and energy_type=${energyType}
+
+and  record_date >= #{feeStartDate} 
+
+and record_date &lt;= #{feeEndDate}
+
+
+</update>
+
+<update id="updateBuildingEnergyCostIsBilled">
+
+update etop_energy_cost set 
+
+is_billed=${isBilled}
+
+where ref_building_id=#{refBuildingId} 
+
+and  record_date >= #{feeStartDate} 
+
+and record_date &lt;= #{feeEndDate}
+
+</update>
+
+<select id="getEnergyCost"  parameterType="com.etop.management.bean.Criteria" resultType="com.etop.management.bean.EnergyCost">
+
+	select * from etop_energy_cost
+	
+	where 1=1 
+	
+	<if test="condition.id != null and condition.id !='' " >
+		and id=#{condition.id}
+	</if>
+	
+	
+	<if test="condition.energyCategory != null" >
+	
+		and energy_category=${condition.energyCategory}
+	
+	</if> 
+	
+	<if test="condition.isBilled != null" >
+	
+		and is_billed=${condition.isBilled}
+	
+	</if> 
+	
+	<if test="condition.energyType != null" >
+		and	energy_type=${condition.energyType}
+	</if>
+	
+	
+	<if test="condition.refItemId != null and condition.refItemId !='' " >
+		and ref_item_id=#{condition.refItemId}
+	</if>
+	
+	<if test="condition.recordDate != null and condition.recordDate !='' " >
+		and record_date=#{condition.recordDate}
+	</if>
+<!-- 	<if test="dateType == 0" > -->
+	
+<!-- 		record_date &lt; ${condition.recordDate}	 -->
+	
+<!-- 	</if>	 -->
+	
+<!-- 	<if test="dateType == 1" > -->
+	
+<!-- 		record_date &lt;= ${condition.recordDate}	 -->
+		
+<!-- 	</if> -->
+	
+<!-- 	order by record_date desc -->
+	 
+<!-- 	limit 1;	 -->
+
+</select>
+
+<select id="getBuildingLastEnergyCost" resultType="com.etop.management.bean.EnergyCost">
+
+	select * from etop_energy_cost 
+	
+	where 1=1 and energy_category=1 and is_billed=0 
+	
+	<if test="energyType != null ">
+		and energy_type=${energyType}
+	</if>
+	
+	<if test="refBuildingId != null and refBuildingId != '' ">
+		
+		and ref_item_id=#{refBuildingId}
+	
+	</if>
+	
+	<if test="lastFeeDate != null and lastFeeDate != '' ">
+		
+		and record_date > #{lastFeeDate}
+	
+	</if>
+
+	order by record_date desc limit 1
+
+</select>
+
+
+<select id="getRoomEnergySumByRecordDateAndType" resultType="float">
+
+	select ifnull(sum(record),0) from etop_energy_cost 
+	
+	where record_date=#{recordDate} and energy_category=0 
+	
+	and energy_type=${energyType}
+	
+	and ref_building_id=#{refBuildingId}
+
+</select>
+
+<select id="getRoomsMaxEnergySumByDateAndType" resultType="float">
+
+select sum(record) as amount from (
+
+	select max(record) as record from etop_energy_cost 
+	
+	where energy_category=0 
+	
+	and energy_type = ${energyType}	
+		
+	and record_date >= #{feeDateStart}
+ 
+ 	and record_date &lt;= #{feeDateEnd}
+ 		
+	and ref_building_id=#{refBuildingId}
+	
+	group by ref_item_id
+
+) b
+
+
+</select>
+
+
+<select id="getRoomsMinEnergySumByDateAndType" resultType="float">
+
+select sum(record) as amount from (
+
+	select min(record) as record from etop_energy_cost 
+	
+	where energy_category=0 
+	
+	and energy_type = ${energyType}	
+		
+	and record_date >= #{feeDateStart}
+ 
+ 	and record_date &lt;= #{feeDateEnd}
+ 		
+	and ref_building_id=#{refBuildingId}
+	
+	group by ref_item_id
+
+) b
+
+
+</select>
+
+
+
+
+<select id="getRoomEnergyCountByBuildingAndDateAndType" resultType="integer">
+
+<!-- 	select count(*) from etop_energy_cost  -->
+	
+<!-- 	where record_date=#{recordDate} and energy_category=0  -->
+	
+<!-- 	and energy_type=${energyType} -->
+	
+<!-- 	and ref_building_id=#{refBuildingId} -->
+
+
+select count(*) from etop_energy_cost a 
+
+left join etop_floor_room b on a.ref_item_id=b.id 
+
+where 
+
+a.record_date = #{recordDate} 
+
+and a.energy_type=${energyType}
+
+and b.activated=1 
+
+
+and b.created_at &lt;= #{recordDate} 
+
+and b.ref_floor_id=#{refBuildingId}
+
+order by b.room_num asc;
+
+
+
+	
+
+</select>
+
+
+
+
+
+<select id="getFloorEnergy" resultType="com.etop.management.model.BuildingEnergyModel">
+
+	select 
+	
+	energy_type as energyType,
+	share_type as shareType,
+	room_amount_used as roomAmountUsed
+	
+	
+	 from etop_floor_energy where 1=1 
+	
+	
+	<if test="energyType != null">
+	
+		and energy_type=#{energyType}
+		
+	</if>
+	
+	<if test="refBuildingId!=null and refBuildingId != ''">
+	
+		and ref_floor_id=#{refBuildingId}
+	
+	</if>
+	
+</select>
+
+<select id="getBuildingEnergyByRoom" resultType="com.etop.management.model.BuildingEnergyModel">
+
+	select 
+	
+	a.energy_type as energyType,
+	a.share_type as shareType,
+	a.room_amount_used as roomAmountUsed
+	
+	
+	 from etop_floor_energy a
+	 
+	 left join etop_floor_room b on a.ref_floor_id=b.ref_floor_id 
+	 
+	  where 1=1 
+	
+	
+	<if test="refRoomId != null and refRoomId != ''">
+	
+		and b.id=#{refRoomId}
+	
+	</if>
+
+</select>
+
+<update id="updateFloorEnergyFeeDate">
+
+	update etop_floor_energy set fee_date=#{feeDate} 
+
+	where 1=1 
+	
+	<if test="energyType != null">
+	
+		and energy_type=#{energyType}
+		
+	</if>
+	
+	<if test="refBuildingId != null and refBuildingId != ''">
+	
+		and ref_floor_id=#{refBuildingId}
+	
+	</if>
+
+ 
+
+</update>
+
+<select id="getEnergyFeeList"  resultType="com.etop.management.bean.EnergyCost">
+
+	select * from etop_energy_cost a 
+
+	where 
+	
+	a.record_date > #{dateStart} and a.record_date &lt;= #{dateEnd} 
+	
+	and a.energy_type=${energyType} 
+	
+	and a.ref_item_id=#{refItemId};
+
+
+</select>
+
+<select id="getEnergyListByRoom"  parameterType="com.etop.management.bean.PageEnergyBill" resultType="com.etop.management.model.EnergyRecordModel">
+
+
+select 
+a.id,c.room_num as room,
+
+a.energy_type as energyType, a.record_date as recordDate,a.record,
+
+a.amount,a.days,a.daily_amount as dailyAmount,
+
+b.bill_id as billId,b.bill_status as billStatus,a.is_billed as isBilled,
+
+b.created_time as createdTime
+
+from etop_energy_cost a
+
+left join etop_bill b on b.bill_id=a.ref_bill_id
+
+left join etop_floor_room c on c.id=a.ref_item_id
+
+<!-- left join etop_contract c on c.ref_room_id=a.ref_item_id -->
+
+where 1=1 
+
+<!-- <if test="refRoomId != null and refRoomId != '' "> -->
+
+<!-- 	and a.ref_item_id=#{refRoomId} -->
+
+<!-- </if> -->
+<if test="refRoomIds != null">
+		and a.ref_item_id IN
+        <foreach collection="refRoomIds" item="refRoomIds" index="index" open="(" separator="," close=")">
+            #{refRoomIds}
+        </foreach>   
+</if>
+<if test="energyType != null and energyType != '' ">
+
+	and a.energy_type=${energyType}
+
+</if>
+
+<if test="enterStartDate != null and enterStartDate != '' ">
+
+	and a.record_date >= #{enterStartDate}
+
+</if>
+
+<if test="enterEndDate != null and enterEndDate != '' ">
+
+	and a.record_date &lt;= #{enterEndDate}
+
+</if>
+
+
+<if test="billStartDate != null and billStartDate != '' ">
+
+	and b.created_time >= #{billStartDate}
+
+</if>
+
+<if test="billEndDate != null and billEndDate != '' ">
+
+	and b.created_time &lt; #{billEndDate}
+
+</if>
+ 
+order by ${orderColumn} ${orderDir} 
+
+limit ${start},${length} 
+
+
+</select>
+
+<select id="getEnergyCountByRoom"  parameterType="com.etop.management.bean.PageEnergyBill" resultType="integer">
+
+
+select 
+
+ifnull(count(*),0)
+
+from etop_energy_cost a
+
+left join etop_bill b on b.bill_id=a.ref_bill_id
+
+<!-- left join etop_contract c on c.ref_room_id=a.ref_item_id -->
+
+where 1=1 
+
+<if test="refRoomIds != null">
+		and a.ref_item_id IN
+        <foreach collection="refRoomIds" item="refRoomIds" index="index" open="(" separator="," close=")">
+            #{refRoomIds}
+        </foreach>   
+</if>
+        
+<if test="energyType != null and energyType != '' ">
+
+	and a.energy_type=${energyType}
+
+</if>
+<if test="enterStartDate != null and enterStartDate != '' ">
+
+	and a.record_date >= #{enterStartDate}
+
+</if>
+
+<if test="enterEndDate != null and enterEndDate != '' ">
+
+	and a.record_date &lt;= #{enterEndDate}
+
+</if>
+
+
+<if test="billStartDate != null and billStartDate != '' ">
+
+	and b.created_time >= #{billStartDate}
+
+</if>
+
+<if test="billEndDate != null and billEndDate != '' ">
+
+	and b.created_time &lt; #{billEndDate}
+
+</if>
+
+</select>
+
+<select id="getEnergySummaryByRoom" parameterType="com.etop.management.bean.PageEnergyBill" resultType="map">
+
+
+select 
+
+a.energy_type as energyType,sum(a.amount) as amount,sum(a.days) as days,
+
+min(a.record_date) as minRecordDate,max(a.record_date) as maxRecordDate
+
+from etop_energy_cost a 
+
+left join etop_bill b on b.bill_id=a.ref_bill_id 
+
+where 1=1 
+
+
+<if test="refRoomIds != null">
+		and a.ref_item_id IN
+        <foreach collection="refRoomIds" item="refRoomIds" index="index" open="(" separator="," close=")">
+            #{refRoomIds}
+        </foreach>   
+</if>
+        
+<if test="energyType != null and energyType != '' ">
+
+	and a.energy_type=${energyType}
+
+</if>
+
+<if test="enterStartDate != null and enterStartDate != '' ">
+
+	and a.record_date >= #{enterStartDate}
+
+</if>
+
+<if test="enterEndDate != null and enterEndDate != '' ">
+
+	and a.record_date &lt;= #{enterEndDate}
+
+</if>
+
+
+<if test="billStartDate != null and billStartDate != '' ">
+
+	and b.created_time >= #{billStartDate}
+
+</if>
+
+<if test="billEndDate != null and billEndDate != '' ">
+
+	and b.created_time &lt; #{billEndDate}
+
+</if>
+
+
+
+
+<if test="energyType == null or energyType == '' ">
+
+	group by a.energy_type
+
+</if>
+
+
+
+
+</select>
+
+
+
+
+
+<select id="getLastRecordOfRoomBeforeEndDate" resultType="com.etop.management.bean.EnergyCost">
+
+	select * from etop_energy_cost a 
+	
+	where 
+	
+	a.energy_type=${energyType}
+	
+	and a.energy_category=0 
+	
+	and a.ref_item_id=#{refRoomId} 
+	
+	and a.record_date &lt;= #{endDate} 
+	
+	order by a.record_date desc limit 1
+
+	
+
+
+</select>
+
+
+<select id="getFirstRecordOfRoomAfterStartDate" resultType="com.etop.management.bean.EnergyCost">
+
+select * from etop_energy_cost a 
+	
+	where 
+	
+	a.energy_type=${energyType}
+	
+	and a.energy_category=0 
+	
+	and a.ref_item_id=#{refRoomId} 
+	
+	and a.record_date >= #{startDate} 
+	
+	order by a.record_date asc limit 1
+
+
+</select>
+<select id="getRecordOfRoomByRecordDate" resultType="com.etop.management.bean.EnergyCost">
+
+select * from etop_energy_cost a 
+	
+	where 
+	
+	a.energy_type=${energyType}
+	
+	and a.energy_category=0 
+	
+	and a.ref_item_id=#{refRoomId} 
+	
+	and a.record_date = #{recordDate} 
+	
+
+</select>
+
+<select id="getNearestRecordOfRoomByRecordDate" resultType="com.etop.management.bean.EnergyCost">
+
+select * from etop_energy_cost a 
+	
+	where 
+	
+	a.energy_type=${energyType}
+	
+	and a.energy_category=0 
+	
+	and a.ref_item_id=#{refRoomId} 
+	
+	and a.record_date >= #{recordDate} 
+	
+	and a.record_date &lt; #{recordEndDate}
+	
+	order by a.record_date asc
+	
+	limit 1
+
+</select>
+
+<select id="getFirstBuildingEnergyCost" resultType="com.etop.management.bean.EnergyCost">
+
+	select * from etop_energy_cost a 
+	
+	where 
+	
+	a.energy_type=${energyType}
+	
+	and a.energy_category=1 
+	
+	and a.ref_item_id=#{refBuildingId} 
+		
+	order by record_date asc limit 1
+
+
+</select>
+
+<select id="getLastEnitty"  resultType="com.etop.management.bean.EnergyCost">
+
+	select * from etop_energy_cost a 
+	
+	where 
+	
+	a.energy_type=${energyType}
+	
+	and a.energy_category=${energyCategory} 
+	
+	and a.ref_item_id=#{id} 
+		
+	order by record_date desc limit 1
+
+
+</select>
+
+<select id="getEnergyCostSumByRecordDate" resultType="double">
+
+
+	select ifnull(sum(record),0) from etop_energy_cost where 1=1 
+	
+	
+	and ref_building_id=#{refBuildingId}
+	
+	and energy_category=#{energyCategory}
+	
+	and energy_type=#{energyType}
+	
+	and record_date=#{recordDate}
+
+
+</select>
+
+<select id="getLastBilledRecordOfRoom" resultType="com.etop.management.bean.EnergyCost">
+
+	select * from etop_energy_cost a 
+	
+	where 
+	
+	a.energy_type=${energyType}
+	
+	and a.is_billed=1 
+	
+	and a.ref_item_id=#{refRoomId} 
+		
+	order by record_date desc limit 1
+
+</select>
+
+<select id="getNeedEnterEnergyFloors" resultType="com.etop.management.entity.EtopFloor">
+
+	select * from etop_floor a
+	
+	where 
+	
+	park_id=#{refParkId} and build_type='floor' and
+	
+	(
+		(energy_enter_type=0 and energy_enter_day=${eDay})
+		
+		or
+		
+		(energy_enter_type=1 and energy_enter_day=${eWeek})
+	)
+	
+	
+	 
+
+
+</select>
+
+
+
+
+</mapper>
+

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopServicePurchaseDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.entity.EtopServicePurchase" >
+	<result column="purchase_id" property="purchaseId"/>
+	<result column="service_id" property="serviceId"/>
+	<result column="goods_id" property="goodsId"/>
+	<result column="goods_name" property="goodsName"/>
+	<result column="unit" property="unit"/>
+	<result column="unit_price" property="unitPrice"/>
+	<result column="number" property="number"/>
+	<result column="total_price" property="totalPrice"/>
+	<result column="description" property="description"/>
+</resultMap>
+       
+<!-- etop_service_purchase table all fields -->
+<sql id="Base_Column_List" >
+	 purchase_id,service_id,goods_id,goods_name,unit,unit_price,number,total_price,description
+	 
+</sql>
+   
+   
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="condition.purchaseId != null and condition.purchaseId != ''" >
+	    and purchase_id =  #{condition.purchaseId}
+	</if>
+	
+			<if test="nocondition.purchaseId != null and nocondition.purchaseId != ''" >
+	    and purchase_id not in  (#{nocondition.purchaseId})
+	</if>
+	
+		<if test="condition.serviceId != null and condition.serviceId != ''" >
+	    and service_id =  #{condition.serviceId}
+	</if>
+	
+			<if test="nocondition.serviceId != null and nocondition.serviceId != ''" >
+	    and service_id not in  (#{nocondition.serviceId})
+	</if>
+	
+		<if test="condition.goodsId != null and condition.goodsId != ''" >
+	    and goods_id =  #{condition.goodsId}
+	</if>
+	
+			<if test="nocondition.goodsId != null and nocondition.goodsId != ''" >
+	    and goods_id not in  (#{nocondition.goodsId})
+	</if>
+	
+		<if test="condition.goodsName != null and condition.goodsName != ''" >
+	    and goods_name =  #{condition.goodsName}
+	</if>
+	
+			<if test="nocondition.goodsName != null and nocondition.goodsName != ''" >
+	    and goods_name not in  (#{nocondition.goodsName})
+	</if>
+	
+		<if test="condition.unit != null and condition.unit != ''" >
+	    and unit =  #{condition.unit}
+	</if>
+	
+			<if test="nocondition.unit != null and nocondition.unit != ''" >
+	    and unit not in  (#{nocondition.unit})
+	</if>
+	
+		<if test="condition.unitPrice != null and condition.unitPrice != ''" >
+	    and unit_price =  #{condition.unitPrice}
+	</if>
+	
+			<if test="nocondition.unitPrice != null and nocondition.unitPrice != ''" >
+	    and unit_price not in  (#{nocondition.unitPrice})
+	</if>
+	
+		<if test="condition.number != null and condition.number != ''" >
+	    and number =  #{condition.number}
+	</if>
+	
+			<if test="nocondition.number != null and nocondition.number != ''" >
+	    and number not in  (#{nocondition.number})
+	</if>
+	
+		<if test="condition.totalPrice != null and condition.totalPrice != ''" >
+	    and total_price =  #{condition.totalPrice}
+	</if>
+	
+			<if test="nocondition.totalPrice != null and nocondition.totalPrice != ''" >
+	    and total_price not in  (#{nocondition.totalPrice})
+	</if>
+	
+		<if test="condition.description != null and condition.description != ''" >
+	    and description =  #{condition.description}
+	</if>
+	
+			<if test="nocondition.description != null and nocondition.description != ''" >
+	    and description not in  (#{nocondition.description})
+	</if>
+	
+</trim>
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="purchaseId != null" >
+	    and purchase_id =  #{purchaseId}
+	</if>
+	
+		<if test="serviceId != null" >
+	    and service_id =  #{serviceId}
+	</if>
+	
+		<if test="goodsId != null" >
+	    and goods_id =  #{goodsId}
+	</if>
+	
+		<if test="goodsName != null" >
+	    and goods_name =  #{goodsName}
+	</if>
+	
+		<if test="unit != null" >
+	    and unit =  #{unit}
+	</if>
+	
+		<if test="unitPrice != null" >
+	    and unit_price =  #{unitPrice}
+	</if>
+	
+		<if test="number != null" >
+	    and number =  #{number}
+	</if>
+	
+		<if test="totalPrice != null" >
+	    and total_price =  #{totalPrice}
+	</if>
+	
+		<if test="description != null" >
+	    and description =  #{description}
+	</if>
+	
+</trim>
+</sql>   
+
+<!-- 插入记录 -->
+<insert id="add" parameterType="com.etop.management.entity.EtopServicePurchase" >
+  insert into etop_service_purchase(purchase_id,service_id,goods_id,goods_name,unit,unit_price,number,total_price,description)
+ values(#{purchaseId},#{serviceId},#{goodsId},#{goodsName},#{unit},#{unitPrice},#{number},#{totalPrice},#{description})
+</insert>
+
+<!-- 批量插入记录 -->
+<insert id="adds" parameterType="com.etop.management.entity.EtopServicePurchase" >
+  insert into etop_service_purchase(purchase_id,service_id,goods_id,goods_name,unit,unit_price,number,total_price,description)
+  values
+  <foreach collection="list" item="item" index="index" separator="," > 
+  	(#{item.purchaseId},#{item.serviceId},#{item.goodsId},#{item.goodsName},#{item.unit},#{item.unitPrice},#{item.number},#{item.totalPrice},#{item.description})
+  </foreach>
+</insert>
+
+<!-- 根据id，修改记录-->  
+ <update id="update" parameterType="com.etop.management.entity.EtopServicePurchase" >
+  update etop_service_purchase set service_id=#{serviceId},goods_id=#{goodsId},goods_name=#{goodsName},unit=#{unit},unit_price=#{unitPrice},number=#{number},total_price=#{totalPrice},description=#{description} where purchase_id=#{purchaseId}
+ </update>
+ 
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="updateBySelective" parameterType="com.etop.management.entity.EtopServicePurchase" >
+	update etop_service_purchase set 
+	<trim  suffixOverrides="," >
+	<if test="serviceId != null  ">
+		service_id=#{serviceId},
+	</if>
+	<if test="goodsId != null  ">
+		goods_id=#{goodsId},
+	</if>
+	<if test="goodsName != null  ">
+		goods_name=#{goodsName},
+	</if>
+	<if test="unit != null  ">
+		unit=#{unit},
+	</if>
+	<if test="unitPrice != null  ">
+		unit_price=#{unitPrice},
+	</if>
+	<if test="number != null  ">
+		number=#{number},
+	</if>
+	<if test="totalPrice != null  ">
+		total_price=#{totalPrice},
+	</if>
+	<if test="description != null  ">
+		description=#{description},
+	</if>
+	</trim>
+	<include refid="Example_Where_Clause_Object"/>
+</update>
+
+<!-- 删除记录 -->
+<delete id="delete" parameterType="com.etop.management.entity.EtopServicePurchase">
+	delete 	 from etop_service_purchase
+	<include refid="Example_Where_Clause_Object"/>
+</delete>
+ 
+<!-- 根据id查询  -->
+<select id="queryById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_service_purchase where purchase_id = #{purchaseId}
+</select>
+
+<select id="queryByServiceId" resultMap="BaseResultMap" parameterType="string">
+	select purchase_id,service_id,goods_id,eg.category,eg.goodName as goodsName, eg.unit,eg.unitPrice,number,total_price,eg.description
+	
+	from etop_service_purchase esp
+      
+	join etop_goods eg on esp.goods_id =eg.id
+	
+	where service_id= #{serviceId}
+
+</select>
+
+<select id="queryObject" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopServicePurchase">
+	select <include refid="Base_Column_List" />
+	from etop_service_purchase
+	<include refid="Example_Where_Clause_Object"/>
+</select>
+
+<!--  列表总数-->
+<select id="queryByCount" resultType="java.lang.Integer"  parameterType="com.etop.management.bean.Criteria">
+	select count(1) from etop_service_purchase 
+	<include refid="Example_Where_Clause"/>
+</select>
+  	
+<!-- 查询列表 -->
+<select id="queryByList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+	select 
+	<include refid="Base_Column_List"/>
+	from etop_service_purchase 
+	<include refid="Example_Where_Clause"/>
+	<if test="otherCondition != null" >
+	    #{otherCondition}
+	</if>
+	
+	<if test="orderByClause != null and orderByClause != ''" >
+       order by  ${orderByClause}
+    </if>
+    <if test="limitClause != null and limitClause != ''" >
+       ${limitClause}
+    </if>
+</select>
+
+<select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</select>
+
+<insert id="myDefinedAdd" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</insert>
+
+<update id="myDefinedUpdate" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</update>  	
+
+<delete id="myDefinedDelete" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</delete>  	
+
+</mapper>   

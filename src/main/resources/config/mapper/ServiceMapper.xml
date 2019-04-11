@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.ServiceDao">
+
+    <select id="search" resultType="com.etop.management.bean.ServiceReport">
+        SELECT
+            IFNULL(SUM(t5.statusNum), 0) AS statusNum,
+            t5.park_name,
+            t5.service_status,
+            t5.service_type
+        FROM
+            (
+                SELECT
+                    COUNT(t3.service_status) statusNum,
+                    t4.id,
+                    t4.park_name,
+                    t3.apply_time,
+                    t1.build_name,
+                    t3.service_id,
+                    t3.service_no,
+                    t3.club_id,
+                    t3.service_type,
+                    t3.service_status,
+                    t3.building_no,
+                    t3.storey,
+                    t3.zone_no,
+                    t3.room_no,
+                    t3.room_id
+                FROM
+                    etop_floor t1
+                LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_floor_id
+                LEFT JOIN etop_service t3 ON t2.id = t3.room_id
+                INNER JOIN etop_park t4 ON t4.id = t1.park_id
+                WHERE
+                    t1.build_type = 'floor'
+                AND t3.service_type = #{serviceype}
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t3.apply_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t3.apply_time < #{end}
+                        ]]>
+                </if>
+                GROUP BY
+                    t1.id,
+                    t3.service_type,
+                    t3.service_status
+            ) t5
+        GROUP BY
+            t5.service_status
+    </select>
+
+    <select id="getTotalApplications" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t6.applications), 0) AS totalApplications
+        FROM
+            (
+                SELECT
+                    IFNULL(SUM(t5.statusNum), 0) AS applications,
+                    t5.park_name,
+                    t5.statusNum,
+                    t5.service_status,
+                    t5.service_type
+                FROM
+                    (
+                        SELECT
+                            COUNT(t3.service_status) statusNum,
+                            t4.park_name,
+                            t4.id,
+                            t3.apply_time,
+                            t1.build_name,
+                            t3.service_id,
+                            t3.service_no,
+                            t3.club_id,
+                            t3.service_type,
+                            t3.service_status,
+                            t3.building_no,
+                            t3.storey,
+                            t3.zone_no,
+                            t3.room_no,
+                            t3.room_id
+                        FROM
+                            etop_floor t1
+                        LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_floor_id
+                        LEFT JOIN etop_service t3 ON t2.id = t3.room_id
+                        INNER JOIN etop_park t4 ON t4.id = t1.park_id
+                        WHERE
+                            t1.build_type = 'floor'
+                        AND t3.service_type = #{serviceype}
+                        <if test="parkId != null and parkId != ''">
+                            AND t1.park_id = #{parkId}
+                        </if>
+                        <if test="start != null and start != ''">
+                            <![CDATA[
+                                    AND t3.apply_time >= #{start}
+                                ]]>
+                        </if>
+                        <if test="end != null and end != ''">
+                            <![CDATA[
+                                    AND t3.apply_time < #{end}
+                                ]]>
+                        </if>
+                        GROUP BY
+                            t1.id,
+                            t3.service_type,
+                            t3.service_status
+                    ) t5
+                GROUP BY
+                    t5.service_status
+            ) t6
+    </select>
+
+    <select id="searchFloor" resultType="com.etop.management.bean.ServiceReport">
+        SELECT
+            t5.park_name,
+            t5.statusNum,
+            t5.build_name AS building,
+            t5.service_type,
+            IFNULL(t5.service_status,0) AS service_status,
+            t5.id
+        FROM
+            (
+                SELECT
+                    IFNULL(t3.service_type, #{serviceype}) AS service_type,
+                    COUNT(t3.service_status) statusNum,
+                    t4.park_name,
+                    t1.id,
+                    t3.apply_time,
+                    t1.build_name,
+                    t3.service_id,
+                    t3.service_no,
+                    t3.club_id,
+                    t3.service_status,
+                    t3.building_no,
+                    t3.storey,
+                    t3.zone_no,
+                    t3.room_no,
+                    t3.room_id
+                FROM
+                    etop_floor t1
+                LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_floor_id
+                LEFT JOIN etop_service t3 ON t2.id = t3.room_id
+                INNER JOIN etop_park t4 ON t4.id = t1.park_id
+                WHERE
+                    t1.build_type = 'floor'
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t3.apply_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t3.apply_time < #{end}
+                        ]]>
+                </if>
+                GROUP BY
+                    t1.id,
+                    t3.service_type,
+                    t3.service_status
+                ORDER BY
+                    t1.build_name
+            ) t5
+        WHERE
+            t5.service_type = #{serviceype}
+
+    </select>
+
+    <select id="getTotalApplicationsByFloor" resultType="com.etop.management.bean.ServiceReport">
+        SELECT
+            t5.park_name,
+            t5.build_name AS building,
+            t5.id,
+            SUM(t5.statusNum) AS totalApplications
+        FROM
+            (
+                SELECT
+                    IFNULL(t3.service_type, #{serviceype}) AS service_type,
+                    COUNT(t3.service_status) statusNum,
+                    t4.park_name,
+                    t1.id,
+                    t3.apply_time,
+                    t1.build_name,
+                    t3.service_id,
+                    t3.service_no,
+                    t3.club_id,
+                    t3.service_status,
+                    t3.building_no,
+                    t3.storey,
+                    t3.zone_no,
+                    t3.room_no,
+                    t3.room_id
+                FROM
+                    etop_floor t1
+                LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_floor_id
+                LEFT JOIN etop_service t3 ON t2.id = t3.room_id
+                INNER JOIN etop_park t4 ON t4.id = t1.park_id
+                WHERE
+                    t1.build_type = 'floor'
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t3.apply_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t3.apply_time < #{end}
+                        ]]>
+                </if>
+                GROUP BY
+                    t1.id,
+                    t3.service_type,
+                    t3.service_status
+            ) t5
+        WHERE
+            t5.service_type = #{serviceype}
+        GROUP BY
+            t5.id
+    </select>
+
+    <select id="searchStorey" resultType="com.etop.management.bean.ServiceReport">
+        SELECT
+            t5.park_name,
+            t5.floor AS building,
+            t5.build_name AS storey,
+            t5.statusNum,
+            t5.service_type,
+            IFNULL(t5.service_status,0) AS service_status,
+            t5.id
+        FROM
+            (
+                SELECT
+                    IFNULL(t3.service_type, #{serviceype}) AS service_type,
+                    COUNT(t3.service_status) statusNum,
+                    t4.park_name,
+                    t1.id,
+                    t3.apply_time,
+                    t6.build_name floor,
+                    t1.build_name,
+                    t3.club_id,
+                    t3.service_status,
+                    t3.building_no,
+                    t3.storey,
+                    t3.zone_no,
+                    t3.room_no,
+                    t3.room_id
+                FROM
+                    etop_floor t1
+                LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_storey_id
+                LEFT JOIN etop_service t3 ON t2.id = t3.room_id
+                INNER JOIN etop_park t4 ON t4.id = t1.park_id
+                INNER JOIN etop_floor t6 ON t1.parent_id = t6.id
+                WHERE
+                    t1.build_type = 'storey'
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t3.apply_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t3.apply_time < #{end}
+                        ]]>
+                </if>
+                GROUP BY
+                    t1.id,
+                    t3.service_type,
+                    t3.service_status
+                ORDER BY
+                t6.build_name,t1.build_name
+            ) t5
+        WHERE
+            t5.service_type = #{serviceype}
+    </select>
+
+    <select id="getTotalApplicationsByStorey" resultType="com.etop.management.bean.ServiceReport">
+        SELECT
+            t5.id,
+            t5.park_name,
+            t5.floor AS building,
+            t5.build_name AS storey,
+            SUM(t5.statusNum) AS totalApplications
+        FROM
+            (
+                SELECT
+                    IFNULL(t3.service_type, #{serviceype}) AS service_type,
+                    COUNT(t3.service_status) statusNum,
+                    t4.park_name,
+                    t1.id,
+                    t3.apply_time,
+                    t6.build_name floor,
+                    t1.build_name,
+                    t3.club_id,
+                    t3.service_status,
+                    t3.building_no,
+                    t3.storey,
+                    t3.zone_no,
+                    t3.room_no,
+                    t3.room_id
+                FROM
+                    etop_floor t1
+                LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_storey_id
+                LEFT JOIN etop_service t3 ON t2.id = t3.room_id
+                INNER JOIN etop_park t4 ON t4.id = t1.park_id
+                INNER JOIN etop_floor t6 ON t1.parent_id = t6.id
+                WHERE
+                    t1.build_type = 'storey'
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t3.apply_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t3.apply_time < #{end}
+                        ]]>
+                </if>
+                GROUP BY
+                    t1.id,
+                    t3.service_type,
+                    t3.service_status
+            ) t5
+        WHERE
+            t5.service_type = #{serviceype}
+        GROUP BY
+            t5.id
+    </select>
+
+    <select id="searchArea" resultType="com.etop.management.bean.ServiceReport">
+        SELECT
+            t5.park_name,
+            t5.floor AS building,
+            t5.storey,
+            t5.area AS zoneNo,
+            t5.statusNum,
+            t5.service_type,
+            IFNULL(t5.service_status,0) AS service_status,
+            t5.id
+        FROM
+            (
+                SELECT
+                    IFNULL(t3.service_type, #{serviceype}) AS service_type,
+                    COUNT(t3.service_status) statusNum,
+                    t4.park_name,
+                    t1.id,
+                    t3.apply_time,
+                    t7.build_name AS floor,
+                    t6.build_name AS storey,
+                    t1.build_name AS area,
+                    t3.club_id,
+                    t3.service_status,
+                    t3.room_id
+                FROM
+                    etop_floor t1
+                LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_area_id
+                LEFT JOIN etop_service t3 ON t2.id = t3.room_id
+                INNER JOIN etop_park t4 ON t4.id = t1.park_id
+                INNER JOIN etop_floor t6 ON t1.parent_id = t6.id
+                INNER JOIN etop_floor t7 ON t6.parent_id = t7.id
+                WHERE
+                    t1.build_type = 'area'
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t3.apply_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t3.apply_time < #{end}
+                        ]]>
+                </if>
+                GROUP BY
+                    t1.id,
+                    t3.service_type,
+                    t3.service_status
+                ORDER BY
+                    t7.build_name,t6.build_name,t1.build_name
+            ) t5
+        WHERE
+            t5.service_type = #{serviceype}
+
+    </select>
+
+    <select id="getTotalApplicationsByArea" resultType="com.etop.management.bean.ServiceReport">
+        SELECT
+            t5.id,
+            t5.park_name,
+            t5.floor AS building,
+            t5.storey,
+            t5.area AS zoneNo,
+            SUM(t5.statusNum) AS totalApplications
+        FROM
+            (
+                SELECT
+                    IFNULL(t3.service_type, #{serviceype}) AS service_type,
+                    COUNT(t3.service_status) statusNum,
+                    t4.park_name,
+                    t1.id,
+                    t3.apply_time,
+                    t7.build_name AS floor,
+                    t6.build_name AS storey,
+                    t1.build_name AS area,
+                    t3.club_id,
+                    t3.service_status,
+                    t3.room_id
+                FROM
+                    etop_floor t1
+                LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_area_id
+                LEFT JOIN etop_service t3 ON t2.id = t3.room_id
+                INNER JOIN etop_park t4 ON t4.id = t1.park_id
+                INNER JOIN etop_floor t6 ON t1.parent_id = t6.id
+                INNER JOIN etop_floor t7 ON t6.parent_id = t7.id
+                WHERE
+                    t1.build_type = 'area'
+                <if test="parkId != null and parkId != ''">
+                    AND t1.park_id = #{parkId}
+                </if>
+                <if test="start != null and start != ''">
+                    <![CDATA[
+                            AND t3.apply_time >= #{start}
+                        ]]>
+                </if>
+                <if test="end != null and end != ''">
+                    <![CDATA[
+                            AND t3.apply_time < #{end}
+                        ]]>
+                </if>
+                GROUP BY
+                    t1.id,
+                    t3.service_type,
+                    t3.service_status
+            ) t5
+        WHERE
+            t5.service_type = #{serviceype}
+        GROUP BY
+            t5.id
+    </select>
+</mapper>

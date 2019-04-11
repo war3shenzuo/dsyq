@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.ContractExpressItemDao">
+
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.bean.ContractExpressItem" >
+	<result column="id" property="id"/>
+	<result column="ref_contract_id" property="refContractId"/>
+	<result column="destination" property="destination"/>
+	<result column="block_id" property="blockId"/>
+	<result column="first_heavy" property="firstHeavy"/>
+	<result column="first_heavy_price" property="firstHeavyPrice"/>
+	<result column="forwarding_heavy" property="forwardingHeavy"/>
+	<result column="forwarding_heavy_price" property="forwardingHeavyPrice"/>	
+    <result column="created_at" property="createdAt"/>
+    <result column="created_by" property="createdBy"/>
+    <result column="updated_at" property="updatedAt"/>
+    <result column="updated_by" property="updatedBy"/>
+		
+</resultMap>
+       
+<!-- etop_park table all fields -->
+<sql id="Base_Column_List" >
+	 id,ref_contract_id,
+	 destination,block_id,
+	 first_heavy,first_heavy_price,forwarding_heavy,forwarding_heavy_price,
+	 <include refid="com.etop.management.dao.CommonsDao.AUDIT_INFO_COLUMNS"/>
+</sql>
+
+<sql id="insert_value">
+
+	#{refContractId},
+	#{destination},#{blockId},
+	#{firstHeavy},#{firstHeavyPrice},#{forwardingHeavy},#{forwardingHeavyPrice},
+	<include refid="com.etop.management.dao.CommonsDao.INSERT_WITH_AUDIT_INFO_COLUMNS"/>
+
+</sql>
+
+<select id="getContractExpressItemById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract_express_item where id = #{id}
+</select>
+
+<select id="getContractExpressItemList"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract_express_item where ref_contract_id = #{contractId}
+</select>
+
+
+<delete id="deleteContractExpressItem" parameterType="string">
+
+	delete from etop_contract_express_item where id=#{id}
+
+</delete>
+
+
+
+<insert id="createContractExpressItem" parameterType="com.etop.management.bean.ContractExpressItem">
+
+insert into etop_contract_express_item (<include refid="Base_Column_List" />)
+values
+(#{id},<include refid="insert_value" />)
+
+</insert>
+
+<update id="updateContractExpressItem" parameterType="com.etop.management.bean.ContractExpressItem">
+
+
+	update etop_contract_express_item set 
+	
+	ref_contract_id=#{refContractId},
+	
+	destination=#{destination},block_id=#{blockId},
+		
+	first_heavy=#{firstHeavy},first_heavy_price=#{firstHeavyPrice},
+	
+	forwarding_heavy=#{forwardingHeavy},forwarding_heavy_price=#{forwardingHeavyPrice},
+	
+	updated_at=#{updatedAt},updated_by=#{updatedBy}
+	
+	where id=#{id}
+
+
+</update>
+</mapper>
+

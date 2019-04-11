@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopCompanyMaintainDao">
+
+    <sql id="Base_Column_List" >
+        t1.id,t1.company_id,t1.visitors,t1.position,t1.receiver,t1.mobile,t1.content,t1.cause,t1.remind_at,t1.created_at,t1.created_by,t1.updated_at,t1.updated_by
+    </sql>
+
+    <sql id="Example_Where_Clause_Object">
+        <if test="companyId != null" >
+            t1.company_id = #{companyId}
+        </if>
+        <if test="visitors != null" >
+            and t1.visitors like CONCAT('%',#{visitors},'%')
+        </if>
+        <if test="position != null" >
+            and t1.position =  #{position}
+        </if>
+        <if test="receiver != null" >
+            and t1.receiver =  #{receiver}
+        </if>
+        <if test="mobile != null" >
+            and t1.mobile =  #{mobile}
+        </if>
+        <if test="content != null" >
+            and t1.content =  #{content}
+        </if>
+        <if test="cause != null" >
+            and t1.cause =  #{cause}
+        </if>
+        <if test="remindAt != null" >
+            and t1.remind_at =  #{remindAt}
+        </if>
+        <if test="createdBy != null">
+            AND t1.created_by = #{createdBy}
+        </if>
+        <if test="updatedBy != null">
+            AND t1.updated_by = #{updatedBy}
+        </if>
+        <if test="createdAt != null">
+            AND t1.created_at like CONCAT('%',#{createdAt},'%')
+        </if>
+        <if test="updatedAt != null">
+            AND t1.updated_at = #{updatedAt}
+        </if>
+    </sql>
+
+    <update id="updateById">
+        update etop_company_maintain
+        <set>
+            <if test="companyId != null  ">
+                company_id = #{companyId},
+            </if>
+            <if test="visitors != null  ">
+                visitors=#{visitors},
+            </if>
+            <if test="position != null  ">
+                position=#{position},
+            </if>
+            <if test="receiver != null  ">
+                receiver=#{receiver},
+            </if>
+            <if test="mobile != null  ">
+                mobile=#{mobile},
+            </if>
+            <if test="content != null  ">
+                content=#{content},
+            </if>
+            <if test="cause != null  ">
+                cause=#{cause},
+            </if>
+            <if test="remindAt != null  ">
+                remind_at=#{remindAt},
+            </if>
+            <if test="createdAt != null  ">
+                created_at=#{createdAt},
+            </if>
+            <if test="createdBy != null  ">
+                created_by=#{createdBy},
+            </if>
+            <if test="updatedAt != null" >
+                updated_at =  #{updatedAt},
+            </if>
+            <if test="updatedBy != null" >
+                updated_by =  #{updatedBy}
+            </if>
+        </set>
+        where id = #{id}
+        order by updated_at desc
+    </update>
+
+    <select id="selectIntention" resultType="com.etop.management.bean.EtopCompanyMaintain">
+        SELECT
+            t2.company_name,t3.park_name,<include refid="Base_Column_List"/>
+        FROM
+            etop_company_intention t2
+        INNER JOIN etop_company_maintain t1 ON t1.company_id = t2.id
+        INNER JOIN etop_park t3 ON t2.park_id = t3.id
+        <where>
+            <include refid="Example_Where_Clause_Object"/>
+        </where>
+    </select>
+
+    <select id="select" resultType="com.etop.management.bean.EtopCompanyMaintain">
+        SELECT
+            t2.company_name,t3.park_name,<include refid="Base_Column_List"/>
+        FROM
+            etop_company t2
+        INNER JOIN etop_company_maintain t1 ON t1.company_id = t2.company_id
+        INNER JOIN etop_park t3 ON t2.park_id = t3.id
+        <where>
+            <include refid="Example_Where_Clause_Object"/>
+        </where>
+    </select>
+
+    <select id="getMaintainInfoById" resultType="com.etop.management.bean.EtopCompanyMaintain">
+        SELECT
+	        t2.company_name,t3.park_name,<include refid="Base_Column_List"/>
+        FROM
+            etop_company_maintain t1
+        INNER JOIN etop_company t2 ON t1.company_id = t2.company_id
+        INNER JOIN etop_park t3 ON t2.park_id = t3.id
+        WHERE
+            t1.id = #{id}
+        AND t1.company_id = #{companyId}
+    </select>
+
+    <select id="getMaintainInfoByIntentionId" resultType="com.etop.management.bean.EtopCompanyMaintain">
+        SELECT
+            t2.company_name,t3.park_name,<include refid="Base_Column_List"/>
+        FROM
+            etop_company_maintain t1
+        INNER JOIN etop_company_intention t2 ON t1.company_id = t2.id
+        INNER JOIN etop_park t3 ON t2.park_id = t3.id
+        WHERE
+            t1.id = #{id}
+        AND t1.company_id = #{companyId}
+    </select>
+
+    <select id="getMaintainList" resultType="com.etop.management.bean.EtopCompanyMaintain">
+        select
+            <include refid="Base_Column_List"/>
+        from
+            etop_company_maintain t1
+        WHERE
+            t1.remind_at like CONCAT('%',#{remindAt},'%')
+    </select>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+            etop_company_maintain
+        WHERE
+            id IN
+        <foreach collection="ids" item="ids" index="index" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <insert id="insert">
+        insert into etop_company_maintain(id,company_id,visitors,position,receiver,mobile,content,cause,remind_at,
+        created_at,created_by,updated_at,updated_by)
+        values(#{id}, #{companyId}, #{visitors}, #{position}, #{receiver}, #{mobile}, #{content}, #{cause}, #{remindAt},
+        #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy})
+    </insert>
+
+	<select id="count" resultType="int">
+        SELECT
+			count(*)
+		FROM
+			etop_company_intention t2
+		INNER JOIN etop_company_maintain t1 ON t1.company_id = t2.id
+		INNER JOIN etop_park t3 ON t2.park_id = t3.id
+		WHERE
+			t1.company_id = #{companyId}
+    </select>
+</mapper>

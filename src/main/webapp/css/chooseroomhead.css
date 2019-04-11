@@ -1,0 +1,122 @@
+	*{
+				margin:0;
+				padding:0;			
+			}
+			.wrap{
+				width:1155px;
+				margin:0 auto;
+			}
+			.head{
+				
+				margin:40px 0px;
+			}
+			.head p{
+				font-size:30px;
+				text-align: center;
+				font-weight:bold;
+			}
+			.head .tuli{
+				margin-top:-60px;
+				float:right;
+				font-size:14px;
+			}
+			.head .tuli img{
+				margin:0px 5px;
+			}
+			.cont{
+				width:1155px;
+				margin:0 auto;
+			}
+			.cont .floors .floor{
+				display:inline-block;
+				width:260px;
+				height: 150px;
+				border:1px solid #E4E1E1;
+				color:black;
+				text-decoration: none;
+				position:relative;
+				transition: all 1s;
+				margin: 0 34px 25px 0;
+			}
+			.floors{
+				margin:50px 0px 0 0;
+				
+			}
+			
+			.floor:hover{
+					box-shadow: 1px 1px 10px 1px #737373;
+			}
+			.lf{
+				float:left;
+				font-size:30px;
+				font-weight:bold;
+				margin-top:12px;
+				margin-left:20px;
+			}
+			@media screen and (min-width: 900px) and (max-width: 1299px) {
+				.lf{
+				float:left;
+				font-size:20px;
+				font-weight:bold;
+				margin-top:12px;
+				margin-left:20px;
+			}
+			}
+			.rf{
+				float:left;
+				font-size:16px;
+				margin-top:20px;
+				margin-left:10px;
+			}
+			.rf .p1{
+				margin:0px 0 6px 0;
+			}
+			.floor .img1{
+				position:absolute;
+				bottom:0px;
+				right:0px;
+			}
+			.midfloor{
+				
+				margin:0px 60px 0px 60px;
+			}
+				
+			.pagination>.disabled>a{
+				background-color:white;
+				color:grey;
+			}
+			.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover,
+			.pagination>.active>span, .pagination>.active>span:focus,
+			.pagination>.active>span:hover{
+				color:grey;
+				background-color:white;
+				border:none;
+			}
+			.foot{
+				margin:0 auto;
+				width:400px;
+			}
+			.foot ul li a{
+				margin:1px;
+				background:#F6F6F6;
+				color:black;
+			}
+			.choose{
+				width:100%;
+				margin:0px auto 40px auto;
+				text-align: center;;
+				
+			}
+			
+			.choose select{
+				width:200px;
+				height:35px;
+				padding:3px;
+				font-size:15px;
+				background-color:#fbfbfb;
+				border:1px solid #E4E1E1;
+				margin:0px 10px;
+				border-radius: 5px;
+				margin-right:30px;
+			}
+			

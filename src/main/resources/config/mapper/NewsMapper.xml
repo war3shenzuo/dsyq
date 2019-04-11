@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.NewsDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.bean.News" >
+	<result column="id" property="id"/>
+	<result column="park_id" property="parkId"/>
+	<result column="title" property="title"/>
+	<result column="created_by" property="createdBy"/>
+	<result column="news_img" property="newsImg"/>
+	<result column="created_at" property="createdAt"/>
+	<result column="content" property="content"/>
+	<result column="state" property="state"/>
+	<result column="news_type" property="newsType"/>
+	<result column="total_type" property="totalType"/>
+</resultMap>
+       
+	<!-- etop_news table all fields -->
+	<sql id="Base_Column_List" >
+		 en.id,en.park_id,en.title,en.created_by,en.news_img,en.created_at,en.content,en.state,en.news_type,total_type
+	</sql>
+   
+
+	<!-- 查询条件 -->
+	<sql id="Example_Where_Clause_Object">
+	where 1=1
+	<trim  suffixOverrides="," >
+			<if test="id != null and id!=''"  >
+			and en.id =  #{id}
+		</if>
+
+			<if test="parkId != null" >
+			and en.park_id =  #{parkId}
+		</if>
+
+			<if test="title != null and title!=''" >
+			and en.title like '%${title}%'
+		</if>
+
+			<if test="createdBy != null" >
+			and en.created_by =  #{createdBy}
+		</if>
+
+			<if test="newsImg != null" >
+			and en.news_img =  #{newsImg}
+		</if>
+
+			<if test="createdAt != null" >
+			and en.created_at =  #{createdAt}
+		</if>
+
+			<if test="content != null" >
+			and en.content =  #{content}
+		</if>
+
+			<if test="state != null and state !=''" >
+			and en.state =  #{state}
+		</if>
+
+		<if test="newsType != null and newsType!=''" >
+			and en.news_type =  #{newsType}
+		</if>
+		<if test="totalType != null and totalType!=''" >
+			and en.total_type =  #{totalType}
+		</if>
+
+	</trim>
+	</sql>
+
+<!-- 插入记录 -->
+	<insert id="addNews" parameterType="com.etop.management.bean.News" >
+		insert into etop_news(id,park_id,title,created_by,news_img,created_at,content,state,news_type,total_type)
+		values(uuid(),#{parkId},#{title},#{createdBy},#{newsImg},sysdate(),#{content},#{state},#{newsType},#{totalType})
+	</insert>
+
+ 
+ <!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateNews" parameterType="com.etop.management.bean.News" >
+		update etop_news en set
+		<trim  suffixOverrides="," >
+			<if test="parkId != null  ">
+				en.park_id=#{parkId},
+			</if>
+			<if test="title != null  ">
+				en.title=#{title},
+			</if>
+			<if test="createdBy != null  ">
+				en.created_by=#{createdBy},
+			</if>
+			<if test="newsImg != null  ">
+				en.news_img=#{newsImg},
+			</if>
+			<if test="createdAt != null  ">
+				en.created_at=#{createdAt},
+			</if>
+			<if test="content != null  ">
+				en.content=#{content},
+			</if>
+			<if test="state != null  ">
+				en.state=#{state},
+			</if>
+			<if test="newsType != null  ">
+				en.news_type=#{newsType},
+			</if>
+			<if test="totalType != null" >
+				en.total_type =  #{totalType}
+			</if>
+		</trim>
+		where en.id=#{id}
+	</update>
+
+<!-- 删除记录 -->
+	<delete id="delete" parameterType="com.etop.management.bean.News">
+		delete
+		from
+			etop_news
+		<include refid="Example_Where_Clause_Object"/>
+	</delete>
+
+	<delete id="deleteByIds">
+		DELETE
+		FROM
+			etop_news
+		WHERE
+			id IN
+			<foreach collection="ids" item="ids" index="index" open="(" separator="," close=")">
+				#{ids}
+			</foreach>
+
+	</delete>
+
+	<!-- 根据id查询  -->
+	<select id="getNewsInfo"  resultMap="BaseResultMap" parameterType="string">
+		select
+			<include refid="Base_Column_List" />
+		from
+			etop_news en
+		where
+			id = #{id}
+	</select>
+
+	<select id="getNewsList" resultMap="BaseResultMap" parameterType="com.etop.management.bean.News">
+		select
+			<include refid="Base_Column_List" />
+		from
+			etop_news en
+			<include refid="Example_Where_Clause_Object"/>
+		order by
+			en.created_at desc
+	</select>
+
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="activeOrCloseNews" parameterType="com.etop.management.bean.News" >
+		update
+			etop_news
+		set
+			state=#{state}
+		where
+			id = #{id}
+	</update>
+	
+</mapper>

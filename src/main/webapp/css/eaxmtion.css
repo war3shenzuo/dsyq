@@ -1,0 +1,20 @@
+#eaxmtion{width:80%; margin: 20px 8% 0 8%; border: 1px solid #ccc; padding:20px; background: #f9f9e0;}
+#eaxmtion p{ font-size: 14px;  line-height: 32px;}
+#eaxmtion p label{ margin-right: 12px; vertical-align: middle;;}
+#eaxmtion p input{ width:14px; height:14px; vertical-align: middle; margin-right: 5px;}
+
+#sub {
+    width: 168px;
+    border: none;
+    outline: none;
+    height: 48px;
+    border-radius: 22px;
+    font-size: 24px;
+    color: #fff;
+    background: #ee770f;
+    display: block;}
+
+
+
+
+

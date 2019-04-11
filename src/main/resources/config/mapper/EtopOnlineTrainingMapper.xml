@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopOnlineTrainingDao">
+
+    <sql id="Base_Column_List" >
+        t1.id,t1.course_id,t1.course_name,t1.course_type,t1.platform,t1.post,t1.speaker,t1.description,t1.created_at,t1.created_by,t1.updated_by,t1.updated_at,t1.target,t1.play_url,t1.duration,t1.cover_img,t1.choose_park
+    </sql>
+
+    <sql id="Example_Where_Clause_Object">
+        <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="courseId != null and courseId !=''" >
+            and t1.course_id =  #{courseId}
+        </if>
+        <if test="courseName != null and courseName != ''" >
+            and t1.course_name like CONCAT ('%', #{courseName} ,'%')
+        </if>
+        <if test="courseType != null  and courseType !=''" >
+            and t1.course_type =  #{courseType}
+        </if>
+        <if test="platform != null and platform != ''" >
+            and t1.platform =  #{platform}
+        </if>
+        <if test="post != null and post != ''" >
+            and t1.post =  #{post}
+        </if>
+        <if test="description != null" >
+            and t1.description =  #{description}
+        </if>
+        <if test="speaker != null" >
+            and t1.speaker =  #{speaker}
+        </if>
+        <if test="createdAt != null" >
+            and t1.created_at =  #{createdAt}
+        </if>
+        <if test="createdBy != null" >
+            and t1.created_by =  #{createdBy}
+        </if>
+        <if test="updatedBy != null" >
+            and t1.updated_by =  #{updatedBy}
+        </if>
+        <if test="updatedAt != null" >
+            and t1.updated_at =  #{updatedAt}
+        </if>
+        <if test="target != null and target !=''" >
+            and t1.target like '%${target}%'
+        </if>
+        <if test="playUrl != null" >
+            and t1.play_url =  #{playUrl}
+        </if>
+        <if test="duration != null" >
+            and t1.duration =  #{duration}
+        </if>
+        <if test="coverImg != null" >
+            and t1.cover_img =  #{coverImg}
+        </if>
+         <if test="choosePark != null" >
+            and t1.choose_park =  #{choosePark}
+        </if>
+    </sql>
+
+    <insert id="insert">
+        insert into etop_online_training(id,course_id,course_name,course_type,platform,post,speaker,description,created_at,created_by,updated_at,target,play_url,duration,cover_img,choose_park)
+        values(#{id},#{courseId},#{courseName},#{courseType},#{platform},#{post},#{speaker},#{description},sysdate(),#{createdBy},sysdate(),#{target},#{playUrl}, #{duration},#{coverImg},#{choosePark})
+    </insert>
+
+    <update id="updateOnlineTraining">
+        update etop_online_training
+        <set>
+            <if test="courseId != null  ">
+                course_id=#{courseId},
+            </if>
+            <if test="courseName != null  ">
+                course_name=#{courseName},
+            </if>
+            <if test="courseType != null  ">
+                course_type=#{courseType},
+            </if>
+            <if test="platform != null  ">
+                platform=#{platform},
+            </if>
+            <if test="post != null  ">
+                post=#{post},
+            </if>
+            <if test="description != null  ">
+                description=#{description},
+            </if>
+            <if test="speaker != null  ">
+                speaker=#{speaker},
+            </if>
+            <if test="createdAt != null  ">
+                created_at=#{createdAt},
+            </if>
+            <if test="createdBy != null  ">
+                created_by=#{createdBy},
+            </if>
+            <if test="updatedBy != null  ">
+                updated_by=#{updatedBy},
+            </if>
+            <if test="updatedAt != null  ">
+                updated_at=sysdate(),
+            </if>
+            <if test="target != null  ">
+                target=#{target},
+            </if>
+            <if test="playUrl != null  ">
+                play_url=#{playUrl},
+            </if>
+            <if test="duration != null" >
+             	duration =  #{duration},
+	        </if>
+	        <if test="coverImg != null and coverImg != ''" >
+	            cover_img =  #{coverImg},
+	        </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM
+            etop_online_training
+        WHERE
+            id IN
+        <foreach collection="ids" item="ids" index="index" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <select id="select" resultType="com.etop.management.bean.EtopOnlineTraining">
+   SELECT * FROM (
+    SELECT t1.*,(SELECT count(*) from etop_question_bank qb where qb.title_id = t1.id) as kc,
+	(SELECT count(*) from etop_participant ep where ep.course_id = t1.id) as ry ,
+	(SELECT SUM(t4.content_level + t4.teacher_level + t4.play_smooth + t4.video_clarity) / (COUNT(*) * 4) from etop_train_feedback t4 where t4.course_id = t1.id) as pf 
+	 FROM etop_online_training t1
+	 <where>
+            <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="courseId != null and courseId !=''" >
+            and t1.course_id =  #{courseId}
+        </if>
+        <if test="courseName != null and courseName != ''" >
+            and t1.course_name like CONCAT ('%', #{courseName} ,'%')
+        </if>
+        <if test="courseType != null  and courseType !=''" >
+            and t1.course_type =  #{courseType}
+        </if>
+        <if test="platform != null and platform != ''" >
+            and t1.platform =  #{platform}
+        </if>
+        <if test="post != null and post != ''" >
+            and t1.post =  #{post}
+        </if>
+        <if test="description != null" >
+            and t1.description =  #{description}
+        </if>
+        <if test="speaker != null" >
+            and t1.speaker =  #{speaker}
+        </if>
+        <if test="createdAt != null" >
+            and t1.created_at =  #{createdAt}
+        </if>
+        <if test="createdBy != null" >
+            and t1.created_by =  #{createdBy}
+        </if>
+        <if test="updatedBy != null" >
+            and t1.updated_by =  #{updatedBy}
+        </if>
+        <if test="updatedAt != null" >
+            and t1.updated_at =  #{updatedAt}
+        </if>
+        <if test="target != null and target !=''" >
+            and t1.target like '%${target}%'
+        </if>
+        <if test="playUrl != null" >
+            and t1.play_url =  #{playUrl}
+        </if>
+        <if test="duration != null" >
+            and t1.duration =  #{duration}
+        </if>
+        <if test="coverImg != null" >
+            and t1.cover_img =  #{coverImg}
+        </if>
+     <if test="searchValue != null and searchValue != ''" >
+		and t1.target like '%${searchValue}%'      
+   	</if>
+        </where>
+	 HAVING 1=1
+	 <if test="questionNum1 != null  and questionNum1 !=''">
+	AND kc >= #{questionNum1} 
+	</if>
+	<if test="questionNum2 != null  and questionNum2 !=''">
+	AND kc &lt;= #{questionNum2}
+	</if>
+	<if test="num1 != null  and num1 !=''">
+	AND ry >= #{num1} 
+	</if>
+	<if test="num2 != null  and num2 !=''">
+	AND ry &lt;= #{num2}
+	</if>
+	<if test="avgScore1 != null  and avgScore1 !=''">
+	AND pf >= #{avgScore1} 
+	</if>
+	<if test="avgScore2 != null  and avgScore2 !=''">
+	AND pf &lt;= #{avgScore2}
+	</if>
+	<if test="choosePark != null and choosePark != '' " >
+	UNION
+
+	SELECT t1.*,(SELECT count(*) from etop_question_bank qb where qb.title_id = t1.id) as kc,
+	(SELECT count(*) from etop_participant ep where ep.course_id = t1.id) as ry ,
+	(SELECT SUM(t4.content_level + t4.teacher_level + t4.play_smooth + t4.video_clarity) / (COUNT(*) * 4) from etop_train_feedback t4 where t4.course_id = t1.id) as pf 
+	 FROM etop_online_training t1
+	 <where>
+           <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="courseId != null and courseId !=''" >
+            and t1.course_id =  #{courseId}
+        </if>
+        <if test="courseName != null and courseName != ''" >
+            and t1.course_name like CONCAT ('%', #{courseName} ,'%')
+        </if>
+        <if test="courseType != null  and courseType !=''" >
+            and t1.course_type =  #{courseType}
+        </if>
+        <if test="platform != null and platform != ''" >
+            and t1.platform =  #{platform}
+        </if>
+        <if test="post != null and post != ''" >
+            and t1.post =  #{post}
+        </if>
+        <if test="description != null" >
+            and t1.description =  #{description}
+        </if>
+        <if test="speaker != null" >
+            and t1.speaker =  #{speaker}
+        </if>
+        <if test="createdAt != null" >
+            and t1.created_at =  #{createdAt}
+        </if>
+        <if test="createdBy != null" >
+            and t1.created_by =  #{createdBy}
+        </if>
+        <if test="updatedBy != null" >
+            and t1.updated_by =  #{updatedBy}
+        </if>
+        <if test="updatedAt != null" >
+            and t1.updated_at =  #{updatedAt}
+        </if>
+        <if test="playUrl != null" >
+            and t1.play_url =  #{playUrl}
+        </if>
+        <if test="duration != null" >
+            and t1.duration =  #{duration}
+        </if>
+        <if test="coverImg != null" >
+            and t1.cover_img =  #{coverImg}
+        </if>
+         <if test="choosePark != null" >
+            and t1.choose_park =  #{choosePark}
+        </if>
+     <if test="searchValue != null and searchValue != ''" >
+		and t1.target like '%${searchValue}%'      
+   	</if>
+        </where>
+	 HAVING 1=1
+	 <if test="questionNum1 != null  and questionNum1 !=''">
+	AND kc >= #{questionNum1} 
+	</if>
+	<if test="questionNum2 != null  and questionNum2 !=''">
+	AND kc &lt;= #{questionNum2}
+	</if>
+	<if test="num1 != null  and num1 !=''">
+	AND ry >= #{num1} 
+	</if>
+	<if test="num2 != null  and num2 !=''">
+	AND ry &lt;= #{num2}
+	</if>
+	<if test="avgScore1 != null  and avgScore1 !=''">
+	AND pf >= #{avgScore1} 
+	</if>
+	<if test="avgScore2 != null  and avgScore2 !=''">
+	AND pf &lt;= #{avgScore2}
+	</if>
+	</if>
+        )t
+    </select>
+
+    <select id="getOnlineTrainingInfoById" resultType="com.etop.management.bean.EtopOnlineTraining">
+        SELECT
+        	IFNULL(avg(t2.content_level),0)  AS avgcontentLevel,
+			IFNULL(avg(t2.teacher_level),0) AS avgteacherevel,
+			IFNULL(avg(t2.play_smooth),0) AS avgplaySmooth,
+			IFNULL(avg(t2.video_clarity),0) AS avgvideoclarity,
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_online_training t1
+        JOIN etop_train_feedback t2 ON t1.id =t2.course_id
+        WHERE
+            t1.id = #{id}
+    </select>
+
+    <select id="selectOnlineTraining" resultType="com.etop.management.bean.EtopOnlineTraining">
+        SELECT
+        	
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_online_training t1
+       
+        <where>
+            <include refid="Example_Where_Clause_Object"/>
+        </where>
+    </select>
+
+    <select id="getCount" resultType="java.lang.Integer">
+        SELECT
+            IFNULL(COUNT(*),0) countNum
+        FROM
+            etop_question_bank
+        WHERE
+            title_id = #{titleId}
+    </select>
+
+    <select id="selectOnlineInfo" resultType="com.etop.management.bean.EtopOnlineTraining">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_online_training t1
+        <where>
+            <if test="courseType != null and courseType != '' " >
+                and t1.course_type =  #{courseType}
+            </if>
+            <if test="target != null and target != '' " >
+                and t1.target =  #{target}
+            </if>
+        </where>
+    </select>
+	<!--     题库数量 -->
+    <select id="CountQuestionBank" resultType="int" parameterType="String">
+			SELECT
+				count(*) questionNum
+			FROM
+				etop_question_bank
+			WHERE
+			 title_id=#{id}
+    </select>
+	<!--     参与人数 -->
+    <select id="CountTestNum" resultType="int" parameterType="String">
+			SELECT
+				count(DISTINCT(t1.user_id)) AS num
+			FROM
+				etop_participant t1
+			INNER JOIN etop_user t2 ON t1.user_id = t2.id
+<!-- 			INNER JOIN etop_company_staff t3 ON t3.user_id = t2.id -->
+			INNER JOIN etop_park t4 ON t2.park_id = t4.id
+<!-- 			INNER JOIN etop_company t5 ON t3.company_id = t5.company_id -->
+			INNER JOIN etop_online_training t6 ON t1.course_id = t6.id
+            WHERE
+				 t1.course_id= #{id}
+    </select>
+	<!--     综合评分 -->
+    <select id="getAvgScore" resultType="com.etop.management.bean.EtopOnlineTraining">
+            SELECT
+			IFNULL(
+				SUM(
+					t1.content_level + t1.teacher_level + t1.play_smooth+ t1.video_clarity
+				) / (COUNT(*) * 4),
+				0
+			) AS avgScore,
+			COUNT(*) AS totalPeople
+		FROM
+			etop_train_feedback t1
+		WHERE
+			t1.course_id = #{id}
+	</select>
+</mapper>

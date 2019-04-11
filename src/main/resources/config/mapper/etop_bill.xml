@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopBillDao">
+	<select id="listAll" resultType="com.etop.management.entity.EtopBill">
+		SELECT * FROM etop_bill
+	</select>
+	<select id="findById" resultType="com.etop.management.entity.EtopBill">
+		SELECT * FROM etop_bill WHERE bill_id=#{_parameter}
+	</select>
+	<select id="list" parameterType="map" resultType="com.etop.management.entity.EtopBill">
+		SELECT * FROM etop_bill
+		WHERE deleted = 0
+		<if test="billIds != null">
+			AND bill_id IN
+			<foreach collection="billIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="billId != null and billId != ''">
+<!-- 			AND bill_id LIKE '%${billId}%' -->
+			AND bill_id=#{billId}
+		</if>
+		<if test="parkId != null and parkId != ''">
+			AND park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="billType != null">
+			AND bill_type=#{billType}
+		</if>
+		<if test="billStatus != null">
+			AND bill_status=#{billStatus}
+		</if>
+		<if test="companyId != null and companyId != ''">
+			AND company_id=#{companyId}
+		</if>
+		<if test="companyName != null and companyName != ''">
+			AND company_name LIKE '%${companyName}%'
+		</if>
+		<if test="billSource != null">
+			AND bill_source=#{billSource}
+		</if>
+		<if test="auditStatus != null">
+			AND audit_status= #{auditStatus}
+		</if>
+		<if test="auditLevel != null">
+			AND audit_level=#{auditLevel}
+		</if>
+		<if test="beginDate != null">
+			AND created_time &gt; #{beginDate}
+		</if>
+		<if test="endDate != null">
+			AND created_time &lt; #{endDate}
+		</if>
+		<if test="paid != null and paid == false">
+			AND bill_status &lt; 2
+		</if>
+	</select>
+	<select id="listWithFloor" parameterType="map" resultType="com.etop.management.entity.EtopBill">
+		SELECT t1.*,t2.building,t2.floor,t2.block,t2.room
+		FROM etop_bill t1
+		LEFT JOIN etop_contract t2 ON t1.bill_no_out=t2.contract_no
+		LEFT JOIN etop_floor_room t3 ON t2.ref_room_id=t3.id
+		WHERE t1.deleted = 0
+		<if test="billIds != null">
+			AND t1.bill_id IN
+			<foreach collection="billIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="billId != null and billId != ''">
+			AND t1.bill_id LIKE '%${billId}%'
+		</if>
+		<if test="parkId != null and parkId != ''">
+			AND t1.park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND t1.park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="billType != null">
+			AND t1.bill_type=#{billType}
+		</if>
+		<if test="billStatus != null">
+			AND t1.bill_status=#{billStatus}
+		</if>
+		<if test="companyId != null and companyId != ''">
+			AND t1.company_id=#{companyId}
+		</if>
+		<if test="companyName != null and companyName != ''">
+			AND t1.company_name LIKE '%${companyName}%'
+		</if>
+		<if test="billSource != null">
+			AND t1.bill_source=#{billSource}
+		</if>
+		<if test="auditStatus != null">
+			AND t1.audit_status= #{auditStatus}
+		</if>
+		<if test="auditLevel != null">
+			AND t1.audit_level=#{auditLevel}
+		</if>
+		<if test="beginDate != null">
+			AND t1.created_time &gt; #{beginDate}
+		</if>
+		<if test="endDate != null">
+			AND t1.created_time &lt; #{endDate}
+		</if>
+		<if test="paid != null and paid == false">
+			AND t1.bill_status &lt; 2
+		</if>
+		<if test="buildingSele != null and buildingSele != ''">
+			AND t3.ref_floor_id=#{buildingSele}
+		</if>
+		<if test="floorSele != null and floorSele != ''">
+			AND t3.ref_storey_id=#{floorSele}
+		</if>
+		<if test="blockSele != null and blockSele != ''">
+			AND t3.ref_area_id=#{blockSele}
+		</if>
+		<if test="roomNum != null and roomNum != ''">
+			AND t3.room_num LIKE '%${roomNum}%'
+		</if>
+	</select>
+	<select id="listWithComp" parameterType="map" resultType="com.etop.management.bean.BillWithCompanyItem">
+		SELECT t1.*,t2.company_name FROM
+		etop_bill t1 LEFT JOIN etop_company t2
+		ON t1.company_id=t2.company_id
+		WHERE t1.deleted = 0
+		<if test="parkId != null">
+			AND t1.park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND t1.park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="billId != null and billId != ''">
+			AND t1.bill_id LIKE '%${billId}%'
+		</if>
+		<if test="billType != null">
+			AND t1.bill_type=#{billType}
+		</if>
+		<if test="billStatus != null">
+			AND t1.bill_status=#{billStatus}
+		</if>
+		<if test="companyId != null">
+			AND t1.company_id=#{companyId}
+		</if>
+		<if test="companyName != null and companyName != ''">
+			AND t2.company_name LIKE '%${companyName}%'
+		</if>
+		<if test="billSource != null">
+			AND t1.bill_source=#{billSource}
+		</if>
+		<if test="auditStatus != null">
+			AND t1.audit_status= #{auditStatus}
+		</if>
+		<if test="auditLevel != null">
+			AND t1.audit_level= #{auditLevel}
+		</if>
+		<if test="beginDate != null">
+			AND t1.created_time &gt; #{beginDate}
+		</if>
+		<if test="endDate != null">
+			AND t1.created_time &lt; #{endDate}
+		</if>
+	</select>
+	<select id="listActiveWithComp" parameterType="map" resultType="com.etop.management.bean.BillWithCompanyItem">
+		SELECT t1.*,t2.company_name FROM
+		etop_bill t1 LEFT JOIN etop_company t2
+		ON t1.company_id=t2.company_id
+		WHERE t1.deleted = 0 AND t1.audit_status=t1.audit_level
+		<if test="parkId != null">
+			AND t1.park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND t1.park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="billType != null">
+			AND t1.bill_type=#{billType}
+		</if>
+		<if test="billStatus != null">
+			AND t1.bill_status=#{billStatus}
+		</if>
+		<if test="companyId != null">
+			AND t1.company_id=#{companyId}
+		</if>
+		<if test="billSource != null">
+			AND t1.bill_source=#{billSource}
+		</if>
+	</select>
+	
+	<select id="listToAudit" parameterType="map" resultType="com.etop.management.bean.BillWithCompanyItem">
+		SELECT t1.*,t2.company_name FROM
+		etop_bill t1 LEFT JOIN etop_company t2
+		ON t1.company_id=t2.company_id
+		WHERE t1.deleted = 0 AND t1.audit_level&gt;=#{auditLevel} AND t1.audit_status=#{auditLevel}-1
+		<if test="parkId != null">
+			AND t1.park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND t1.park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="billId != null and billId != ''">
+			AND t1.bill_id LIKE '%${billId}%'
+		</if>
+		<if test="billType != null">
+			AND t1.bill_type=#{billType}
+		</if>
+		<if test="companyId != null">
+			AND t1.company_id=#{companyId}
+		</if>
+		<if test="companyName != null and companyName != ''">
+			AND t2.company_name LIKE '%${companyName}%'
+		</if>
+		<if test="billSource != null">
+			AND t1.bill_source=#{billSource}
+		</if>
+	</select>
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="com.etop.management.entity.EtopBill">
+		INSERT INTO
+		etop_bill(bill_id,park_id,bill_type,bill_status,company_id,company_name,bill_source,bill_no_out,created_time,
+		deadline,pay_time,start_time,end_time,amount,amount_paid,overdue_fine,overdue_rate,account_remission,
+		overdue_remission,description,attachment,audit_status,audit_level,auditor,audit_time,finance,finance_time)
+		VALUES(#{billId},#{parkId},#{billType},#{billStatus},#{companyId},#{companyName},#{billSource},
+		#{billNoOut},#{createdTime},#{deadline},#{payTime},#{startTime},#{endTime},#{amount},#{amountPaid},
+		#{overdueFine},#{overdueRate},#{accountRemission},#{overdueRemission},#{description},#{attachment},
+		#{auditStatus},#{auditLevel},#{auditor},#{auditTime},#{finance},#{financeTime})
+	</insert>
+
+	<!-- 批量插入记录 -->
+	<insert id="adds" parameterType="com.etop.management.entity.EtopBill">
+		INSERT INTO
+		etop_bill(bill_id,park_id,bill_type,bill_status,company_id,company_name,bill_source,bill_no_out,created_time,
+		deadline,pay_time,start_time,end_time,amount,amount_paid,overdue_fine,overdue_rate,account_remission,
+		overdue_remission,description,attachment,audit_status,audit_level,auditor,audit_time,finance,finance_time)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{billId},#{parkId},#{billType},#{billStatus},#{companyId},#{companyName},#{billSource},
+			#{billNoOut},#{createdTime},#{deadline},#{payTime},#{startTime},#{endTime},#{amount},#{amountPaid},
+			#{overdueFine},#{overdueRate},#{accountRemission},#{overdueRemission},#{description},#{attachment},
+			#{auditStatus},#{auditLevel},#{auditor},#{auditTime},#{finance},#{financeTime})
+		</foreach>
+	</insert>
+
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="com.etop.management.entity.EtopBill">
+		UPDATE etop_bill SET
+		park_id=#{parkId},bill_type=#{billType},bill_status=#{billStatus},company_id=#{companyId},
+		company_name=#{companyName},bill_source=#{billSource},bill_no_out=#{billNoOut},created_time=#{createdTime},
+		deadline=#{deadline},pay_time=#{payTime},start_time=#{startTime},end_time=#{endTime},amount=#{amount},
+		amount_paid=#{amountPaid},overdue_fine=#{overdueFine},overdue_rate=#{overdueRate},account_remission=#{accountRemission},
+		overdue_remission=#{overdueRemission},description=#{description},comment=#{comment},attachment=#{attachment},
+		auditor=#{auditor},audit_time=#{auditTime},audit_level=#{auditLevel},audit_status=#{auditStatus},
+		finance=#{finance},finance_time=#{financeTime},deleted=#{deleted}
+		WHERE bill_id=#{billId}
+	</update>
+
+	<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateBySelective" parameterType="com.etop.management.entity.EtopBill">
+		UPDATE etop_bill SET
+		<trim suffixOverrides=",">
+			<if test="parkId != null">
+				park_id=#{parkId},
+			</if>
+			<if test="billType != null">
+				bill_type=#{billType},
+			</if>
+			<if test="billStatus != null">
+				bill_status=#{billStatus},
+			</if>
+			<if test="companyId != null">
+				company_id=#{companyId},
+			</if>
+			<if test="companyName != null">
+				company_name=#{companyName},
+			</if>
+			<if test="billSource != null">
+				bill_source=#{billSource},
+			</if>
+			<if test="billNoOut != null">
+				bill_no_out=#{billNoOut},
+			</if>
+			<if test="createdTime != null">
+				created_time=#{createdTime},
+			</if>
+			<if test="deadline != null">
+				deadline=#{deadline},
+			</if>
+			<if test="payTime != null">
+				pay_time=#{payTime},
+			</if>
+			<if test="startTime != null">
+				start_time=#{startTime},
+			</if>
+			<if test="endTime != null">
+				end_time=#{endTime},
+			</if>
+			<if test="amount != null">
+				amount=#{amount},
+			</if>
+			<if test="amountPaid != null">
+				amount_paid=#{amountPaid},
+			</if>
+			<if test="overdueFine != null">
+				overdue_fine=#{overdueFine},
+			</if>
+			<if test="overdueRate != null">
+				overdue_rate=#{overdueRate},
+			</if>
+			<if test="accountRemission != null">
+				account_remission=#{accountRemission},
+			</if>
+			<if test="overdueRemission != null">
+				overdue_remission=#{overdueRemission},
+			</if>
+			<if test="description != null">
+				description=#{description},
+			</if>
+			<if test="commment != null">
+				comment=#{comment},
+			</if>
+			<if test="attachment != null">
+				attachment=#{attachment},
+			</if>
+			<if test="auditor != null">
+				auditor=#{auditor},
+			</if>
+			<if test="auditTime != null">
+				audit_time=#{auditTime},
+			</if>
+			<if test="finance != null">
+				finance=#{finance},
+			</if>
+			<if test="financeTime != null">
+				finance_time=#{financeTime},
+			</if>
+		</trim>
+		WHERE bill_id=#{billId}
+	</update>
+
+	<!-- 删除记录 -->
+	<delete id="delete" parameterType="string">
+		UPDATE etop_bill SET deleted=1 WHERE bill_id=#{_parameter}
+	</delete>
+	
+	<update id="deletes" parameterType="string">
+		UPDATE etop_bill SET deleted=1
+		WHERE audit_status=0 AND bill_id IN
+		<foreach collection="array" item="billId" open="(" separator="," close=")">
+			#{billId}
+		</foreach>
+	</update>
+
+	<update id="audit" parameterType="map">
+		UPDATE etop_bill SET
+		audit_status=#{auditStatus},auditor=#{auditor},audit_time=NOW(),comment=CONCAT(comment,#{comment})
+		WHERE bill_id IN
+		<foreach collection="billIds" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+
+	<update id="auditTwo" parameterType="map">
+		UPDATE etop_bill SET
+		audit_status=#{auditStatus},auditor=#{auditor},audit_time=NOW(),comment=CONCAT(comment,#{comment})
+			<if test="billStatus != null">
+				,bill_status=#{billStatus}
+			</if>
+		WHERE bill_id =#{id}
+	</update>
+	
+	<update id="financeAudit" parameterType="map">
+		UPDATE etop_bill SET
+		audit_status=#{auditStatus},finance=#{finance},finance_time=NOW(),comment=CONCAT(comment,#{comment})
+		WHERE bill_id IN
+		<foreach collection="billIds" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+	<update id="updateOverdue">
+		UPDATE etop_bill SET
+		overdue_fine=overdue_fine+(amount-amount_paid-account_remission)*overdue_rate
+		WHERE NOW()>deadline AND amount&gt;(amount_paid+account_remission)
+	</update>
+	
+	<select id="getEnergyBillList" parameterType="com.etop.management.bean.PageEnergyBill" resultType="com.etop.management.model.EnergyBillModel">
+	
+	
+	
+	select 
+
+		a.bill_id as billId,b.company_name as companyName,
+		
+		a.description,a.amount,a.overdue_fine as overdueFine,
+		
+		a.bill_status as billStatus,a.audit_status as auditStatus,
+		
+		a.deadline,a.created_time as createdTime
+		
+		 from etop_bill a 
+		
+		left join etop_contract b on a.bill_no_out=b.contract_no
+		
+		 where a.bill_source=3 
+		
+<!-- 		 and b.ref_room_id=#{refRoomId} -->
+<if test="refRoomIds != null">
+		 	and b.ref_room_id IN
+        <foreach collection="refRoomIds" item="refRoomIds" index="index" open="(" separator="," close=")">
+            #{refRoomIds}
+        </foreach> 
+		 
+		 </if>
+		 
+		<if test="searchValue != null and searchValue != ''" >
+			and 
+			
+			(a.bill_id like '%${searchValue}%' or 
+			
+			b.company_name like '%${searchValue}%' or
+			
+			a.description like '%${searchValue}%'
+			
+			)       
+    	</if>
+		
+		order by ${orderColumn} ${orderDir} 
+
+		limit ${start},${length}
+		
+		
+	
+	
+	
+	</select>
+	
+	
+	<select id="getEnergyBillCount" resultType="integer" parameterType="com.etop.management.bean.PageEnergyBill">
+	
+	
+	
+	select 
+
+		ifnull(count(*),0)
+		
+		 from etop_bill a 
+		
+		left join etop_contract b on a.bill_no_out=b.contract_no
+		
+		 where a.bill_source=3 
+		
+		<if test="refRoomIds != null">
+		 	and b.ref_room_id IN
+        <foreach collection="refRoomIds" item="refRoomIds" index="index" open="(" separator="," close=")">
+            #{refRoomIds}
+        </foreach> 
+		 
+		 </if>
+		<if test="searchValue != null and searchValue != ''" >
+			and 
+			
+			(a.bill_id like '%${searchValue}%' or 
+			
+			b.company_name like '%${searchValue}%' or
+			
+			a.description like '%${searchValue}%'
+			
+			)       
+    	</if>
+	
+	
+	</select>
+	
+	<select id="sum" parameterType="map" resultType="java.math.BigDecimal">
+		SELECT SUM(amount) FROM etop_bill
+		WHERE deleted = 0
+		<if test="parkId != null and parkId != ''">
+			AND park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="billId != null and billId != ''">
+			AND bill_id LIKE '%${billId}%'
+		</if>
+		<if test="billType != null">
+			AND bill_type=#{billType}
+		</if>
+		<if test="billStatus != null">
+			AND bill_status=#{billStatus}
+		</if>
+		<if test="companyId != null and companyId != ''">
+			AND company_id=#{companyId}
+		</if>
+		<if test="companyName != null and companyName != ''">
+			AND company_name LIKE '%${companyName}%'
+		</if>
+		<if test="billSource != null">
+			AND bill_source=#{billSource}
+		</if>
+		<if test="auditStatus != null">
+			AND audit_status= #{auditStatus}
+		</if>
+		<if test="auditLevel != null">
+			AND audit_level= #{auditLevel}
+		</if>
+		<if test="beginDate != null">
+			AND created_time &gt; #{beginDate}
+		</if>
+		<if test="endDate != null">
+			AND created_time &lt; #{endDate}
+		</if>
+	</select>
+	
+	<select id="sumWithFloor" parameterType="map" resultType="java.math.BigDecimal">
+		SELECT SUM(t1.amount) FROM etop_bill t1
+		LEFT JOIN etop_contract t2 ON t1.bill_no_out=t2.contract_no
+		LEFT JOIN etop_floor_room t3 ON t2.ref_room_id=t3.id
+		WHERE t1.deleted = 0
+		<if test="billIds != null">
+			AND t1.bill_id IN
+			<foreach collection="billIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="billId != null and billId != ''">
+			AND t1.bill_id LIKE '%${billId}%'
+		</if>
+		<if test="parkId != null and parkId != ''">
+			AND t1.park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND t1.park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="billType != null">
+			AND t1.bill_type=#{billType}
+		</if>
+		<if test="billStatus != null">
+			AND t1.bill_status=#{billStatus}
+		</if>
+		<if test="companyId != null and companyId != ''">
+			AND t1.company_id=#{companyId}
+		</if>
+		<if test="companyName != null and companyName != ''">
+			AND t1.company_name LIKE '%${companyName}%'
+		</if>
+		<if test="billSource != null">
+			AND t1.bill_source=#{billSource}
+		</if>
+		<if test="auditStatus != null">
+			AND t1.audit_status= #{auditStatus}
+		</if>
+		<if test="auditLevel != null">
+			AND t1.audit_level=#{auditLevel}
+		</if>
+		<if test="beginDate != null">
+			AND t1.created_time &gt; #{beginDate}
+		</if>
+		<if test="endDate != null">
+			AND t1.created_time &lt; #{endDate}
+		</if>
+		<if test="paid != null and paid == false">
+			AND t1.bill_status &lt; 2
+		</if>
+		<if test="buildingSele != null and buildingSele != ''">
+			AND t3.ref_floor_id=#{buildingSele}
+		</if>
+		<if test="floorSele != null and floorSele != ''">
+			AND t3.ref_storey_id=#{floorSele}
+		</if>
+		<if test="blockSele != null and blockSele != ''">
+			AND t3.ref_area_id=#{blockSele}
+		</if>
+		<if test="roomNum != null and roomNum != ''">
+			AND t3.room_num LIKE '%${roomNum}%'
+		</if>
+	</select>
+	<select id="listServiceWithFloor" parameterType="String" resultType="com.etop.management.entity.EtopBill">
+		SELECT
+			t1.*, t2.building_no,
+			t2.storey,
+			t2.zone_no,
+			t2.room_no
+		FROM
+			etop_bill t1
+		 JOIN etop_service t2 ON t1.bill_no_out = t2.service_id
+		where bill_id = #{billId}
+	</select>
+	
+	
+	
+	<select id="searchDeposit" parameterType="String" resultType="com.etop.management.entity.EtopBill">
+		SELECT
+			bill_id,
+			bill_source,
+			created_time,
+			bill_no_out,
+			amount,
+			amount_paid,
+			description
+		FROM
+			etop_bill
+		WHERE
+			bill_source = 0
+	</select>
+	
+		<!-- 修改记录，只修改只不为空的字段 -->
+	<update id="updateByBillNoOut" parameterType="com.etop.management.entity.EtopBill">
+		UPDATE etop_bill 
+			SET
+				bill_no_out=#{billNoOut}
+		WHERE bill_id=#{billId}
+	</update>
+</mapper>

@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopCompanyDao">
+
+    <sql id="Base_Column_List" >
+        t1.company_type,t1.company_code,t1.company_status,t1.company_capital,t1.business_type,t1.beforeseat,t1.company_name,t1.contact,t1.mobile,t1.company_mobile,
+        t1.company_id,t1.company_fax,t1.spare_contact,t1.spare_mobile,t1.email,t1.remarks,t1.in_at,t1.out_at,t1.created_at,t1.park_id,t1.created_by,t1.updated_at,t1.updated_by,t1.aveMonthTurnover
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause_Object">
+        <if test="companyType != null" >
+            t1.company_type =  #{companyType}
+        </if>
+        <if test="companyCode != null" >
+            and t1.company_code =  #{companyCode}
+        </if>
+        <if test="companyCapital != null and companyCapital != ''" >
+            and t1.company_capital =  #{companyCapital}
+        </if>
+        <if test="businessType != null and businessType != ''" >
+            and t1.business_type = #{businessType}
+        </if>
+        <if test="beforeseat != null" >
+            and t1.beforeseat =  #{beforeseat}
+        </if>
+        <if test="companyName != null and companyName != ''" >
+            and t1.company_name like CONCAT('%',#{companyName},'%')
+        </if>
+        <if test="contact != null" >
+            and t1.contact =  #{contact}
+        </if>
+        <if test="mobile != null" >
+            and t1.mobile =  #{mobile}
+        </if>
+        <if test="companyMobile != null" >
+            and t1.company_mobile =  #{companyMobile}
+        </if>
+        <if test="companyId != null" >
+            and t1.company_id =  #{companyId}
+        </if>
+        <if test="companyFax != null" >
+            and t1.company_fax =  #{companyFax}
+        </if>
+        <if test="spareContact != null" >
+            and t1.spare_contact =  #{spareContact}
+        </if>
+        <if test="spareMobile != null" >
+            and t1.spare_mobile =  #{spareMobile}
+        </if>
+        <if test="email != null" >
+            and t1.email =  #{email}
+        </if>
+        <if test="remarks != null" >
+            and t1.remarks =  #{remarks}
+        </if>
+        <if test="inAt != null" >
+            and t1.in_at =  #{inAt}
+        </if>
+        <if test="outAt != null" >
+            and t1.out_at =  #{outAt}
+        </if>
+        <if test="parkId != null" >
+            and t1.park_id = #{parkId}
+        </if>
+        <if test="companyStatus != null and companyStatus !='' ">
+            and t1.company_status ${companyStatus}
+        </if>
+        <if test="createdBy != null">
+            AND t1.created_by = #{createdBy}
+        </if>
+        <if test="updatedBy != null">
+            AND t1.updated_by = #{updatedBy}
+        </if>
+        <if test="createdAt != null">
+            AND t1.created_at = #{createdAt}
+        </if>
+        <if test="updatedAt != null">
+            AND t1.updated_at = #{updatedAt}
+        </if>
+        <if test="aveMonthTurnover != null">
+            AND t1.aveMonthTurnover = #{aveMonthTurnover}
+        </if>
+    </sql>
+
+    <select id="select" resultType="com.etop.management.bean.EtopCompany">
+        SELECT
+            *
+        FROM
+            (
+                SELECT
+                        CASE
+                    WHEN t4.user_id IS NULL THEN
+                        0
+                    ELSE
+                        COUNT(t1.company_id)
+                    END AS employeesNums,
+                    t1.*, t2.user_name,
+                    t2.user_type
+                FROM
+                    etop_company t1
+                LEFT JOIN etop_user t2 ON t1.company_id = t2.company_id
+                <if test="businessPractice != null and businessPractice != '' ">
+                    INNER JOIN etop_company_business t3 on t1.company_id = t3.company_id
+                </if>
+                LEFT JOIN etop_company_staff t4 ON t1.company_id = t4.company_id
+                <where>
+                    <include refid="Example_Where_Clause_Object"/>
+                    <if test="businessPractice != null and businessPractice != '' ">
+                        AND t3.business_practice = #{businessPractice}
+                    </if>
+                    <if test="companyStatus2 != null and companyStatus2 !='' ">
+			            and t1.company_status ${companyStatus2}
+			        </if>
+                </where>
+                GROUP BY
+                    t1.company_id
+            ) a
+        where
+            1=1
+        <if test="employeesNums1 != null and employeesNums1 !='' ">
+            <![CDATA[
+                AND a.employeesNums >= #{employeesNums1}
+            ]]>
+        </if>
+        <if test="employeesNums2 != null and employeesNums2 !='' ">
+            <![CDATA[
+                AND a.employeesNums <= #{employeesNums2}
+            ]]>
+        </if>
+        <if test="aveMonthTurnover1 != null and aveMonthTurnover1 !='' ">
+             <![CDATA[
+            and a.aveMonthTurnover >= #{aveMonthTurnover1}
+             ]]>
+        </if>
+        <if test="aveMonthTurnover2 != null and aveMonthTurnover2 !='' ">
+             <![CDATA[
+            and a.aveMonthTurnover <= #{aveMonthTurnover2}
+             ]]>
+        </if>
+        ORDER BY
+            a.updated_at desc
+    </select>
+
+     <insert id="insert" keyProperty="companyId" useGeneratedKeys="true" parameterType="com.etop.management.bean.EtopCompany">
+        insert into etop_company(company_id,company_code,company_type,company_status,company_capital,business_type,beforeseat,company_name,
+            contact,mobile,company_mobile,company_fax,spare_contact,spare_mobile,email,remarks,in_at,out_at,park_id,
+            <include refid="com.etop.management.dao.CommonsDao.AUDIT_INFO_COLUMNS"/> ) values
+        (#{companyId},#{companyCode},#{companyType},#{companyStatus},#{companyCapital},#{businessType},#{beforeseat},#{companyName},#{contact},
+        #{mobile},#{companyMobile},#{companyFax},#{spareContact},#{spareMobile},#{email},#{remarks},#{inAt},
+        #{outAt},#{parkId},<include refid="com.etop.management.dao.CommonsDao.INSERT_WITH_AUDIT_INFO_COLUMNS"/> )
+    </insert>
+
+    <insert id="insertInfo">
+        insert into etop_company(company_type,company_code,company_status,company_capital,business_type,beforeseat,company_name,company_id,
+        contact,mobile,company_mobile,company_fax,spare_contact,spare_mobile,email,remarks,in_at,out_at,park_id,
+        <include refid="com.etop.management.dao.CommonsDao.AUDIT_INFO_COLUMNS"/> ) values
+        (#{companyType},#{companyCode},#{companyStatus},#{companyCapital},#{businessType},#{beforeseat},#{companyName},#{companyId},#{contact},
+        #{mobile},#{companyMobile},#{companyFax},#{spareContact},#{spareMobile},#{email},#{remarks},#{inAt},
+        #{outAt},#{parkId},<include refid="com.etop.management.dao.CommonsDao.INSERT_WITH_AUDIT_INFO_COLUMNS"/> )
+    </insert>
+
+
+    <update id="updateById">
+        update etop_company
+        <set>
+            <if test="companyType != null" >
+                company_type =  #{companyType},
+            </if>
+            <if test="companyStatus != null  ">
+                company_status=#{companyStatus},
+            </if>
+            <if test="companyCapital != null  ">
+                company_capital=#{companyCapital},
+            </if>
+            <if test="businessType != null  ">
+                business_type=#{businessType},
+            </if>
+            <if test="beforeseat != null  ">
+                beforeseat=#{beforeseat},
+            </if>
+            <if test="companyName != null  ">
+                company_name=#{companyName},
+            </if>
+            <if test="contact != null  ">
+                contact=#{contact},
+            </if>
+            <if test="mobile != null  ">
+                mobile=#{mobile},
+            </if>
+            <if test="companyMobile != null  ">
+                company_mobile=#{companyMobile},
+            </if>
+            <if test="companyId != null  ">
+                company_id=#{companyId},
+            </if>
+            <if test="companyFax != null  ">
+                company_fax=#{companyFax},
+            </if>
+            <if test="spareContact != null  ">
+                spare_contact=#{spareContact},
+            </if>
+            <if test="spareMobile != null  ">
+                spare_mobile=#{spareMobile},
+            </if>
+            <if test="email != null  ">
+                email=#{email},
+            </if>
+            <if test="remarks != null  ">
+                remarks=#{remarks},
+            </if>
+            <if test="inAt != null  ">
+                in_at=#{inAt},
+            </if>
+            <if test="outAt != null  ">
+                out_at=#{outAt},
+            </if>
+            <if test="parkId != null  ">
+                park_id=#{parkId},
+            </if>
+            <include refid="com.etop.management.dao.CommonsDao.UPDATE_WITH_AUDIT_INFO_COLUMNS"/>
+        </set>
+        where company_id = #{companyId}
+        order by updated_at desc
+    </update>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+            etop_company
+        WHERE
+            company_id IN
+        <foreach collection="companyIds" item="companyIds" index="index" open="(" separator="," close=")">
+            #{companyIds}
+        </foreach>
+    </delete>
+
+    <select id="getCompInfoById" resultType="com.etop.management.bean.EtopCompany">
+        SELECT
+            e.company_type,e.company_code,e.company_status,e.company_capital,e.business_type,e.beforeseat,e.company_name,e.contact,e.mobile,e.company_mobile,e.company_id,
+            e.company_fax,e.spare_contact,e.spare_mobile,e.email,e.remarks,e.in_at,e.out_at,e.created_at,e.park_id,e.created_by,e.updated_at,e.updated_by,p.park_name
+        FROM
+            etop_company e
+        INNER JOIN etop_park p ON e.park_id = p.id
+        WHERE
+            e.company_id = #{id}
+    </select>
+
+    <select id="getCompanyByParkId" resultType="com.etop.management.bean.EtopCompany">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_company t1
+        WHERE
+            t1.park_id IN
+        <foreach collection="parkIds" item="parkIds" index="index" open="(" separator="," close=")">
+            #{parkIds}
+        </foreach>
+    </select>
+    
+    <select id="searchCompany"  resultType="com.etop.management.model.CompanyModel">
+    
+    	select * from (SELECT
+            a.company_id as companyId,a.company_name as companyName,
+            a.contact,a.mobile,b.id as parkId,b.park_name as parkName
+        FROM
+            etop_company a
+        LEFT JOIN 
+        	etop_park b on a.park_id=b.id           
+        WHERE 1=1 
+
+        <if test="parkId != null and parkId != '' ">
+             and   a.park_id=#{parkId}
+        </if>
+
+        <if test="searchValue != null and searchValue != '' ">
+         and   a.company_name like '%${searchValue}%'
+        </if>
+        
+        union
+        
+	SELECT
+            a.id as companyId,a.company_name as companyName,
+            a.contact,a.mobile,b.id as parkId,b.park_name as parkName
+        FROM
+            etop_company_intention a
+        LEFT JOIN 
+        	etop_park b on a.park_id=b.id           
+        WHERE 1=1 
+
+        <if test="parkId != null and parkId != '' ">
+             and   a.park_id=#{parkId}
+        </if>
+
+        <if test="searchValue != null and searchValue != '' ">
+         and   a.company_name like '%${searchValue}%'
+        </if>
+) a
+        order by a.companyName asc
+                
+    </select>
+
+    <select id="getCompanyNum" resultType="com.etop.management.bean.EtopCompany">
+        SELECT
+	        COUNT(*) companyNum
+        FROM
+            etop_company
+        WHERE
+            park_id = #{parkId}
+        and company_status = 1
+    </select>
+
+    <select id="selectEmployeesNums" resultType="java.lang.Integer">
+        SELECT
+	        COUNT(DISTINCT(company_id)) AS employeesNums
+        FROM
+            etop_company_staff
+        WHERE
+            company_id = #{companyId}
+    </select>
+
+    <select id="selectCompany" resultType="com.etop.management.bean.EtopCompany">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_company t1
+        WHERE
+            t1.company_name = #{companyName}
+        <if test="companyId != null and companyId != ''">
+            AND t1.company_id = #{companyId}
+        </if>
+    </select>
+    
+    <select id="selectCompanyList" resultType="com.etop.management.bean.EtopCompany">
+        SELECT
+            company_id
+        FROM
+            etop_company
+        WHERE
+           company_status= 1
+    </select>
+    
+ 	<update id="updateBycompanyId">
+        update 
+        	etop_company
+        set
+         	company_status = 4
+        where
+        	 company_id = #{companyId}
+    </update>
+    
+    
+    <select id="getCompanyName" resultType="String">
+        SELECT
+			t2.company_name
+		FROM
+			etop_user t1
+		LEFT JOIN etop_company t2 ON t1.company_id = t2.company_id
+		where t1.id =#{id}
+    </select>
+    
+      <update id="updateOfTurnover">
+        update etop_company
+        <set>
+           <if test="aveMonthTurnover != null  ">
+                aveMonthTurnover=#{aveMonthTurnover}
+            </if>
+        </set>
+        where company_id = #{companyId}
+      </update>
+</mapper>

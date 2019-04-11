@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopGoodsDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.entity.EtopGoods" >
+	<result column="id" property="id"/>
+	<result column="goodName" property="goodName"/>
+	<result column="unit" property="unit"/>
+	<result column="unitPrice" property="unitPrice"/>
+	<result column="createdTime" property="createdTime"/>
+	<result column="activated" property="activated"/>
+	<result column="parkId" property="parkId"/>
+	<result column="category" property="category"/>
+	<result column="categories" property="categories"/>
+	<result column="description" property="description"/>
+	<result column="remark" property="remark"/>
+	
+</resultMap>
+       
+<!-- etop_goods table all fields -->
+<sql id="Base_Column_List" >
+	 id,goodName,unit,unitPrice,createdTime,activated,parkId,category,description,remark
+	 
+</sql>
+   
+   
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="condition.id != null and condition.id != ''" >
+	    and id =  #{condition.id}
+	</if>
+	
+			<if test="nocondition.id != null and nocondition.id != ''" >
+	    and id not in  (#{nocondition.id})
+	</if>
+	
+		<if test="condition.goodName != null and condition.goodName != ''" >
+	    and goodName like  '%${condition.goodName}%'
+	</if>
+	
+			<if test="nocondition.goodName != null and nocondition.goodName != ''" >
+	    and goodName not in  (#{nocondition.goodName})
+	</if>
+	
+		<if test="condition.category != null and condition.category != ''" >
+	    and category like  '%${condition.category}%'
+	</if>
+	
+		<if test="nocondition.category != null and nocondition.category != ''" >
+	    and category not in  (#{nocondition.category})
+	</if>
+	
+		<if test="condition.categories != null and condition.categories != ''" >
+	    and category  =  #{condition.categories}
+	</if>
+	
+		<if test="nocondition.categories != null and nocondition.categories != ''" >
+	    and category not in  (#{nocondition.categories})
+	</if>
+	
+		<if test="condition.unit != null and condition.unit != ''" >
+	    and unit =  #{condition.unit}
+	</if>
+	
+			<if test="nocondition.unit != null and nocondition.unit != ''" >
+	    and unit not in  (#{nocondition.unit})
+	</if>
+	
+		<if test="condition.unitPrice != null and condition.unitPrice != ''" >
+	    and unitPrice =  #{condition.unitPrice}
+	</if>
+	
+			<if test="nocondition.unitPrice != null and nocondition.unitPrice != ''" >
+	    and unitPrice not in  (#{nocondition.unitPrice})
+	</if>
+	
+		<if test="condition.createdTime != null and condition.createdTime != ''" >
+	    and createdTime =  #{condition.createdTime}
+	</if>
+	
+			<if test="nocondition.createdTime != null and nocondition.createdTime != ''" >
+	    and createdTime not in  (#{nocondition.createdTime})
+	</if>
+	
+		<if test="condition.activated != null and condition.activated != ''" >
+	    and activated =  #{condition.activated}
+	</if>
+	
+			<if test="nocondition.activated != null and nocondition.activated != ''" >
+	    and activated not in  (#{nocondition.activated})
+	</if>
+	
+		<if test="condition.parkId != null and condition.parkId != ''" >
+	    and parkId =  #{condition.parkId}
+	</if>
+	
+			<if test="nocondition.parkId != null and nocondition.parkId != ''" >
+	    and parkId not in  (#{nocondition.parkId})
+	</if>
+	
+		<if test="condition.remark != null and condition.remark != ''" >
+	    and remark =  #{condition.remark}
+	</if>
+	
+			<if test="nocondition.remark != null and nocondition.remark != ''" >
+	    and remark not in  (#{nocondition.remark})
+	</if>
+		<if test="condition.description != null and condition.description != ''" >
+	    and description =  #{condition.description}
+	</if>
+	
+			<if test="nocondition.description != null and nocondition.description != ''" >
+	    and description  not in  (#{nocondition.description})
+	</if>
+	
+
+</trim>
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="id != null" >
+	    and id =  #{id}
+	</if>
+	
+		<if test="goodName != null" >
+	    and goodName like  '%${goodName}%'
+	</if>
+	
+		<if test="unit != null" >
+	    and unit =  #{unit}
+	</if>
+	
+		<if test="unitPrice != null" >
+	    and unitPrice =  #{unitPrice}
+	</if>
+	
+		<if test="createdTime != null" >
+	    and createdTime =  #{createdTime}
+	</if>
+	
+		<if test="activated != null" >
+	    and activated =  #{activated}
+	</if>
+	
+		<if test="parkId != null" >
+	    and parkId =  #{parkId}
+	</if>
+		<if test="category != null" >
+	    and category =  #{category}
+	</if>	
+		<if test="categories != null" >
+	    and category =  #{categories}
+	</if>	
+		<if test="description != null" >
+	    and description =  #{description}
+	</if>
+		<if test="description != null" >
+	    and description =  #{description}
+	</if>	
+		<if test="remark != null" >
+	    and remark =  #{remark}
+	</if>
+		<if test="remark != null" >
+	    and remark =  #{remark}
+	</if>	
+</trim>
+</sql>   
+
+<!-- 插入记录 -->
+<insert id="add" parameterType="com.etop.management.entity.EtopGoods" >
+  insert into etop_goods(id,goodName,unit,unitPrice,createdTime,activated,parkId,category,description,remark)
+ values(#{id},#{goodName},#{unit},#{unitPrice},#{createdTime},#{activated},#{parkId},#{category},#{description},#{remark})
+</insert>
+
+<!-- 批量插入记录 -->
+<insert id="adds" parameterType="com.etop.management.entity.EtopGoods" >
+  insert into etop_goods(id,goodName,unit,unitPrice,createdTime,activated,parkId,category,description,remark)
+  values
+  <foreach collection="list" item="item" index="index" separator="," > 
+  	(#{item.id},#{item.goodName},#{item.unit},#{item.unitPrice},#{item.createdTime},#{item.activated},#{item.parkId},#{item.category},#{description},#{remark})
+  </foreach>
+</insert>
+
+<!-- 根据id，修改记录-->  
+ <update id="update" parameterType="com.etop.management.entity.EtopGoods" >
+  update etop_goods set goodName=#{goodName},unit=#{unit},unitPrice=#{unitPrice},createdTime=#{createdTime},activated=#{activated},parkId=#{parkId},category=#{category},description=#{description},remark=#{remark} where id=#{id}
+ </update>
+ 
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="updateBySelective" parameterType="com.etop.management.entity.EtopGoods" >
+	update etop_goods set 
+	<trim  suffixOverrides="," >
+	<if test="goodName != null  ">
+		goodName=#{goodName},
+	</if>
+	<if test="unit != null  ">
+		unit=#{unit},
+	</if>
+	<if test="unitPrice != null  ">
+		unitPrice=#{unitPrice},
+	</if>
+	<if test="createdTime != null  ">
+		createdTime=#{createdTime},
+	</if>
+	<if test="activated != null  ">
+		activated=#{activated},
+	</if>
+	<if test="parkId != null  ">
+		parkId=#{parkId},
+	</if>
+	<if test="category != null  ">
+		category=#{category},
+	</if>
+	<if test="description != null  ">
+		description=#{description},
+	</if>
+	<if test="remark != null  ">
+		remark=#{remark},
+	</if>
+	</trim>
+	where id =#{id}
+</update>
+
+<!-- 删除记录 -->
+<delete id="delete" parameterType="com.etop.management.entity.EtopGoods">
+	delete 	 from etop_goods
+	<include refid="Example_Where_Clause_Object"/>
+</delete>
+ 
+<!-- 根据id查询  -->
+<select id="queryById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_goods where id = #{id}
+</select>
+
+<select id="queryObject" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopGoods">
+	select <include refid="Base_Column_List" />
+	from etop_goods
+	<include refid="Example_Where_Clause_Object"/>
+</select>
+
+<!--  列表总数-->
+<select id="queryByCount" resultType="java.lang.Integer"  parameterType="com.etop.management.bean.Criteria">
+	select count(1) from etop_goods 
+	<include refid="Example_Where_Clause"/>
+</select>
+  	
+<!-- 查询列表 -->
+<select id="queryByList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+	select 
+	<include refid="Base_Column_List"/>
+	from etop_goods 
+	<include refid="Example_Where_Clause"/>
+	<if test="otherCondition != null" >
+	    #{otherCondition}
+	</if>
+	
+	<if test="orderByClause != null and orderByClause != ''" >
+       order by  ${orderByClause}
+    </if>
+    <if test="limitClause != null and limitClause != ''" >
+       ${limitClause}
+    </if>
+</select>
+<select id="queryByListGroup" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+	select 
+	<include refid="Base_Column_List"/>
+	from etop_goods 
+	<include refid="Example_Where_Clause"/>
+	<if test="otherCondition != null" >
+	    #{otherCondition}
+	</if>
+	
+	<if test="orderByClause != null and orderByClause != ''" >
+       order by  ${orderByClause}
+    </if>
+    <if test="limitClause != null and limitClause != ''" >
+       ${limitClause}
+    </if>
+    GROUP BY category
+</select>
+
+<select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</select>
+
+<insert id="myDefinedAdd" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</insert>
+
+<update id="myDefinedUpdate" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</update>  	
+
+<delete id="myDefinedDelete" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</delete>  	
+
+<select id="categoryList" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopGoods">
+      SELECT
+			category
+		FROM
+			etop_goods
+		where
+		  parkId= #{parkId}
+		AND
+		  activated = '1'
+		GROUP BY
+			category
+      
+</select>
+
+      <!-- 根据类别获得服务名称 -->
+      <select id="getCategory" resultType="Map"  parameterType="Map"  >
+
+		SELECT
+			*
+		FROM
+			etop_goods
+		WHERE category=#{category}
+		and activated = 1
+		AND 
+		parkId =#{parkId}
+     </select>
+     
+          <!--     验证是否存在重复服务     -->
+       <select id="proveGoodName" parameterType="Map" resultType="String">
+		       SELECT
+					count(*)
+				FROM
+					etop_goods
+				WHERE
+					goodName =#{goodName}
+       			AND 
+			  		parkId =#{parkId}
+       </select> 
+</mapper>   

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.WebIndexDao">
+      
+      <select id="getWebIndex" parameterType="string"   resultType="string">
+      SELECT context FROM etop_web_context WHERE style = #{value}
+      </select>
+      
+      <select id="getAbout" parameterType="string" resultType="string">
+      SELECT context FROM etop_web_context WHERE style = 'about'
+      </select>
+      
+      <select id="getHeader" parameterType="string" resultType="string">
+      SELECT context FROM etop_web_context WHERE style = 'header'
+      </select>
+      
+      <select id="getFooter" parameterType="string" resultType="string">
+      SELECT context FROM etop_web_context WHERE style = 'footer'
+      </select>
+</mapper>

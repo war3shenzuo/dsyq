@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopCompanyBusinessDao">
+
+    <sql id="Base_Column_List" >
+        company_id,business_practice,electronic_retailing,created_at,created_by,updated_at,updated_by
+    </sql>
+
+    <insert id="insert" parameterType="java.util.List">
+        insert into etop_company_business(id,company_id,business_practice,electronic_retailing,created_at, updated_at)
+        values
+        <foreach collection="etopCompanyBusiness" item="etopCompanyBusiness" index="index" separator="," >
+            (uuid(),#{etopCompanyBusiness.companyId},#{etopCompanyBusiness.businessPractice},#{etopCompanyBusiness.electronicRetailing},#{etopCompanyBusiness.createdAt},#{etopCompanyBusiness.updatedAt})
+        </foreach>
+    </insert>
+
+    <insert id="addInfo">
+        insert into etop_company_business(id, company_id, business_practice, created_at, created_by, updated_at)
+        values
+        (uuid(),#{companyId},#{businessPractice},sysdate(),#{createdBy},sysdate())
+    </insert>
+
+    <delete id="deleteByIds" >
+        DELETE
+        FROM
+            etop_company_business
+        WHERE
+            company_id IN
+        <foreach collection="companyIds" item="companyIds" index="index" open="(" separator="," close=")">
+            #{companyIds}
+        </foreach>
+    </delete>
+
+    <select id="getCompBusiness" resultType="com.etop.management.bean.EtopCompanyBusiness">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_company_business
+        WHERE
+            company_id = #{companyId}
+    </select>
+
+</mapper>

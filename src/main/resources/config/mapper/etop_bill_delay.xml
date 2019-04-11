@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopBillDelayDao">
+	<select id="findById" resultType="com.etop.management.entity.EtopBillDelay">
+		SELECT * FROM etop_bill_delay WHERE delay_id=#{_parameter}
+	</select>
+	<select id="listByIds" resultType="com.etop.management.entity.EtopBillDelay">
+		SELECT * FROM etop_bill_delay WHERE delay_id IN
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+	<select id="listByBillId" parameterType="string"
+		resultType="com.etop.management.entity.EtopBillDelay">
+		SELECT * FROM etop_bill_delay
+		WHERE deleted=0 AND bill_id=#{_parameter}
+	</select>
+	<select id="list" parameterType="map" resultType="com.etop.management.entity.EtopBillDelay">
+		SELECT * FROM etop_bill_delay WHERE deleted=0
+		<if test="billId != null">
+			AND bill_id=#{billId}
+		</if>
+		<if test="delayTime != null">
+			AND delay_time=#{delayTime}
+		</if>
+		<if test="reason != null">
+			AND reason=#{reason}
+		</if>
+		<if test="applicant != null">
+			AND applicant=#{applicant}
+		</if>
+		<if test="applyTime != null">
+			AND apply_time=#{applyTime}
+		</if>
+		<if test="auditStatus != null">
+			AND audit_status=#{auditStatus}
+		</if>
+		<if test="auditor != null">
+			AND auditor=#{auditor}
+		</if>
+		<if test="auditTime != null">
+			AND audit_time=#{auditTime}
+		</if>
+	</select>
+	
+	<select id="listWithUser" parameterType="map" resultType="com.etop.management.bean.BillDelayWithUser">
+		SELECT t1.*,t2.user_name AS applicant_name
+		FROM etop_bill_delay t1 INNER JOIN etop_user t2
+		ON t1.applicant=t2.id
+		WHERE t1.deleted=0
+		<if test="billId != null">
+			AND t1.bill_id=#{billId}
+		</if>
+		<if test="delayTime != null">
+			AND t1.delay_time=#{delayTime}
+		</if>
+		<if test="reason != null">
+			AND t1.reason=#{reason}
+		</if>
+		<if test="applicant != null">
+			AND t1.applicant=#{applicant}
+		</if>
+		<if test="auditStatus != null">
+			AND t1.audit_status=#{auditStatus}
+		</if>
+		<if test="auditor != null">
+			AND t1.auditor=#{auditor}
+		</if>
+	</select>
+	
+	<select id="listWithBill" parameterType="map" resultType="com.etop.management.bean.BillDelayBean">
+		SELECT t1.*,t2.company_name,t2.deadline
+		FROM etop_bill_delay t1 INNER JOIN etop_bill t2
+		ON t1.bill_id=t2.bill_id
+		WHERE t1.deleted=0
+		<if test="auditStatus != null">
+			AND t1.audit_status=#{auditStatus}
+		</if>
+		<if test="audited != null and audited">
+			AND t1.audit_status&gt;0
+		</if>
+		<if test="audited != null and !audited">
+			AND t1.audit_status=0
+		</if>
+		<if test="parkId != null">
+			AND t2.park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND t2.park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="listByParkId" parameterType="map"
+		resultType="com.etop.management.entity.EtopBillDelay">
+		SELECT t1.* FROM
+		etop_bill_delay t1 INNER JOIN etop_bill t2
+		ON t1.bill_id=t2.bill_id
+		WHERE t1.deleted=0
+		<if test="auditStatus != null">
+			AND t1.audit_status=#{auditStatus}
+		</if>
+		<if test="parkId != null">
+			AND t2.park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND t2.park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="listWithUserByParkId" parameterType="map"
+		resultType="com.etop.management.bean.BillDelayWithUser">
+		SELECT t1.*,t3.user_name AS applicant_name FROM
+		etop_bill_delay t1 INNER JOIN etop_bill t2 INNER JOIN etop_user t3
+		ON t1.bill_id=t2.bill_id AND t1.applicant=t3.id
+		WHERE t1.deleted=0
+		<if test="auditStatus != null">
+			AND t1.audit_status=#{auditStatus}
+		</if>
+		<if test="parkId != null">
+			AND t2.park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND t2.park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</select>
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="com.etop.management.entity.EtopBillDelay">
+		INSERT INTO etop_bill_delay(delay_id,bill_id,delay_time,reason,applicant,apply_time,audit_status,audit_desc,auditor,audit_time)
+		VALUES(#{delayId},#{billId},#{delayTime},#{reason},#{applicant},#{applyTime},#{auditStatus},#{auditDesc},#{auditor},#{auditTime})
+	</insert>
+
+	<!-- 批量插入记录 -->
+	<insert id="adds" parameterType="com.etop.management.entity.EtopBillDelay">
+		INSERT INTO
+		etop_bill_delay(delay_id,bill_id,delay_time,reason,applicant,apply_time,audit_status,audit_desc,auditor,audit_time)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{delayId},#{billId},#{delayTime},#{reason},#{applicant},#{applyTime},#{auditStatus},#{auditDesc},#{auditor},#{auditTime})
+		</foreach>
+	</insert>
+
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="com.etop.management.entity.EtopBillDelay">
+		UPDATE etop_bill_delay SET
+		bill_id=#{billId},delay_time=#{delayTime},reason=#{reason},applicant=#{applicant},apply_time=#{applyTime},
+		audit_status=#{auditStatus},audit_desc=#{auditDesc},auditor=#{auditor},audit_time=#{auditTime}
+		where delay_id=#{delayId}
+	</update>
+	
+	<update id="updateSelective" parameterType="com.etop.management.entity.EtopBillDelay">
+		UPDATE etop_bill_delay SET
+		<trim suffixOverrides=",">
+			<if test="billId != null">
+				bill_id=#{billId},
+			</if>
+			<if test="delayTime != null">
+				delay_time=#{delayTime},
+			</if>
+			<if test="reason != null">
+				reason=#{reason},
+			</if>
+			<if test="applicant != null">
+				applicant=#{applicant},
+			</if>
+			<if test="applyTime != null">
+				apply_time=#{applyTime},
+			</if>
+			<if test="auditDesc != null">
+				audit_desc=#{auditDesc},
+			</if>
+			<if test="auditor != null">
+				auditor=#{auditor},
+			</if>
+			<if test="auditTime != null">
+				audit_time=#{auditTime},
+			</if>
+		</trim>
+		where delay_id=#{delayId}
+	</update>
+
+	<!-- 删除记录 -->
+	<update id="delete" parameterType="string">
+		UPDATE etop_bill_delay SET deleted=1 WHERE delay_id=#{_parameter}
+	</update>
+	
+	<update id="deletes">
+		UPDATE etop_bill_delay SET deleted=1
+		WHERE audit_status=0 AND delay_id IN
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+	<update id="setAuditByIds" parameterType="map">
+		UPDATE etop_bill_delay SET
+		audit_status=#{auditStatus},auditor=#{auditor},audit_time=NOW()
+		WHERE delay_id IN
+		<foreach collection="delayIds" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+</mapper>

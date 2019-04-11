@@ -1,0 +1,891 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopServiceDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.entity.EtopService" >
+	<result column="service_id" property="serviceId"/>
+	<result column="service_no" property="serviceNo"/>
+	<result column="club_id" property="clubId"/>
+	<result column="service_type" property="serviceType"/>
+	<result column="service_status" property="serviceStatus"/>
+	<result column="company_id" property="companyId"/>
+	<result column="company_name" property="companyName"/>
+	<result column="apply_time" property="applyTime"/>
+	<result column="complete_time" property="completeTime"/>
+	<result column="building_no" property="buildingNo"/>
+	<result column="zone_no" property="zoneNo"/>
+	<result column="storey" property="storey"/>
+	<result column="room_no" property="roomNo"/>
+	<result column="applicant" property="applicant"/>
+	<result column="applicant_phone" property="applicantPhone"/>
+	<result column="applicant_department" property="applicantDepartment"/>
+	<result column="applicant_position" property="applicantPosition"/>
+	<result column="isfree" property="isfree"/>
+	<result column="description" property="description"/>
+	<result column="beginTime" property="beginTime"/>
+	<result column="endTime" property="endTime"/>
+	<result column="facilityName" property="facilityName"/>
+	<result column="expirationTime" property="expirationTime"/>
+	<result column="facilityPrice" property="facilityPrice"/>
+	<result column="changes" property="changes"/>
+	<result column="totalPrices" property="totalPrices"/>
+</resultMap>
+       
+<!-- etop_service table all fields -->
+<sql id="Base_Column_List" >
+	 service_id,service_no,club_id,service_type,service_status,company_id,company_name,apply_time,complete_time,building_no,zone_no,storey,room_no,applicant,applicant_phone,applicant_department,applicant_position,isfree,description,changes
+	 
+</sql>
+
+<sql id="Base_Column_List_ASNAME" >
+	 es.service_id,es.service_no,es.club_id,es.service_type,es.service_status,es.company_id,es.company_name,es.apply_time,es.complete_time,es.building_no,es.zone_no,es.storey,es.room_no,es.applicant,es.applicant_phone,es.applicant_department,es.applicant_position,es.isfree,es.description,es.changes
+	 
+</sql>
+   
+   
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="condition.serviceId != null and condition.serviceId != ''" >
+	    and service_id =  #{condition.serviceId}
+	</if>
+	
+			<if test="nocondition.serviceId != null and nocondition.serviceId != ''" >
+	    and service_id not in  (#{nocondition.serviceId})
+	</if>
+	
+		<if test="condition.serviceNo != null and condition.serviceNo != ''" >
+	    and service_no =  #{condition.serviceNo}
+	</if>
+	
+			<if test="nocondition.serviceNo != null and nocondition.serviceNo != ''" >
+	    and service_no not in  (#{nocondition.serviceNo})
+	</if>
+	
+		<if test="condition.clubId != null and condition.clubId != ''" >
+	    and club_id =  #{condition.clubId}
+	</if>
+	
+			<if test="nocondition.clubId != null and nocondition.clubId != ''" >
+	    and club_id not in  (#{nocondition.clubId})
+	</if>
+	
+		<if test="condition.serviceType != null and condition.serviceType != ''" >
+	    and service_type =  #{condition.serviceType}
+	</if>
+	
+			<if test="nocondition.serviceType != null and nocondition.serviceType != ''" >
+	    and service_type not in  (#{nocondition.serviceType})
+	</if>
+	
+		<if test="condition.serviceStatus != null and condition.serviceStatus != ''" >
+	    and service_status =  #{condition.serviceStatus}
+	</if>
+	
+			<if test="nocondition.serviceStatus != null and nocondition.serviceStatus != ''" >
+	    and service_status not in  (#{nocondition.serviceStatus})
+	</if>
+	
+		<if test="condition.companyId != null and condition.companyId != ''" >
+	    and company_id =  #{condition.companyId}
+	</if>
+	
+			<if test="nocondition.companyId != null and nocondition.companyId != ''" >
+	    and company_id not in  (#{nocondition.companyId})
+	</if>
+	
+		<if test="condition.companyName != null and condition.companyName != ''" >
+	    and company_name =  #{condition.companyName}
+	</if>
+	
+			<if test="nocondition.companyName != null and nocondition.companyName != ''" >
+	    and company_name not in  (#{nocondition.companyName})
+	</if>
+	
+		<if test="condition.applyTime != null and condition.applyTime != ''" >
+	    and apply_time =  #{condition.applyTime}
+	</if>
+	
+			<if test="nocondition.applyTime != null and nocondition.applyTime != ''" >
+	    and apply_time not in  (#{nocondition.applyTime})
+	</if>
+	
+		<if test="condition.completeTime != null and condition.completeTime != ''" >
+	    and complete_time =  #{condition.completeTime}
+	</if>
+	
+			<if test="nocondition.completeTime != null and nocondition.completeTime != ''" >
+	    and complete_time not in  (#{nocondition.completeTime})
+	</if>
+	
+		<if test="condition.buildingNo != null and condition.buildingNo != ''" >
+	    and building_no =  #{condition.buildingNo}
+	</if>
+	
+			<if test="nocondition.buildingNo != null and nocondition.buildingNo != ''" >
+	    and building_no not in  (#{nocondition.buildingNo})
+	</if>
+	
+		<if test="condition.zoneNo != null and condition.zoneNo != ''" >
+	    and zone_no =  #{condition.zoneNo}
+	</if>
+	
+			<if test="nocondition.zoneNo != null and nocondition.zoneNo != ''" >
+	    and zone_no not in  (#{nocondition.zoneNo})
+	</if>
+	
+		<if test="condition.storey != null and condition.storey != ''" >
+	    and storey =  #{condition.storey}
+	</if>
+	
+			<if test="nocondition.storey != null and nocondition.storey != ''" >
+	    and storey not in  (#{nocondition.storey})
+	</if>
+	
+		<if test="condition.roomNo != null and condition.roomNo != ''" >
+	    and room_no =  #{condition.roomNo}
+	</if>
+	
+			<if test="nocondition.roomNo != null and nocondition.roomNo != ''" >
+	    and room_no not in  (#{nocondition.roomNo})
+	</if>
+	
+		<if test="condition.applicant != null and condition.applicant != ''" >
+	    and applicant =  #{condition.applicant}
+	</if>
+	
+			<if test="nocondition.applicant != null and nocondition.applicant != ''" >
+	    and applicant not in  (#{nocondition.applicant})
+	</if>
+	
+		<if test="condition.applicantPhone != null and condition.applicantPhone != ''" >
+	    and applicant_phone =  #{condition.applicantPhone}
+	</if>
+	
+			<if test="nocondition.applicantPhone != null and nocondition.applicantPhone != ''" >
+	    and applicant_phone not in  (#{nocondition.applicantPhone})
+	</if>
+	
+		<if test="condition.applicantDepartment != null and condition.applicantDepartment != ''" >
+	    and applicant_department =  #{condition.applicantDepartment}
+	</if>
+	
+			<if test="nocondition.applicantDepartment != null and nocondition.applicantDepartment != ''" >
+	    and applicant_department not in  (#{nocondition.applicantDepartment})
+	</if>
+	
+		<if test="condition.applicantPosition != null and condition.applicantPosition != ''" >
+	    and applicant_position =  #{condition.applicantPosition}
+	</if>
+	
+			<if test="nocondition.applicantPosition != null and nocondition.applicantPosition != ''" >
+	    and applicant_position not in  (#{nocondition.applicantPosition})
+	</if>
+	
+		<if test="condition.isfree != null and condition.isfree != ''" >
+	    and isfree =  #{condition.isfree}
+	</if>
+	
+			<if test="nocondition.isfree != null and nocondition.isfree != ''" >
+	    and isfree not in  (#{nocondition.isfree})
+	</if>
+	
+		<if test="condition.description != null and condition.description != ''" >
+	    and description =  #{condition.description}
+	</if>
+	
+			<if test="nocondition.description != null and nocondition.description != ''" >
+	    and description not in  (#{nocondition.description})
+	</if>
+	
+</trim>
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="serviceId != null" >
+	    and service_id =  #{serviceId}
+	</if>
+	
+		<if test="serviceNo != null" >
+	    and service_no =  #{serviceNo}
+	</if>
+	
+		<if test="clubId != null" >
+	    and club_id =  #{clubId}
+	</if>
+	
+		<if test="serviceType != null" >
+	    and service_type =  #{serviceType}
+	</if>
+	
+		<if test="serviceStatus != null" >
+	    and service_status =  #{serviceStatus}
+	</if>
+	
+		<if test="companyId != null" >
+	    and company_id =  #{companyId}
+	</if>
+	
+		<if test="companyName != null" >
+	    and company_name =  #{companyName}
+	</if>
+	
+		<if test="applyTime != null" >
+	    and apply_time =  #{applyTime}
+	</if>
+	
+		<if test="completeTime != null" >
+	    and complete_time =  #{completeTime}
+	</if>
+	
+		<if test="buildingNo != null" >
+	    and building_no =  #{buildingNo}
+	</if>
+	
+		<if test="zoneNo != null" >
+	    and zone_no =  #{zoneNo}
+	</if>
+	
+		<if test="storey != null" >
+	    and storey =  #{storey}
+	</if>
+	
+		<if test="roomNo != null" >
+	    and room_no =  #{roomNo}
+	</if>
+	
+		<if test="applicant != null" >
+	    and applicant =  #{applicant}
+	</if>
+	
+		<if test="applicantPhone != null" >
+	    and applicant_phone =  #{applicantPhone}
+	</if>
+	
+		<if test="applicantDepartment != null" >
+	    and applicant_department =  #{applicantDepartment}
+	</if>
+	
+		<if test="applicantPosition != null" >
+	    and applicant_position =  #{applicantPosition}
+	</if>
+	
+		<if test="isfree != null" >
+	    and isfree =  #{isfree}
+	</if>
+	
+		<if test="description != null " >
+	    and description =  #{description}
+	</if>
+			<if test="changes != null " >
+	    and changes =  #{changes}
+	</if>
+</trim>
+</sql>  
+
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object_ASNAME">
+where 1=1
+<trim  suffixOverrides="," >
+	<if test="serviceNo != null and serviceNo != '' " >
+	    and es.service_no =  #{serviceNo}
+	</if>
+	
+	<if test="serviceType != null and serviceType != '' " >
+	    and es.service_type =  #{serviceType}
+	</if>
+	<if test="serviceStatus != null and serviceStatus != '' " >
+	    and es.service_status =  #{serviceStatus}
+	</if>
+	
+	<if test="category != null and category != '' " >
+	    and eg.category =  #{category}
+	</if>
+	<if test="goodName != null and goodName != '' " >
+	    and eg.goodName =  #{goodName}
+	</if>
+	<if test="number != null and number != '' " >
+	    and esp.number =  #{number}
+	</if>
+	<if test="totalPrice != null and totalPrice != '' " >
+	    and esp.total_price =  #{totalPrice}
+	</if>
+	<if test="companyName != null and companyName != '' " >
+	    and es.company_name like  '%${companyName}%'
+	</if>
+	<if test="applyTime != null and applyTime != '' " >
+	    and es.apply_time >=  #{applyTime}
+	</if>
+	<if test="completeTime != null and completeTime != '' " >
+	    and es.complete_time &lt;=  #{completeTime}
+	</if>
+	
+</trim>
+</sql>    
+
+<!-- 插入记录 -->
+<insert id="add" parameterType="com.etop.management.entity.EtopService" >
+  insert into etop_service(service_id,service_no,club_id,service_type,service_status,company_id,company_name,apply_time,complete_time,building_no,zone_no,storey,room_no,applicant,applicant_phone,applicant_department,applicant_position,isfree,description,changes)
+ values(#{serviceId},#{serviceNo},#{clubId},#{serviceType},#{serviceStatus},#{companyId},#{companyName},#{applyTime},#{completeTime},#{buildingNo},#{zoneNo},#{storey},#{roomNo},#{applicant},#{applicantPhone},#{applicantDepartment},#{applicantPosition},#{isfree},#{description},#{changes})
+</insert>
+
+<!-- 批量插入记录 -->
+<insert id="adds" parameterType="com.etop.management.entity.EtopService" >
+  insert into etop_service(service_id,service_no,club_id,service_type,service_status,company_id,company_name,apply_time,complete_time,building_no,zone_no,storey,room_no,applicant,applicant_phone,applicant_department,applicant_position,isfree,description,changes)
+  values
+  <foreach collection="list" item="item" index="index" separator="," > 
+  	(#{item.serviceId},#{item.serviceNo},#{item.clubId},#{item.serviceType},#{item.serviceStatus},#{item.companyId},#{item.companyName},#{item.applyTime},#{item.completeTime},#{item.buildingNo},#{item.zoneNo},#{item.storey},#{item.roomNo},#{item.applicant},#{item.applicantPhone},#{item.applicantDepartment},#{item.applicantPosition},#{item.isfree},#{item.description},#{changes})
+  </foreach>
+</insert>
+
+<!-- 根据id，修改记录-->  
+ <update id="update" parameterType="com.etop.management.entity.EtopService" >
+  update etop_service set service_no=#{serviceNo},club_id=#{clubId},service_type=#{serviceType},service_status=#{serviceStatus},company_id=#{companyId},company_name=#{companyName},apply_time=#{applyTime},complete_time=#{completeTime},building_no=#{buildingNo},zone_no=#{zoneNo},storey=#{storey},room_no=#{roomNo},applicant=#{applicant},applicant_phone=#{applicantPhone},applicant_department=#{applicantDepartment},applicant_position=#{applicantPosition},isfree=#{isfree},description=#{description},changes=#{changes} where service_id=#{serviceId}
+ </update>
+ 
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="updateBySelective" parameterType="com.etop.management.entity.EtopService" >
+	update etop_service set 
+	<trim  suffixOverrides="," >
+	<if test="serviceNo != null  ">
+		service_no=#{serviceNo},
+	</if>
+	<if test="clubId != null  ">
+		club_id=#{clubId},
+	</if>
+	<if test="serviceType != null  ">
+		service_type=#{serviceType},
+	</if>
+	<if test="serviceStatus != null  ">
+		service_status=#{serviceStatus},
+	</if>
+	<if test="companyId != null  ">
+		company_id=#{companyId},
+	</if>
+	<if test="companyName != null  ">
+		company_name=#{companyName},
+	</if>
+	<if test="applyTime != null  ">
+		apply_time=#{applyTime},
+	</if>
+	<if test="completeTime != null  ">
+		complete_time=#{completeTime},
+	</if>
+	<if test="buildingNo != null  ">
+		building_no=#{buildingNo},
+	</if>
+	<if test="zoneNo != null  ">
+		zone_no=#{zoneNo},
+	</if>
+	<if test="storey != null  ">
+		storey=#{storey},
+	</if>
+	<if test="roomNo != null  ">
+		room_no=#{roomNo},
+	</if>
+	<if test="applicant != null  ">
+		applicant=#{applicant},
+	</if>
+	<if test="applicantPhone != null  ">
+		applicant_phone=#{applicantPhone},
+	</if>
+	<if test="applicantDepartment != null  ">
+		applicant_department=#{applicantDepartment},
+	</if>
+	<if test="applicantPosition != null  ">
+		applicant_position=#{applicantPosition},
+	</if>
+	<if test="isfree != null  ">
+		isfree=#{isfree},
+	</if>
+	<if test="description != null  ">
+		description=#{description},
+	</if>
+	<if test="changes != null  ">
+		changes=#{changes},
+	</if>
+	</trim>
+	where  service_id =#{serviceId}
+</update>
+
+<!-- 删除记录 -->
+<delete id="delete" parameterType="com.etop.management.entity.EtopService">
+	delete 	 from etop_service
+	<include refid="Example_Where_Clause_Object"/>
+</delete>
+ 
+<!-- 根据id查询  -->
+<select id="queryById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_service where service_id = #{serviceId}
+</select>
+
+<select id="queryObject" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopService">
+	select <include refid="Base_Column_List" />
+	from etop_service
+	<include refid="Example_Where_Clause_Object"/>
+</select>
+
+<!--  列表总数-->
+<select id="queryByCount" resultType="java.lang.Integer"  parameterType="com.etop.management.bean.Criteria">
+	select count(1) from etop_service 
+	<include refid="Example_Where_Clause"/>
+</select>
+  	
+<!-- 查询列表 -->
+<select id="queryByList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+	select 
+	<include refid="Base_Column_List"/>
+	from etop_service 
+	<include refid="Example_Where_Clause"/>
+	<if test="otherCondition != null" >
+	    #{otherCondition}
+	</if>
+	
+	<if test="orderByClause != null and orderByClause != ''" >
+       order by  ${orderByClause}
+    </if>
+    <if test="limitClause != null and limitClause != ''" >
+       ${limitClause}
+    </if>
+</select>
+
+<select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</select>
+
+<insert id="myDefinedAdd" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</insert>
+
+<update id="myDefinedUpdate" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</update>  	
+
+<delete id="myDefinedDelete" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</delete>  	
+
+<select id="selectListWithTypeName" resultType="com.etop.management.entity.EtopService" parameterType="com.etop.management.entity.EtopService">
+	
+	select 
+	<include refid="Base_Column_List_ASNAME"/>,est.service_name as serviceTypeName
+	from etop_service es
+	
+	join  etop_service_type est 
+	
+	on  es.service_type=est.service_code
+	
+	join  etop_company ec
+	
+	on ec.company_id=es.company_id
+	
+	<include refid="Example_Where_Clause_Object_ASNAME"/>
+	
+	and ec.park_id=#{parkId}
+	group by apply_time desc
+</select>
+
+<select id="selectObjectWithTypeName" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopService">
+	select 
+	<include refid="Base_Column_List_ASNAME"/>,est.service_name as serviceTypeName
+	from etop_service es
+	
+	join  etop_service_type est 
+	
+	on  es.service_type=est.service_code
+	
+	where es.service_id = #{serviceId}
+</select>
+
+	<select id="selectPurchaseService" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopService">
+		select 
+		*
+		from etop_service es
+		
+		join  etop_company ec
+		
+		on ec.company_id=es.company_id
+		
+		join  etop_service_purchase esp
+		
+		on esp.service_id = es.service_id
+		
+		JOIN etop_goods eg 
+		
+		ON eg.id = esp.goods_id
+		<include refid="Example_Where_Clause_Object_ASNAME"/>
+		
+		<if test="applyTime2 != null and applyTime2 != '' " >
+	    	and es.apply_time &lt;=  #{applyTime2}
+		</if>
+		<if test="completeTime2 != null and completeTime2 != '' " >
+		    and es.complete_time >=  #{completeTime2}
+		</if>
+			and ec.park_id=#{parkId}
+		
+<!-- 		order by es.apply_time desc -->
+	
+	</select>
+	
+	<select id="selectRecruitmentService" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopService">
+			SELECT
+				*
+			FROM
+				etop_service es
+			JOIN etop_service_recruitment esr 
+			ON esr.service_id = es.service_id
+			JOIN etop_service_business ess 
+			ON ess.service_id = es.service_id
+			JOIN etop_service_quotation esq 
+			ON esq.quotation_id =ess.quotation_id
+			WHERE 1=1
+			<if test="clubId != null and clubId != '' " >
+			AND es.club_id= #{clubId}
+			</if>
+			 <if test="serviceNo != null and serviceNo != '' " >
+			AND  es.service_no=#{serviceNo}
+			</if>
+			 <if test="companyName != null and companyName != '' " >
+			AND  es.company_name like  '%${companyName}%'
+		   </if>
+			 <if test="category != null and category != '' " >
+			AND esq.category like  '%${category}%'
+			</if>
+			 <if test="subject != null and subject != '' " >
+			AND  ess.subject like  '%${subject}%'
+			</if>
+			  <if test="number != null and number != '' " >
+			AND ess.number=#{number}
+			</if>
+			  <if test="totalPrice != null and totalPrice != '' " >
+			AND  ess.total_price=#{totalPrice}
+			</if>
+			  <if test="applyTime != null and applyTime != ''" >
+			AND es.apply_time >= #{applyTime}       
+		    </if> 
+		      <if test="completeTime != null and completeTime != ''" >
+			AND  es.complete_time &lt;= #{completeTime}       
+		    </if>
+			  <if test="serviceStatus != null and serviceStatus != '' " >
+			AND
+			es.service_status=#{serviceStatus}
+	        </if>
+	</select>
+	
+	<select id="selectFacilityService" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopService" >
+	
+		select 
+		
+		<include refid="Base_Column_List_ASNAME"/>, esf.appointmentBeginTime as beginTime,esf.appointmentEndTime as endTime,ef.facilityName,ef.facilityType,ef.facilityPrice,esf.duration,esf.totalPrices,
+
+		(case  when  #{currentTime} > esf.appointmentEndTime  then 1 else 0 end)  as expirationTime
+		
+		from etop_service es
+		
+		join  etop_company ec
+		
+		on ec.company_id=es.company_id
+		
+		join  etop_service_facility esf
+		
+		on esf.service_id = es.service_id
+		
+		join  etop_facility ef
+
+    	on ef.id = esf.facility_id
+		
+		<include refid="Example_Where_Clause_Object_ASNAME"/>
+		
+		and ec.park_id=#{parkId}
+		
+		<if test="facilityId != null">
+			
+			and ef.id=#{facilityId}
+			
+		</if>
+		
+		<if test="facilityType != null and facilityType != '' ">
+			
+			and ef.facilityType like '%${facilityType}%'
+			
+		</if>
+		
+		<if test="facilityName != null and facilityName != '' ">
+			
+			and ef.facilityName like '%${facilityName}%'
+			
+		</if>
+		
+ 		<if test="beginTime != null and beginTime != '' ">
+			
+			and esf.appointmentBeginTime >= #{beginTime}
+			
+		</if>
+		
+		<if test="endTime != null and endTime != '' ">
+			
+			and esf.appointmentEndTime &lt;= #{endTime}
+			
+		</if> 
+		
+		<if test="expirationTime != null and expirationTime != '' ">
+			
+			and (case  when  #{currentTime} > esf.appointmentEndTime  then 1 else 0 end) = #{expirationTime}
+			
+		</if>
+		
+	    order by es.apply_time desc
+	</select>
+	
+	
+		<select id="selectFacilityServer" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopService" >
+	
+		select 
+		
+		<include refid="Base_Column_List_ASNAME"/>, esf.appointmentBeginTime as beginTime,esf.appointmentEndTime as endTime,ef.facilityName,ef.facilityType,ef.facilityPrice,esf.duration,esf.totalPrices,
+
+		(case  when  #{currentTime} > esf.appointmentEndTime  then 1 else 0 end)  as expirationTime
+		
+		from etop_service es
+		
+		join  etop_company ec
+		
+		on ec.company_id=es.company_id
+		
+		join  etop_service_facility esf
+		
+		on esf.service_id = es.service_id
+		
+		join  etop_facility ef
+
+    	on ef.id = esf.facility_id
+    	</select>
+	
+	<select id="calculateGoods" resultType="com.etop.management.bean.EtopAllGoods" parameterType="Map">
+		
+		select 
+		
+		 IFNULL(SUM(total_price),0)  AS money,
+		 IFNULL(SUM(number) ,0)AS num
+
+		from etop_service es
+		
+		join  etop_company ec
+		
+		on ec.company_id=es.company_id
+		
+		join  etop_service_purchase esp
+		
+		on esp.service_id = es.service_id
+
+		join etop_goods eg 
+
+        on esp.goods_id =eg.id
+		<include refid="Example_Where_Clause_Object_ASNAME"/>
+		and ec.park_id=#{parkId}
+		
+		<!-- <if test="serviceStatus != null  and serviceStatus != ''">
+		and es.service_status=#{serviceStatus}
+		</if>
+		<if test="goodName != null  and goodName != ''">
+		AND eg.goodName like '%${goodName}%'
+		</if> -->
+<!-- 		GROUP BY esp.goods_name -->
+	
+	</select>
+
+	<select id="getServiceNum" resultType="com.etop.management.entity.EtopService">
+		SELECT
+			COUNT(*) serviceNum
+		FROM
+			etop_service
+		WHERE
+			club_id = #{clubId}
+	</select>
+
+	<select id="getServiceCompleteNum" resultType="com.etop.management.entity.EtopService">
+		SELECT
+			COUNT(*) serviceCompleteNum
+		FROM
+			etop_service
+		WHERE
+			club_id = #{clubId}
+		AND service_status = 300
+	</select>
+	
+	<select id="calculateQuotation" resultType="com.etop.management.bean.Etopservice" parameterType="Map">
+	
+			SELECT
+	SUM(money) AS money,
+	SUM(num) AS num
+FROM
+	(
+		SELECT
+			es.*, IFNULL(SUM(total_price), 0) AS money,
+			IFNULL(SUM(number), 0) AS num
+		FROM
+			etop_service es
+		JOIN etop_service_business esb ON esb.service_id = es.service_id
+		JOIN etop_service_quotation esq ON esq.quotation_id = esb.quotation_id
+		WHERE
+			es.club_id = #{clubId}
+		AND service_status IN ('101', '102', '201')
+		<if test="serviceStatus != null  and serviceStatus != ''">
+				and es.service_status=#{serviceStatus}
+			</if>
+			<if test="type != null  and type != ''">
+			    and esq.type=#{type}
+			</if>
+			<if test="subject != null  and subject != ''">
+			    AND `subject` like '%${subject}%'
+			</if>
+			<if test="serviceNo != null and serviceNo != ''">
+			AND
+			   es.service_no = #{serviceNo}
+			</if>
+			<if test="companyName != null and companyName != ''">
+			AND 
+			   es.company_name like '%${companyName}%'
+			</if>
+			<if test="applyTime != null and applyTime != ''" >
+			AND
+				es.apply_time >= #{applyTime}       
+		    </if> 
+		    <if test="completeTime != null and completeTime != ''" >
+			AND
+				 es.complete_time &lt;= #{completeTime}       
+		    </if> 
+		    <if test="categoryName != null and categoryName != ''">
+			AND 
+			   esq.category like '%${categoryName}%'
+			</if>
+		UNION
+			SELECT
+				es.*, IFNULL(SUM(final_price), 0) AS money,
+				IFNULL(SUM(number), 0) AS num
+			FROM
+				etop_service es
+			JOIN etop_service_business esb ON esb.service_id = es.service_id
+			JOIN etop_service_quotation esq ON esq.quotation_id = esb.quotation_id
+			WHERE
+				es.club_id = #{clubId}
+			AND service_status IN ('202','203',	'204','300','301')
+			<if test="serviceStatus != null  and serviceStatus != ''">
+				and es.service_status=#{serviceStatus}
+			</if>
+			<if test="type != null  and type != ''">
+			    and esq.type=#{type}
+			</if>
+			<if test="subject != null  and subject != ''">
+			    AND `subject` like '%${subject}%'
+			</if>
+			<if test="serviceNo != null and serviceNo != ''">
+			AND
+			   es.service_no = #{serviceNo}
+			</if>
+			<if test="companyName != null and companyName != ''">
+			AND 
+			   es.company_name like '%${companyName}%'
+			</if>
+			<if test="applyTime != null and applyTime != ''" >
+			AND
+				es.apply_time >= #{applyTime}       
+		    </if> 
+		    <if test="completeTime != null and completeTime != ''" >
+			AND
+				 es.complete_time &lt;= #{completeTime}       
+		    </if> 
+		    <if test="categoryName != null and categoryName != ''">
+			AND 
+			   esq.category like '%${categoryName}%'
+			</if>
+	) t
+
+	</select>
+	
+	        <select id="getServiceBycompanyId" resultType="com.etop.management.bean.Companyservice" parameterType="Map">
+
+				SELECT
+					*,t2.number as busnumber,t3.number as purnumber
+					,t2.total_price as busprice,t3.total_price as purprice,t8.category as categories
+				FROM
+					etop_service T1
+				LEFT JOIN etop_service_business t2 ON T1.service_id =t2.service_id
+				LEFT JOIN etop_service_purchase t3 ON t1.service_id =t3.service_id
+				LEFT JOIN etop_service_type t4 ON T1.service_type=t4.service_code
+				LEFT JOIN etop_service_facility t5 ON T1.service_id = t5.service_id
+				LEFT JOIN etop_facility t6 ON t5.facility_id = t6.id
+				LEFT JOIN etop_goods t7 ON t3.goods_id = t7.id
+				LEFT JOIN etop_service_quotation t8 ON t2.quotation_id = t8.quotation_id
+				WHERE
+					T1.club_id = #{clubId}
+				<if test="serviceNo != null and serviceNo != ''">
+				AND
+				   T1.service_no like '%${serviceNo}%'
+				</if>
+                <if test="serviceType != null and serviceType != ''">
+				AND 
+				   T1.service_type =#{serviceType}
+				</if>
+                <if test="serviceStatus != null and serviceStatus != ''">
+				AND 
+				   T1.service_status =#{serviceStatus}
+				</if>				
+				<if test="applyTime != null and applyTime != ''">
+				AND 
+				   T1.apply_time  &gt; #{applyTime}
+				</if>
+				<if test="completeTime != null and completeTime != ''">
+				AND 
+				   T1.complete_time  &lt;= #{completeTime}
+				</if>
+				<if test="category != null and category != ''">
+				AND 
+				   t7.category like '%${category}%'
+				</if>						
+				<if test="searchValue != null and searchValue != ''" >
+				AND
+				   (t2.subject like '%${searchValue}%' or t4.service_name like '%${searchValue}%')       
+			    </if>
+        </select>
+        
+       	<select id="selectFacilityServiceApply" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopService" >
+	
+		select 
+		
+		<include refid="Base_Column_List_ASNAME"/>, esf.appointmentBeginTime as beginTime,esf.appointmentEndTime as endTime,ef.facilityName,ef.facilityType,ef.facilityPrice,esf.duration,esf.totalPrices,
+
+		(case  when  #{currentTime} > esf.appointmentEndTime  then 1 else 0 end)  as expirationTime
+		
+		from etop_service es
+		
+		join  etop_company ec
+		
+		on ec.company_id=es.company_id
+		
+		join  etop_service_facility esf
+		
+		on esf.service_id = es.service_id
+		
+		join  etop_facility ef
+
+    	on ef.id = esf.facility_id
+		
+		WHERE
+			service_status != 201
+			
+		and service_status != 301
+		
+		and ef.id=#{facilityId}
+		
+	    order by es.apply_time desc
+	</select>
+</mapper>   

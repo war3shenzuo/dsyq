@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>支持添加事件jQuery日历 - 站长素材</title>
+<link rel="stylesheet" href="style/documentation.css" type="text/css" />
+<link rel="stylesheet" href="style/jalendar.css" type="text/css" />
+<link rel="stylesheet" type="text/css" href="style/meetCal.css"/>
+<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script><!--jQuery-->
+<script type="text/javascript" src="js/jalendar.js"></script>
+<script type="text/javascript">
+$(function () {
+
+    $('#myId3').jalendar({
+    	customDay: '2016/02/29',
+        color: '#023447',
+        lang: 'CH'
+    });
+});
+</script>
+</head>
+
+<body>
+    
+
+<div class="wrap">
+<p style="text-align: center;font-size:40px;margin-top:30px;">会议室预约</p>
+  <div class="left">
+  	<p class="p1">八月</p>
+  	<p class="p1">2</p>
+  	<p class="p2">会议室：</p>
+  	<select>
+		<option>101</option>
+		<option>102</option>
+		<option>103</option>
+		<option>104</option>
+	</select>
+	<p class="p2">起始时间：</p>
+	<select>
+		<option>0:00</option>
+		<option>1:00</option>
+		<option>2:00</option>
+		<option>3:00</option>
+		<option>4:00</option>
+		<option>5:00</option>
+		<option>6:00</option>
+		<option>7:00</option>
+		<option>8:00</option>
+		<option>9:00</option>
+		<option>10:00</option>
+		<option>11:00</option>
+		<option>12:00</option>
+		<option>13:00</option>
+		<option>14:00</option>
+		<option>15:00</option>
+		<option>16:00</option>
+		<option>17:00</option>
+		<option>18:00</option>
+		<option>19:00</option>
+		<option>20:00</option>
+		<option>21:00</option>
+		<option>22:00</option>
+		<option>23:00</option>
+	</select>
+	<p class="p2">结束时间：</p>
+	<select>
+		<option>0:00</option>
+		<option>1:00</option>
+		<option>2:00</option>
+		<option>3:00</option>
+		<option>4:00</option>
+		<option>5:00</option>
+		<option>6:00</option>
+		<option>7:00</option>
+		<option>8:00</option>
+		<option>9:00</option>
+		<option>10:00</option>
+		<option>11:00</option>
+		<option>12:00</option>
+		<option>13:00</option>
+		<option>14:00</option>
+		<option>15:00</option>
+		<option>16:00</option>
+		<option>17:00</option>
+		<option>18:00</option>
+		<option>19:00</option>
+		<option>20:00</option>
+		<option>21:00</option>
+		<option>22:00</option>
+		<option>23:00</option>
+	</select>
+	<div style="color:dimgrey;margin-top:10px;margin-bottom:15px;font-size:17px;">
+		<p>房间信息：</p>
+		<p><span>面积</span><span>130</span><span>平方米</span></p>
+		<p><span>容纳</span><span>200</span><span>人</span></p>
+		<p><span>设施</span><span>圆桌</span><span>空调</span><span>投影仪</span></p>
+	</div>
+	<p style="text-align: center;"><a href="#" class="a1">预约</a></p>
+  </div>
+<div id="myId3" class="jalendar mid" style="float:left;"></div>
+</div>
+</body>
+</html>

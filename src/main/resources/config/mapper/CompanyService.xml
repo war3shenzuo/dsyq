@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.etop.management.dao.CompanyServiceDao">
+
+ 
+
+
+
+        <select id="getServiceBycompanyId" resultType="com.etop.management.bean.Companyservice" parameterType="Map">
+
+				SELECT
+					*,t2.number as busnumber,t3.number as purnumber
+					,t2.total_price as busprice,t3.total_price as purprice,t8.category as categories
+				FROM
+					etop_service T1
+				LEFT JOIN etop_service_business t2 ON T1.service_id =t2.service_id
+				LEFT JOIN etop_service_purchase t3 ON t1.service_id =t3.service_id
+				LEFT JOIN etop_service_type t4 ON T1.service_type=t4.service_code
+				LEFT JOIN etop_service_facility t5 ON T1.service_id = t5.service_id
+				LEFT JOIN etop_facility t6 ON t5.facility_id = t6.id
+				LEFT JOIN etop_goods t7 ON t3.goods_id = t7.id
+				LEFT JOIN etop_service_quotation t8 ON t2.quotation_id = t8.quotation_id
+				WHERE
+					T1.company_id = #{companyId}
+				<if test="serviceNo != null and serviceNo != ''">
+				AND
+				   T1.service_no like '%${serviceNo}%'
+				</if>
+                <if test="serviceType != null and serviceType != ''">
+				AND 
+				   T1.service_type =#{serviceType}
+				</if>
+                <if test="serviceStatus != null and serviceStatus != ''">
+				AND 
+				   T1.service_status =#{serviceStatus}
+				</if>				
+				<if test="applyTime != null and applyTime != ''">
+				AND 
+				   T1.apply_time  &gt; #{applyTime}
+				</if>
+				<if test="completeTime != null and completeTime != ''">
+				AND 
+				   T1.complete_time  &lt;= #{completeTime}
+				</if>
+				<if test="category != null and category != ''">
+				AND 
+				   t7.category like '%${category}%'
+				</if>						
+				<if test="searchValue != null and searchValue != ''" >
+				AND
+				   (t2.subject like '%${searchValue}%' or t4.service_name like '%${searchValue}%')       
+			    </if>
+        </select>
+        
+        
+        <select id="getServiceInfoById" resultType="com.etop.management.bean.Companyservice" parameterType="Map">
+
+				SELECT
+					*
+				FROM
+					etop_service T1
+				INNER JOIN etop_service_business T2 ON T1.service_id = T2.service_id
+				WHERE
+					T1.service_id = #{id}
+ 
+        </select>
+	  <update id="cancel" parameterType="com.etop.management.bean.Companyservice">
+			   update 
+			   etop_service
+			   set service_status ='201'
+			   where 
+			   service_id=#{serviceId}  
+	  </update>
+	  <update id="approve" parameterType="com.etop.management.bean.Companyservice">
+			   update 
+			   etop_service
+			   set service_status ='202'
+			   where 
+			   service_id=#{serviceId}  
+	  </update>
+	  	 <update id="statusOfSuer" parameterType="com.etop.management.bean.Companyservice">
+			UPDATE etop_service
+			SET service_status = '205',
+			 complete_time = #{completeTime}
+			WHERE
+				service_id = #{serviceId}  
+	  </update>
+	  
+	  
+	   <select id="getServiceType" resultType="String" parameterType="String">
+
+				SELECT
+					service_type
+				FROM
+					etop_service
+				WHERE
+				   service_id = #{id}
+        </select>
+
+
+	   <select id="getGoodName"  parameterType="Map" resultType="com.etop.management.entity.EtopGoods">
+
+				SELECT
+					*
+				FROM
+					etop_service t1
+
+				LEFT JOIN 
+					etop_goods t3 
+				ON 
+					t1.club_id=t3.parkId
+				WHERE
+				   t1.company_id = #{companyId}
+			   AND
+				  t1.service_type='GGCG'
+        </select>
+        
+        <select id="getServiceByBillId" resultType="com.etop.management.bean.Companyservice" parameterType="Map">
+        SELECT
+			*, t2.number AS busnumber,
+			t3.number AS purnumber,
+			t2.total_price AS busprice,
+			t3.total_price AS purprice,
+			t8.category AS categories,
+			t2.unit_price AS busunitPrice,
+			t3.unit_price AS purunitPrice
+		FROM
+			etop_bill t0
+		LEFT JOIN etop_service t1 ON t0.bill_no_out = t1.service_id
+		LEFT JOIN etop_service_business t2 ON t1.service_id = t2.service_id
+		LEFT JOIN etop_service_purchase t3 ON t1.service_id = t3.service_id
+		LEFT JOIN etop_service_type t4 ON t1.service_type = t4.service_code
+		LEFT JOIN etop_service_facility t5 ON t1.service_id = t5.service_id
+		LEFT JOIN etop_facility t6 ON t5.facility_id = t6.id
+		LEFT JOIN etop_goods t7 ON t3.goods_id = t7.id
+		LEFT JOIN etop_service_quotation t8 ON t2.quotation_id = t8.quotation_id
+		 WHERE t0.bill_id=#{billId}
+        </select>
+</mapper>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.ContractEnergyDao">
+
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.bean.ContractEnergy" >
+	<result column="id" property="id"/>
+	<result column="ref_contract_id" property="refContractId"/>
+	<result column="power_price" property="powerPrice"/>
+	<result column="water_price" property="waterPrice"/>
+	<result column="gas_price" property="gasPrice"/>
+	<result column="ac_price" property="acPrice"/>
+	<result column="power_record" property="powerRecord"/>
+	<result column="water_record" property="waterRecord"/>
+	<result column="gas_record" property="gasRecord"/>
+	<result column="ac_record" property="acRecord"/>
+	<result column="power_record_date" property="powerRecordDate"/>
+	<result column="water_record_date" property="waterRecordDate"/>
+	<result column="gas_record_date" property="gasRecordDate"/>
+	<result column="ac_record_date" property="acRecordDate"/>
+<!-- 	<result column="bill_type" property="billType"/> -->
+<!-- 	<result column="bill_dates" property="billDates"/> -->
+<!-- 	<result column="bill_date" property="billDate"/> -->
+<!-- 	<result column="payment_date" property="paymentDate"/> -->
+<!-- 	<result column="bill_period" property="billPeriod"/> -->
+<!-- 	<result column="last_fee_date" property="lastFeeDate"/> -->
+
+    <result column="created_at" property="createdAt"/>
+    <result column="created_by" property="createdBy"/>
+    <result column="updated_at" property="updatedAt"/>
+    <result column="updated_by" property="updatedBy"/>
+		
+</resultMap>
+       
+<!-- etop_park table all fields -->
+<sql id="Base_Column_List" >
+	 id,ref_contract_id,
+	 power_price,water_price,gas_price,ac_price,
+	 power_record,water_record,gas_record,ac_record,
+	 power_record_date,water_record_date,gas_record_date,ac_record_date,
+<!-- 	 bill_type,bill_dates,bill_date,payment_date,bill_period, -->
+<!-- 	 last_fee_date, -->
+	 <include refid="com.etop.management.dao.CommonsDao.AUDIT_INFO_COLUMNS"/>
+</sql>
+
+<sql id="insert_value">
+
+	#{refContractId},
+	#{powerPrice},#{waterPrice},#{gasPrice},#{acPrice},
+	#{powerRecord},#{waterRecord},#{gasRecord},#{acRecord},
+	#{powerRecordDate},#{waterRecordDate},#{gasRecordDate},#{acRecordDate},
+<!-- 	#{billType},#{billDates},#{billDate},#{paymentDate},#{billPeriod}, -->
+<!-- 	#{lastFeeDate,jdbcType=DATE}, -->
+	<include refid="com.etop.management.dao.CommonsDao.INSERT_WITH_AUDIT_INFO_COLUMNS"/>
+
+</sql>
+
+<select id="getContractEnergyById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract_energy where id = #{id}
+</select>
+
+<select id="getContractEnergyByRefContractId"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract_energy where ref_contract_id = #{refContractId}
+</select>
+
+
+<delete id="deleteContractEnergy" parameterType="string">
+
+	delete from etop_contract_energy where id=#{id}
+
+</delete>
+<delete id="deleteContractEnergyByRefContractId" parameterType="string">
+
+	delete from etop_contract_energy where ref_contract_id=#{refContractId}
+
+</delete>
+
+
+<insert id="createContractEnergy" parameterType="com.etop.management.bean.ContractEnergy">
+
+insert into etop_contract_energy (<include refid="Base_Column_List" />)
+values
+(#{id},<include refid="insert_value" />)
+
+</insert>
+
+<update id="updateContractEnergy" parameterType="com.etop.management.bean.ContractEnergy">
+
+
+	update etop_contract_energy set 
+	
+	ref_contract_id=#{refContractId},
+	
+	power_price=#{powerPrice},water_price=#{waterPrice},
+	gas_price=#{gasPrice},ac_price=#{acPrice},
+	power_record=#{powerRecord},water_record=#{waterRecord},
+	gas_record=#{gasRecord},ac_record=#{acRecord},
+	power_record_date=#{powerRecordDate},water_record_date=#{waterRecordDate},
+	gas_record_date=#{gasRecordDate},ac_record_date=#{acRecordDate},
+	
+	
+	
+<!-- 	last_fee_date=#{lastFeeDate,jdbcType=DATE}, -->
+<!-- 	start_date=#{startDate},end_date=#{endDate}, -->
+<!-- 	bill_type=#{billType},bill_dates=#{billDates}, -->
+<!-- 	bill_date=#{billDate},payment_date=#{paymentDate},bill_period=#{billPeriod}, -->
+	updated_at=#{updatedAt},updated_by=#{updatedBy}
+	
+	where id=#{id}
+
+
+</update>
+
+
+<select id="getContractEnergyBillModelByBuilding"  resultType="com.etop.management.model.ContractEnergyBillModel">
+
+
+	select  
+	
+	a.id as refContractEnergyId, b.id as refContractId,c.id as refRoomId,c.room_num as roomName,d.build_name as buildingName,
+
+	d.sourceCharge as shareType,a.power_price as powerPrice,a.water_price as waterPrice,a.gas_price as gasPrice ,a.ac_price as acPrice,
+	
+	b.contract_start_date as startDate,b.contract_end_date as endDate,
+	
+	b.contract_status as contractStatus, b.terminate_date as terminateDate,
+	
+	c.build_area as area,
+	
+	d.energy_bill_date as billDate,d.energy_payment_day as paymentDate,
+	
+<!-- 	a.bill_type as billType,a.bill_dates as billDates,a.bill_date as billDate , -->
+	
+<!-- 	a.payment_date as paymentDate,a.bill_period as billPeriod, -->
+	
+	d.energy_last_bill_date as energyLastBillDate,
+	
+	a.power_record_date as lastPowerFeeDate,
+	a.water_record_date as lastWaterFeeDate,
+	a.gas_record_date as lastGasFeeDate,
+	a.ac_record_date as lastAcFeeDate,
+		
+	
+	d.id as refBuildingId,d.park_id as refParkId
+		
+	
+	from etop_contract_energy a
+	
+	left join etop_contract b on a.ref_contract_id=b.id
+			
+	left join etop_floor_room c on c.id=b.ref_room_id
+	
+	left join etop_floor d on d.id=c.ref_floor_id
+	
+	where 
+	
+	b.contract_status in (-5,3,5)	
+	
+	and	b.contract_start_date &lt; #{currFeeDate} 
+	
+<!-- 	and	b.contract_end_date > #{lastFeeDate} -->
+	
+	and  (
+	
+	(b.terminate_date is not null and b.terminate_date > #{lastFeeDate}) 
+	
+	or 
+	
+	(b.terminate_date is null and b.contract_end_date > #{lastFeeDate}) 
+	
+	)
+
+
+	
+	
+	
+	
+	
+<!-- 	and b.contract_end_date >= #{now} -->
+	
+	<if test="refBuildingId != null and refBuildingId != ''" >
+
+		and d.id = #{refBuildingId}
+
+	</if>
+
+
+</select>
+
+<select id="getSupplyContractEnergyList" resultType="com.etop.management.model.EnergySupplyModel">
+
+select 
+
+ a.id,a.ref_contract_lease_id,
+ a.contract_no as contractNo,a.contract_category as contractCategory,
+ a.ref_room_id as refRoomId,b.room_num as room,a.terminate_date as terminateDate,a.contract_status as contractStatus,
+ a.contract_start_date as contractStartDate, a.contract_end_date as contractEndDate
+ 
+ from etop_contract a
+
+left join etop_floor_room b on a.ref_room_id=b.id
+
+where
+
+( (a.contract_status=3 and date_add(a.contract_end_date,interval 1 day) &lt;= #{currRecordDate} and date_add(a.contract_end_date,interval 1 day) >= #{lastRecordDate}) 
+or
+(a.contract_status=5 and date_add(a.terminate_date,interval 1 day) &lt;= #{currRecordDate} and date_add(a.terminate_date,interval 1 day) >= #{lastRecordDate}) 
+)
+
+and b.ref_floor_id=#{refBuildingId}
+
+and a.contract_category=3
+
+</select>
+
+
+</mapper>
+

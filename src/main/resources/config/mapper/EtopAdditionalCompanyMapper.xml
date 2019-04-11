@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopAdditionalCompanyDao">
+
+    <sql id="Base_Column_List" >
+        id,company_id,three_paper,other_three_paper,other_paper,bank_account,open_bank,open_name,bank_account_spare,open_bank_spare,open_name_spare,
+        legal_person_name,leagl_person_mobile,leagl_other_contact,leagl_person_code,leagl_person_address,leagl_person_degrees,leagl_person_birthday,
+        leagl_person_school,leagl_person_graduation,degrees_img,diploma_img,other_img,card_img,created_at,created_by,updated_at,updated_by
+    </sql>
+
+    <insert id="insertInfo" parameterType="com.etop.management.bean.EtopCompanyInformation">
+        insert into etop_company_information(id,company_id,three_paper,other_three_paper,other_paper,bank_account,
+        open_bank,open_name,bank_account_spare,open_bank_spare,open_name_spare,legal_person_name,leagl_person_mobile,
+        leagl_other_contact,leagl_person_code,leagl_person_address,leagl_person_degrees,leagl_person_birthday,
+        leagl_person_school,leagl_person_graduation,degrees_img,diploma_img,other_img,card_img,
+        <include refid="com.etop.management.dao.CommonsDao.AUDIT_INFO_COLUMNS"/> ) values
+        (#{id},#{companyId},#{threePaper},#{otherThreePaper},#{otherPaper},#{bankAccount},#{openBank},#{openName},
+        #{bankAccountSpare},#{openBankSpare},#{openNameSpare},#{legalPersonName},#{leaglPersonMobile},#{leaglOtherContact},
+        #{leaglPersonCode},#{leaglPersonAddress},#{leaglPersonDegrees},#{leaglPersonBirthday},#{leaglPersonSchool},
+        #{leaglPersonGraduation},#{degreesImg},#{diplomaImg},#{otherImg},#{cardImg},<include refid="com.etop.management.dao.CommonsDao.INSERT_WITH_AUDIT_INFO_COLUMNS"/>)
+    </insert>
+
+    <delete id="deleteById" parameterType="list">
+        DELETE
+        FROM
+            etop_company_information
+        WHERE
+            company_id IN
+        <foreach collection="additionalCompanyIds" item="additionalCompanyIds" index="index" open="(" separator="," close=")">
+            #{additionalCompanyIds}
+        </foreach>
+    </delete>
+
+    <select id="getAdditionCompInfo" resultType="com.etop.management.bean.EtopCompanyInformation">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_company_information
+        WHERE
+            company_id = #{id}
+    </select>
+
+    <update id="updateAdditionalById">
+        update etop_company_information
+        <set>
+            <if test="companyId != null  ">
+                company_id=#{companyId},
+            </if>
+            <if test="threePaper != null  ">
+                three_paper=#{threePaper},
+            </if>
+            <if test="otherThreePaper != null  ">
+                other_three_paper=#{otherThreePaper},
+            </if>
+            <if test="otherPaper != null  ">
+                other_paper=#{otherPaper},
+            </if>
+            <if test="bankAccount != null  ">
+                bank_account=#{bankAccount},
+            </if>
+            <if test="openBank != null  ">
+                open_bank=#{openBank},
+            </if>
+            <if test="openName != null  ">
+                open_name=#{openName},
+            </if>
+            <if test="bankAccountSpare != null  ">
+                bank_account_spare=#{bankAccountSpare},
+            </if>
+            <if test="openBankSpare != null  ">
+                open_bank_spare=#{openBankSpare},
+            </if>
+            <if test="openNameSpare != null  ">
+                open_name_spare=#{openNameSpare},
+            </if>
+            <if test="legalPersonName != null  ">
+                legal_person_name=#{legalPersonName},
+            </if>
+            <if test="leaglPersonMobile != null  ">
+                leagl_person_mobile=#{leaglPersonMobile},
+            </if>
+            <if test="leaglOtherContact != null  ">
+                leagl_other_contact=#{leaglOtherContact},
+            </if>
+            <if test="leaglPersonCode != null  ">
+                leagl_person_code=#{leaglPersonCode},
+            </if>
+            <if test="leaglPersonAddress != null  ">
+                leagl_person_address=#{leaglPersonAddress},
+            </if>
+            <if test="leaglPersonDegrees != null  ">
+                leagl_person_degrees=#{leaglPersonDegrees},
+            </if>
+            <if test="leaglPersonBirthday != null  ">
+                leagl_person_birthday=#{leaglPersonBirthday},
+            </if>
+            <if test="leaglPersonSchool != null  ">
+                leagl_person_school=#{leaglPersonSchool},
+            </if>
+            <if test="leaglPersonGraduation != null  ">
+                leagl_person_graduation=#{leaglPersonGraduation},
+            </if>
+            <if test="degreesImg != null  ">
+                degrees_img=#{degreesImg},
+            </if>
+            <if test="diplomaImg != null  ">
+                diploma_img=#{diplomaImg},
+            </if>
+            <if test="otherImg != null  ">
+                other_img=#{otherImg},
+            </if>
+            <if test="cardImg != null  ">
+                card_img=#{cardImg},
+            </if>
+            <include refid="com.etop.management.dao.CommonsDao.UPDATE_WITH_AUDIT_INFO_COLUMNS"/>
+        </set>
+        where company_id = #{companyId}
+        order by updated_at desc
+    </update>
+
+</mapper>

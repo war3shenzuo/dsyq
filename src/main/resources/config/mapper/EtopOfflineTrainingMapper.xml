@@ -1,0 +1,903 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopOfflineTrainingDao">
+
+    <sql id="Base_Column_List" >
+        t1.id,t1.course_id,t1.course_name,t1.offline_type,t1.series,t1.course_type,t1.platform,t1.course_status,t1.post,t1.train_time,t1.target,t1.choose_park,
+        t1.price,t1.training_address,t1.header,t1.course_content,t1.course_img,t1.people_num,t1.join_people_num,t1.teacher_lv,t1.organize_lv,
+        t1.content_lv,t1.sums_content,t1.sums_img,t1.createdAt,t1.createdBy,t1.updatedAt,t1.updatedBy,t1.recruit,t1.close_time,t1.city,t1.phone
+    </sql>
+
+    <sql id="Example_Where_Clause_Object">
+        <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="courseId != null and courseId != '' " >
+            and t1.course_id like CONCAT ('%', #{courseId} ,'%')
+        </if>
+        <if test="courseName != null and courseName != '' " >
+            and t1.course_name like CONCAT ('%', #{courseName} ,'%')
+        </if>
+        <if test="series != null and series !=''" >
+            and t1.series =  #{series}
+        </if>
+<!--         <if test="offlineType != null" >
+            and t1.offline_type ${offlineType}
+        </if> -->
+        <if test="courseType != null  and courseType !=''" >
+            and t1.course_type =  #{courseType}
+        </if>
+        <if test="platform != null  and platform !=''" >
+            and t1.platform =  #{platform}
+        </if>
+        <if test="courseStatus != null" >
+            and t1.course_status =  #{courseStatus}
+        </if>
+        <if test="post != null and post !=''" >
+            and t1.post =  #{post}
+        </if>
+        <if test="trainTime != null and trainTime !=''" >
+            and t1.train_time =  #{trainTime}
+        </if>
+        <if test="target != null and target != ''" >
+            and t1.target like '%${target}%'
+        </if>
+        <if test="choosePark != null" >
+            and t1.choose_park =  #{choosePark}
+        </if>
+        <if test="price != null" >
+            and t1.price =  #{price}
+        </if>
+        <if test="trainingAddress != null and trainingAddress != '' " >
+            and t1.training_address like CONCAT ('%', #{trainingAddress} ,'%')
+        </if>
+        <if test="header != null and header != '' " >
+            and t1.header like CONCAT ('%', #{header} ,'%')
+        </if>
+        <if test="courseContent != null" >
+            and t1.course_content =  #{courseContent}
+        </if>
+        <if test="courseImg != null" >
+            and t1.course_img =  #{courseImg}
+        </if>
+        <if test="peopleNum != null" >
+            and t1.people_num =  #{peopleNum}
+        </if>
+        <if test="joinPeopleNum != null" >
+            and t1.join_people_num =  #{joinPeopleNum}
+        </if>
+        <if test="teacherLv != null" >
+            and t1.teacher_lv =  #{teacherLv}
+        </if>
+        <if test="organizeLv != null" >
+            and t1.organize_lv =  #{organizeLv}
+        </if>
+        <if test="contentLv != null" >
+            and t1.content_lv =  #{contentLv}
+        </if>
+        <if test="sumsContent != null" >
+            and t1.sums_content =  #{sumsContent}
+        </if>
+        <if test="sumsImg != null" >
+            and t1.sums_img =  #{sumsImg}
+        </if>
+        <if test="createdAt != null" >
+            and t1.createdAt =  #{createdAt}
+        </if>
+        <if test="createdBy != null" >
+            and t1.createdBy =  #{createdBy}
+        </if>
+        <if test="updatedAt != null" >
+            and t1.updatedAt =  #{updatedAt}
+        </if>
+        <if test="updatedBy != null" >
+            and t1.updatedBy =  #{updatedBy}
+        </if>
+        <if test="recruit != null and recruit != ''" >
+            and t1.recruit =  #{recruit}
+        </if>
+        <if test="city != null and city != ''" >
+            and t1.city =  #{city}
+        </if>
+        <if test="phone != null and phone != ''" >
+            and t1.phone =  #{phone}
+        </if>
+        <if test="closeTime != null" >
+            and t1.close_time =  #{closeTime}
+        </if>
+		<if test="searchValue != null and searchValue != ''" >
+			and target like '%${searchValue}%'      
+	    </if>
+    </sql>
+
+    <insert id="insert">
+        insert into etop_offline_training(id,course_id,course_name,offline_type,series,course_type,platform,course_status,post,train_time,target,choose_park,
+        price,training_address,header,course_content,course_img,people_num,join_people_num,teacher_lv,organize_lv,content_lv,
+        sums_content,sums_img,createdAt,createdBy,updatedAt,updatedBy,recruit,close_time,city,phone)
+        values(#{id},#{courseId},#{courseName},#{offlineType},#{series},#{courseType},#{platform},#{courseStatus},#{post},#{trainTime},#{target},#{choosePark},
+        #{price},#{trainingAddress},#{header},#{courseContent},#{courseImg},#{peopleNum},#{joinPeopleNum},#{teacherLv},#{organizeLv},#{contentLv},
+        #{sumsContent},#{sumsImg},sysdate(),#{createdBy},sysdate(),#{updatedBy},#{recruit},#{closeTime},#{city},#{phone})
+    </insert>
+
+    <update id="update">
+        update etop_offline_training
+        <set>
+            <if test="courseId != null  ">
+                course_id=#{courseId},
+            </if>
+            <if test="courseName != null  ">
+                course_name=#{courseName},
+            </if>
+            <if test="courseType != null  ">
+                course_type=#{courseType},
+            </if>
+            <if test="series != null" >
+                series =  #{series}
+            </if>
+            <if test="platform != null  ">
+                platform=#{platform},
+            </if>
+            <if test="courseStatus != null  ">
+                course_status=#{courseStatus},
+            </if>
+            <if test="post != null  ">
+                post=#{post},
+            </if>
+            <if test="trainTime != null  ">
+                train_time=#{trainTime},
+            </if>
+            <if test="target != null  ">
+                target=#{target},
+            </if>
+            <if test="choosePark != null  ">
+                choose_park=#{choosePark},
+            </if>
+            <if test="price != null  ">
+                price=#{price},
+            </if>
+            <if test="trainingAddress != null  ">
+                training_address=#{trainingAddress},
+            </if>
+            <if test="header != null  ">
+                header=#{header},
+            </if>
+            <if test="courseContent != null  ">
+                course_content=#{courseContent},
+            </if>
+            <if test="courseImg != null  ">
+                course_img=#{courseImg},
+            </if>
+            <if test="peopleNum != null  ">
+                people_num=#{peopleNum},
+            </if>
+            <if test="joinPeopleNum != null  ">
+                join_people_num=#{joinPeopleNum},
+            </if>
+            <if test="teacherLv != null  ">
+                teacher_lv=#{teacherLv},
+            </if>
+            <if test="organizeLv != null  ">
+                organize_lv=#{organizeLv},
+            </if>
+            <if test="contentLv != null  ">
+                content_lv=#{contentLv},
+            </if>
+            <if test="sumsContent != null  ">
+                sums_content=#{sumsContent},
+            </if>
+            <if test="sumsImg != null  ">
+                sums_img=#{sumsImg},
+            </if>
+            <if test="createdAt != null  ">
+                createdAt=#{createdAt},
+            </if>
+            <if test="createdBy != null  ">
+                createdBy=#{createdBy},
+            </if>
+            <if test="updatedAt != null  ">
+                updatedAt=sysdate(),
+            </if>
+            <if test="updatedBy != null  ">
+                updatedBy=#{updatedBy},
+            </if>
+            <if test="recruit != null" >
+             	recruit =#{recruit}
+	        </if>
+	        <if test="city != null" >
+	            city =#{city}
+	        </if>
+	        <if test="phone != null" >
+	            phone =#{phone}
+	        </if>
+	        <if test="closeTime != null" >
+	            close_time =#{closeTime}
+	        </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE
+            etop_offline_training
+        set
+            course_status = #{courseStatus}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateOfflinePrograms">
+        update etop_offline_training
+        <set>
+            <if test="courseId != null  ">
+                course_id=#{courseId},
+            </if>
+            <if test="courseName != null  ">
+                course_name=#{courseName},
+            </if>
+            <if test="series != null  ">
+                series=#{series},
+            </if>
+            <if test="courseType != null  ">
+                course_type=#{courseType},
+            </if>
+            <if test="offlineType != null  ">
+                offline_type=#{offlineType},
+            </if>
+            <if test="platform != null  ">
+                platform=#{platform},
+            </if>
+            <if test="courseStatus != null  ">
+                course_status=#{courseStatus},
+            </if>
+            <if test="post != null  ">
+                post=#{post},
+            </if>
+            <if test="trainTime != null  ">
+                train_time=#{trainTime},
+            </if>
+            <if test="target != null  ">
+                target=#{target},
+            </if>
+            <if test="choosePark != null  ">
+                choose_park=#{choosePark},
+            </if>
+            <if test="price != null  ">
+                price=#{price},
+            </if>
+            <if test="trainingAddress != null  ">
+                training_address=#{trainingAddress},
+            </if>
+            <if test="header != null  ">
+                header=#{header},
+            </if>
+            <if test="courseContent != null  ">
+                course_content=#{courseContent},
+            </if>
+            <if test="courseImg != null and courseImg !='' ">
+                course_img=#{courseImg},
+            </if>
+            <if test="peopleNum != null  ">
+                people_num=#{peopleNum},
+            </if>
+            <if test="joinPeopleNum != null  ">
+                join_people_num=#{joinPeopleNum},
+            </if>
+            <if test="teacherLv != null  ">
+                teacher_lv=#{teacherLv},
+            </if>
+            <if test="organizeLv != null  ">
+                organize_lv=#{organizeLv},
+            </if>
+            <if test="contentLv != null  ">
+                content_lv=#{contentLv},
+            </if>
+            <if test="sumsContent != null  ">
+                sums_content=#{sumsContent},
+            </if>
+            <if test="sumsImg != null and sumsImg !='' ">
+                sums_img=#{sumsImg},
+            </if>
+            <if test="createdAt != null  ">
+                createdAt=#{createdAt},
+            </if>
+            <if test="createdBy != null  ">
+                createdBy=#{createdBy},
+            </if>
+            <if test="updatedAt != null  ">
+                updatedAt=#{updatedAt},
+            </if>
+            <if test="updatedBy != null  ">
+                updatedBy=#{updatedBy},
+            </if>
+            <if test="recruit != null" >
+             	recruit =#{recruit},
+	        </if>
+	        <if test="city != null" >
+	            city =#{city},
+	        </if>
+	        <if test="phone != null" >
+	            phone =#{phone},
+	        </if>
+	        <if test="closeTime != null" >
+	            close_time =#{closeTime},
+	        </if>
+        </set>
+        where
+            id= #{id}
+    </update>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM
+            etop_offline_training
+        WHERE
+            id IN
+        <foreach collection="ids" item="ids" index="index" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <select id="search" resultType="com.etop.management.bean.EtopOfflineTraining">
+        SELECT
+        *
+        FROM
+        (
+        SELECT
+            <include refid="Base_Column_List"/>,
+                IFNULL(
+                    SUM(
+                    (t1.teacher_lv + t1.organize_lv + t1.content_lv) / 3
+                    ),
+                0 ) AS lv
+        FROM
+            etop_offline_training t1
+            LEFT JOIN etop_train_schedule t2 ON t1.id = t2.course_id
+        <where>
+            <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="courseId != null and courseId != '' " >
+            and t1.course_id like CONCAT ('%', #{courseId} ,'%')
+        </if>
+        <if test="courseName != null and courseName != '' " >
+            and t1.course_name like CONCAT ('%', #{courseName} ,'%')
+        </if>
+        <if test="series != null and series !=''" >
+            and t1.series =  #{series}
+        </if>
+<!--         <if test="offlineType != null" >
+            and t1.offline_type ${offlineType}
+        </if> -->
+        <if test="courseType != null  and courseType !=''" >
+            and t1.course_type =  #{courseType}
+        </if>
+        <if test="platform != null  and platform !=''" >
+            and t1.platform =  #{platform}
+        </if>
+        <if test="courseStatus != null" >
+            and t1.course_status =  #{courseStatus}
+        </if>
+        <if test="post != null and post !=''" >
+            and t1.post =  #{post}
+        </if>
+        <if test="trainTime != null and trainTime !=''" >
+            and t1.train_time =  #{trainTime}
+        </if>
+        <if test="target != null and target != ''" >
+            and t1.target like '%${target}%'
+        </if>
+        <if test="price != null" >
+            and t1.price =  #{price}
+        </if>
+        <if test="trainingAddress != null and trainingAddress != '' " >
+            and t1.training_address like CONCAT ('%', #{trainingAddress} ,'%')
+        </if>
+        <if test="header != null and header != '' " >
+            and t1.header like CONCAT ('%', #{header} ,'%')
+        </if>
+        <if test="courseContent != null" >
+            and t1.course_content =  #{courseContent}
+        </if>
+        <if test="courseImg != null" >
+            and t1.course_img =  #{courseImg}
+        </if>
+        <if test="peopleNum != null" >
+            and t1.people_num =  #{peopleNum}
+        </if>
+        <if test="joinPeopleNum != null" >
+            and t1.join_people_num =  #{joinPeopleNum}
+        </if>
+        <if test="teacherLv != null" >
+            and t1.teacher_lv =  #{teacherLv}
+        </if>
+        <if test="organizeLv != null" >
+            and t1.organize_lv =  #{organizeLv}
+        </if>
+        <if test="contentLv != null" >
+            and t1.content_lv =  #{contentLv}
+        </if>
+        <if test="sumsContent != null" >
+            and t1.sums_content =  #{sumsContent}
+        </if>
+        <if test="sumsImg != null" >
+            and t1.sums_img =  #{sumsImg}
+        </if>
+        <if test="createdAt != null" >
+            and t1.createdAt =  #{createdAt}
+        </if>
+        <if test="createdBy != null" >
+            and t1.createdBy =  #{createdBy}
+        </if>
+        <if test="updatedAt != null" >
+            and t1.updatedAt =  #{updatedAt}
+        </if>
+        <if test="updatedBy != null" >
+            and t1.updatedBy =  #{updatedBy}
+        </if>
+        <if test="recruit != null and recruit != ''" >
+            and t1.recruit =  #{recruit}
+        </if>
+        <if test="city != null and city != ''" >
+            and t1.city =  #{city}
+        </if>
+        <if test="closeTime != null" >
+            and t1.close_time =  #{closeTime}
+        </if>
+		<if test="searchValue != null and searchValue != ''" >
+			and target like '%${searchValue}%'      
+	    </if>
+            <if test="courseTime != null and courseTime != ''" >
+	           t2.start_date >=#{courseTime}
+	        </if>
+            and offline_type in ('2','3')
+        </where>
+        GROUP BY
+        t1.id
+         <if test="choosePark != null and choosePark != ''" >
+        UNION
+         SELECT
+            <include refid="Base_Column_List"/>,
+                IFNULL(
+                    SUM(
+                    (t1.teacher_lv + t1.organize_lv + t1.content_lv) / 3
+                    ),
+                0 ) AS lv
+        FROM
+            etop_offline_training t1
+            LEFT JOIN etop_train_schedule t2 ON t1.id = t2.course_id
+        <where>
+             <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="courseId != null and courseId != '' " >
+            and t1.course_id like CONCAT ('%', #{courseId} ,'%')
+        </if>
+        <if test="courseName != null and courseName != '' " >
+            and t1.course_name like CONCAT ('%', #{courseName} ,'%')
+        </if>
+        <if test="series != null and series !=''" >
+            and t1.series =  #{series}
+        </if>
+        <if test="courseType != null  and courseType !=''" >
+            and t1.course_type =  #{courseType}
+        </if>
+        <if test="platform != null  and platform !=''" >
+            and t1.platform =  #{platform}
+        </if>
+        <if test="courseStatus != null" >
+            and t1.course_status =  #{courseStatus}
+        </if>
+        <if test="post != null and post !=''" >
+            and t1.post =  #{post}
+        </if>
+        <if test="trainTime != null and trainTime !=''" >
+            and t1.train_time =  #{trainTime}
+        </if>
+        <if test="choosePark != null" >
+            and t1.choose_park =  #{choosePark}
+        </if>
+        <if test="price != null" >
+            and t1.price =  #{price}
+        </if>
+        <if test="trainingAddress != null and trainingAddress != '' " >
+            and t1.training_address like CONCAT ('%', #{trainingAddress} ,'%')
+        </if>
+        <if test="header != null and header != '' " >
+            and t1.header like CONCAT ('%', #{header} ,'%')
+        </if>
+        <if test="courseContent != null" >
+            and t1.course_content =  #{courseContent}
+        </if>
+        <if test="courseImg != null" >
+            and t1.course_img =  #{courseImg}
+        </if>
+        <if test="peopleNum != null" >
+            and t1.people_num =  #{peopleNum}
+        </if>
+        <if test="joinPeopleNum != null" >
+            and t1.join_people_num =  #{joinPeopleNum}
+        </if>
+        <if test="teacherLv != null" >
+            and t1.teacher_lv =  #{teacherLv}
+        </if>
+        <if test="organizeLv != null" >
+            and t1.organize_lv =  #{organizeLv}
+        </if>
+        <if test="contentLv != null" >
+            and t1.content_lv =  #{contentLv}
+        </if>
+        <if test="recruit != null and recruit != ''" >
+            and t1.recruit =  #{recruit}
+        </if>
+        <if test="city != null and city != ''" >
+            and t1.city =  #{city}
+        </if>
+        <if test="closeTime != null" >
+            and t1.close_time =  #{closeTime}
+        </if>
+        <if test="courseTime != null and courseTime != ''" >
+           t2.start_date >=#{courseTime}
+        </if>
+            and offline_type in ('2','3')
+        </where>
+         GROUP BY
+       			 t1.id
+        </if>
+         )t
+    </select>
+    
+    <select id="searchPrograms" resultType="com.etop.management.bean.EtopOfflineTraining">
+       SELECT
+        *
+        FROM
+        (
+        SELECT
+            <include refid="Base_Column_List"/>,
+                IFNULL(
+                    SUM(
+                    (t1.teacher_lv + t1.organize_lv + t1.content_lv) / 3
+                    ),
+                0 ) AS lv
+        FROM
+            etop_offline_training t1
+            LEFT JOIN etop_train_schedule t2 ON t1.id = t2.course_id
+        <where>
+            <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="courseId != null and courseId != '' " >
+            and t1.course_id like CONCAT ('%', #{courseId} ,'%')
+        </if>
+        <if test="courseName != null and courseName != '' " >
+            and t1.course_name like CONCAT ('%', #{courseName} ,'%')
+        </if>
+        <if test="series != null and series !=''" >
+            and t1.series =  #{series}
+        </if>
+<!--         <if test="offlineType != null" >
+            and t1.offline_type ${offlineType}
+        </if> -->
+        <if test="courseType != null  and courseType !=''" >
+            and t1.course_type =  #{courseType}
+        </if>
+        <if test="platform != null  and platform !=''" >
+            and t1.platform =  #{platform}
+        </if>
+        <if test="courseStatus != null" >
+            and t1.course_status =  #{courseStatus}
+        </if>
+        <if test="post != null and post !=''" >
+            and t1.post =  #{post}
+        </if>
+        <if test="trainTime != null and trainTime !=''" >
+            and t1.train_time =  #{trainTime}
+        </if>
+        <if test="target != null and target != ''" >
+            and t1.target like '%${target}%'
+        </if>
+        <if test="price != null" >
+            and t1.price =  #{price}
+        </if>
+        <if test="trainingAddress != null and trainingAddress != '' " >
+            and t1.training_address like CONCAT ('%', #{trainingAddress} ,'%')
+        </if>
+        <if test="header != null and header != '' " >
+            and t1.header like CONCAT ('%', #{header} ,'%')
+        </if>
+        <if test="courseContent != null" >
+            and t1.course_content =  #{courseContent}
+        </if>
+        <if test="courseImg != null" >
+            and t1.course_img =  #{courseImg}
+        </if>
+        <if test="peopleNum != null" >
+            and t1.people_num =  #{peopleNum}
+        </if>
+        <if test="joinPeopleNum != null" >
+            and t1.join_people_num =  #{joinPeopleNum}
+        </if>
+        <if test="teacherLv != null" >
+            and t1.teacher_lv =  #{teacherLv}
+        </if>
+        <if test="organizeLv != null" >
+            and t1.organize_lv =  #{organizeLv}
+        </if>
+        <if test="contentLv != null" >
+            and t1.content_lv =  #{contentLv}
+        </if>
+        <if test="sumsContent != null" >
+            and t1.sums_content =  #{sumsContent}
+        </if>
+        <if test="sumsImg != null" >
+            and t1.sums_img =  #{sumsImg}
+        </if>
+        <if test="createdAt != null" >
+            and t1.createdAt =  #{createdAt}
+        </if>
+        <if test="createdBy != null" >
+            and t1.createdBy =  #{createdBy}
+        </if>
+        <if test="updatedAt != null" >
+            and t1.updatedAt =  #{updatedAt}
+        </if>
+        <if test="updatedBy != null" >
+            and t1.updatedBy =  #{updatedBy}
+        </if>
+        <if test="recruit != null and recruit != ''" >
+            and t1.recruit =  #{recruit}
+        </if>
+        <if test="city != null and city != ''" >
+            and t1.city =  #{city}
+        </if>
+        <if test="closeTime != null" >
+            and t1.close_time =  #{closeTime}
+        </if>
+		<if test="searchValue != null and searchValue != ''" >
+			and target like '%${searchValue}%'      
+	    </if>
+            <if test="courseTime != null and courseTime != ''" >
+	           t2.start_date >=#{courseTime}
+	        </if>
+            and offline_type in ('0','1','4')
+        </where>
+        GROUP BY
+        t1.id
+         <if test="choosePark != null and choosePark != ''" >
+        UNION
+         SELECT
+            <include refid="Base_Column_List"/>,
+                IFNULL(
+                    SUM(
+                    (t1.teacher_lv + t1.organize_lv + t1.content_lv) / 3
+                    ),
+                0 ) AS lv
+        FROM
+            etop_offline_training t1
+            LEFT JOIN etop_train_schedule t2 ON t1.id = t2.course_id
+        <where>
+             <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="courseId != null and courseId != '' " >
+            and t1.course_id like CONCAT ('%', #{courseId} ,'%')
+        </if>
+        <if test="courseName != null and courseName != '' " >
+            and t1.course_name like CONCAT ('%', #{courseName} ,'%')
+        </if>
+        <if test="series != null and series !=''" >
+            and t1.series =  #{series}
+        </if>
+        <if test="courseType != null  and courseType !=''" >
+            and t1.course_type =  #{courseType}
+        </if>
+        <if test="platform != null  and platform !=''" >
+            and t1.platform =  #{platform}
+        </if>
+        <if test="courseStatus != null" >
+            and t1.course_status =  #{courseStatus}
+        </if>
+        <if test="post != null and post !=''" >
+            and t1.post =  #{post}
+        </if>
+        <if test="trainTime != null and trainTime !=''" >
+            and t1.train_time =  #{trainTime}
+        </if>
+        <if test="choosePark != null" >
+            and t1.choose_park =  #{choosePark}
+        </if>
+        <if test="price != null" >
+            and t1.price =  #{price}
+        </if>
+        <if test="trainingAddress != null and trainingAddress != '' " >
+            and t1.training_address like CONCAT ('%', #{trainingAddress} ,'%')
+        </if>
+        <if test="header != null and header != '' " >
+            and t1.header like CONCAT ('%', #{header} ,'%')
+        </if>
+        <if test="courseContent != null" >
+            and t1.course_content =  #{courseContent}
+        </if>
+        <if test="courseImg != null" >
+            and t1.course_img =  #{courseImg}
+        </if>
+        <if test="peopleNum != null" >
+            and t1.people_num =  #{peopleNum}
+        </if>
+        <if test="joinPeopleNum != null" >
+            and t1.join_people_num =  #{joinPeopleNum}
+        </if>
+        <if test="teacherLv != null" >
+            and t1.teacher_lv =  #{teacherLv}
+        </if>
+        <if test="organizeLv != null" >
+            and t1.organize_lv =  #{organizeLv}
+        </if>
+        <if test="contentLv != null" >
+            and t1.content_lv =  #{contentLv}
+        </if>
+        <if test="recruit != null and recruit != ''" >
+            and t1.recruit =  #{recruit}
+        </if>
+        <if test="city != null and city != ''" >
+            and t1.city =  #{city}
+        </if>
+        <if test="closeTime != null" >
+            and t1.close_time =  #{closeTime}
+        </if>
+        <if test="courseTime != null and courseTime != ''" >
+           t2.start_date >=#{courseTime}
+        </if>
+           and offline_type in ('0','1','4')
+        </where>
+         GROUP BY
+       			 t1.id
+        </if>
+         )t
+    </select>
+
+    <select id="selectEtopOfflinePrograms" resultType="com.etop.management.bean.EtopOfflineTraining">
+        SELECT
+            <include refid="Base_Column_List"/>,
+                IFNULL(
+                    SUM(
+                    (t1.teacher_lv + t1.organize_lv + t1.content_lv) / 3
+                    ),
+                0 ) AS lv
+        FROM
+        etop_offline_training t1
+        <where>
+            <include refid="Example_Where_Clause_Object"/>
+            <if test="offlineType == 0" >
+            and t1.offline_type = '0'
+            and course_status in('0','1')
+       		 </if>
+             <if test="offlineType == 1" >
+            and offline_type in ('1','4')
+            and course_status in('0','1') 
+            </if>
+             <if test="offlineType == 2" >
+            and offline_type in ('2','3')
+            and course_status in('0','1')
+            </if>
+        </where>
+        GROUP BY
+        t1.id
+    </select>
+
+    <select id="selectTime" resultType="com.etop.management.bean.EtopOfflineTraining">
+        SELECT
+            MIN(t2.start_date) AS start_date,
+            MAX(t2.end_date) AS end_date,
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_offline_training t1
+        LEFT JOIN etop_train_schedule t2 ON t1.id = t2.course_id
+        WHERE
+            t1.id = #{id}
+    </select>
+
+    <select id="getOfflineProgramsInfoById" resultType="com.etop.management.bean.EtopOfflineTraining">
+        SELECT
+            <include refid="Base_Column_List"/>,
+                IFNULL(
+                SUM(
+                (t1.teacher_lv + t1.organize_lv + t1.content_lv) / 3
+                ),
+            0 ) AS lv
+        FROM
+            etop_offline_training t1
+        WHERE
+            t1.id = #{id}
+        GROUP BY
+            t1.id
+    </select>
+
+    <select id="selectProgramsInfo" resultType="com.etop.management.bean.EtopOfflineTraining">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_offline_training t1
+        <where>
+            <if test="courseType != null and courseType != '' " >
+                and t1.course_type =  #{courseType}
+            </if>
+            <if test="target != null and target != '' " >
+                and t1.target like CONCAT('%',#{target},'%')
+            </if>
+             <if test="offlineType == 0" >
+            and t1.offline_type = '0'
+            and course_status in('0','1')
+       		 </if>
+             <if test="offlineType == 1" >
+            and offline_type in ('1','4')
+            and course_status in('0','1')
+            </if>
+             <if test="offlineType == 2" >
+            and offline_type in ('2','3')
+            and course_status in('0','1')
+            </if>
+<!--             and t1.offline_type = #{offlineType} -->
+        </where>
+    </select>
+
+    <select id="selectSeries" resultType="com.etop.management.bean.EtopOfflineTraining">
+        SELECT
+            t1.series
+        FROM
+            etop_offline_training t1
+        WHERE
+            	t1.offline_type in (0,1,4)
+    </select>
+    <select id="selectCity"  resultType="map" parameterType="map">
+        SELECT
+            city,
+			count(*) AS num
+        FROM
+            etop_offline_training
+        GROUP BY
+			city
+		ORDER BY
+			num DESC
+    </select>
+    <select id="countPark" resultType="Integer" parameterType="String">
+        SELECT
+			count(*) targetNumber
+		FROM
+			etop_user eu
+		JOIN etop_park_group epg ON eu.park_id = epg.id
+		JOIN etop_park ep ON epg.id = ep.park_group_id
+		WHERE eu.id=#{createdBy}
+		AND epg.activated = 1	
+    </select>
+    <delete id="delete" parameterType="string">
+		DELETE
+		FROM
+			etop_offline_training
+		WHERE
+		   id = #{id}
+	</delete>
+	
+	 	<select id="proveContent" parameterType="String" resultType="String">
+		       SELECT
+					sums_content
+				FROM
+					etop_offline_training
+				WHERE
+					id=#{id}
+       </select> 
+       
+       <select id="getAll" resultType="com.etop.management.bean.EtopOfflineTraining">
+        SELECT
+			*
+		FROM
+		 	etop_offline_training
+    </select>
+       <select id="getInfo" resultType="com.etop.management.bean.EtopOfflineTraining">
+        SELECT
+			*
+		FROM
+		 	etop_offline_training
+		where
+		 	id = #{id}
+		
+    </select>
+</mapper>

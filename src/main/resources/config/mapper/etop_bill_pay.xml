@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopBillPayDao">
+	<select id="findById" resultType="com.etop.management.entity.EtopBillPay">
+		SELECT * FROM etop_bill_pay WHERE pay_id=#{_parameter}
+	</select>
+	<select id="listByBillId" parameterType="string"
+		resultType="com.etop.management.entity.EtopBillPay">
+		SELECT * FROM etop_bill_pay
+		WHERE deleted=0 AND bill_id=#{_parameter}
+	</select>
+	<select id="listWithUserByBillId" parameterType="string"
+		resultType="com.etop.management.bean.BillPayWithUser">
+		SELECT t1.*, t2.user_name as recorder_name
+		FROM etop_bill_pay t1 LEFT JOIN etop_user t2
+		ON t1.recorder=t2.id
+		WHERE deleted=0 AND bill_id=#{_parameter}
+	</select>
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="com.etop.management.entity.EtopBillPay">
+		INSERT INTO etop_bill_pay(pay_id,bill_id,amount,pay_type,pay_no_out,attachment,pay_time,recorder)
+		VALUES(#{payId},#{billId},#{amount},#{payType},#{payNoOut},#{attachment},#{payTime},#{recorder})
+	</insert>
+
+	<!-- 批量插入记录 -->
+	<insert id="adds" parameterType="com.etop.management.entity.EtopBillPay">
+		INSERT INTO
+		etop_bill_pay(pay_id,bill_id,amount,pay_type,pay_no_out,attachment,pay_time,recorder)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{payId},#{billId},#{amount},#{payType},#{payNoOut},#{attachment},#{payTime},#{recorder})
+		</foreach>
+	</insert>
+
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="com.etop.management.entity.EtopBillPay">
+		UPDATE etop_bill_pay SET
+		bill_id=#{billId},amount=#{amount},pay_type=#{payType},pay_no_out=#{payNoOut},
+		attachment=#{attachment},pay_time=#{payTime},recorder=#{recorder}
+		where pay_id=#{payId}
+	</update>
+
+	<!-- 删除记录 -->
+	<update id="delete" parameterType="string">
+		UPDATE etop_bill_pay SET deleted=1 WHERE pay_id=#{_parameter}
+	</update>
+	
+	<update id="deletes">
+		UPDATE etop_bill_pay SET deleted=1
+		WHERE pay_id IN
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+</mapper>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+                        http://www.springframework.org/schema/mvc
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+                        http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+<!-- <context:component-scan base-package="com.etop.**.service" /> -->
+
+	<!-- 引入配置文件 -->
+	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:config/db/jdbc.properties</value>
+				<!--<value>classpath:config/properties/img.properties</value>-->
+            </list>
+        </property>
+    </bean>
+    
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="properties" ref="configProperties"></property>
+	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${driver}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${initialSize}" />
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${maxActive}" />
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="${maxIdle}" />
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${minIdle}" />
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${maxWait}" />
+		
+		<property name="validationQuery" value="select 1" />
+	</bean>
+
+
+	<!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 自动扫描mapping.xml文件 -->
+		<property name="mapperLocations" value="classpath:config/mapper/*.xml" />
+		<property name="configLocation" value="classpath:config/spring/mybatis-config.xml" />
+	</bean>
+
+	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.etop.*.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+
+
+	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+	<tx:annotation-driven transaction-manager="transactionManager"	order="0" />
+	
+	<bean name="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<aop:config>
+		<aop:advisor pointcut="execution(* *..service.*Service.*(..))"
+			advice-ref="transactionInterceptor" order="1" />
+	</aop:config>
+
+	<tx:advice id="transactionInterceptor" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="find*" read-only="true" />
+			<tx:method name="list*" read-only="true" />
+			<tx:method name="search*" read-only="true" />
+			<tx:method name="is*" read-only="true" />
+			<tx:method name="query*" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- 事务管理器 -->
+	<!--<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	&lt;!&ndash; 事务拦截方法配置 &ndash;&gt;
+	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			&lt;!&ndash; REQUIRED：支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择 &ndash;&gt;
+			&lt;!&ndash; SUPPORTS：支持当前事务，如果当前没有事务，就以非事务方式执行 &ndash;&gt;
+			&lt;!&ndash; MANDATORY：支持当前事务，如果当前没有事务，就抛出异常 &ndash;&gt;
+			&lt;!&ndash; REQUIRES_NEW：新建事务，如果当前存在事务，把当前事务挂起 &ndash;&gt;
+			&lt;!&ndash; NOT_SUPPORTED：以非事务方式执行操作，如果当前存在事务，就把当前事务挂起 &ndash;&gt;
+			&lt;!&ndash; NEVER：以非事务方式执行，如果当前存在事务，则抛出异常 &ndash;&gt;
+			&lt;!&ndash; NESTED：支持当前事务，如果当前事务存在，则执行一个嵌套事务，如果当前没有事务，就新建一个事务 &ndash;&gt;
+			&lt;!&ndash; 增 &ndash;&gt;
+			<tx:method name="add*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="create*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="insert*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="save*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			&lt;!&ndash; 删 &ndash;&gt;
+			<tx:method name="delete*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="remove*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			&lt;!&ndash; 改 &ndash;&gt;
+			<tx:method name="change*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="edit*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="modify*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="update*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="unDelete*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="set*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="claim*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="reset*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="transfer*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			<tx:method name="merge*" propagation="REQUIRED" isolation="READ_COMMITTED"
+					   rollback-for="java.lang.Throwable"/>
+			&lt;!&ndash; 查 &ndash;&gt;
+			<tx:method name="find*" propagation="SUPPORTS" isolation="READ_COMMITTED" read-only="true"/>
+			<tx:method name="get*" propagation="SUPPORTS" isolation="READ_COMMITTED" read-only="true"/>
+			<tx:method name="has*" propagation="SUPPORTS" isolation="READ_COMMITTED" read-only="true"/>
+			<tx:method name="is*" propagation="SUPPORTS" isolation="READ_COMMITTED" read-only="true"/>
+			<tx:method name="list*" propagation="SUPPORTS" isolation="READ_COMMITTED" read-only="true"/>
+			<tx:method name="load*" propagation="SUPPORTS" isolation="READ_COMMITTED" read-only="true"/>
+			<tx:method name="search*" propagation="SUPPORTS" isolation="READ_COMMITTED" read-only="true"/>
+			<tx:method name="select*" propagation="SUPPORTS" isolation="READ_COMMITTED" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+
+	&lt;!&ndash; 第一个*代表所有的返回值类型，第二个*代表所有的类，第三个*代表类所有方法，最后一个..代表所有的参数 &ndash;&gt;
+	<aop:config>
+		<aop:pointcut id="bossTransactionPointcut"
+					  expression="execution(* com.etop.management.service.impl.*ServiceImpl.*(..))"/>
+		<aop:advisor pointcut-ref="bossTransactionPointcut" advice-ref="transactionAdvice"/>
+	</aop:config>-->
+
+
+</beans>

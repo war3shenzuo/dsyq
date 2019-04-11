@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopReplyDao">
+
+
+	<insert id="addReply" parameterType="com.etop.management.bean.EtopReply">
+		insert into etop_reply
+		(id,noticeId,replyer,user,reply_time,content,vote)
+		values(
+		#{id},#{noticeId},#{replyer},#{user},#{replyTime},#{content},#{vote}
+		)
+	</insert>
+
+
+	<select id="getReply" resultType="com.etop.management.bean.EtopReply" parameterType="Map">
+		SELECT
+			*
+		FROM
+			etop_reply t1
+		INNER JOIN etop_user t2 ON t1.replyer = t2.user_name
+		WHERE noticeId=#{noticeId}
+	</select>
+	
+	<select id="getReplyByReplyer" resultType="com.etop.management.bean.EtopReply" parameterType="com.etop.management.bean.EtopReply">
+		SELECT
+			*
+		FROM
+			etop_reply
+		WHERE noticeId = #{noticeId}
+		AND replyer = #{replyer}
+	</select>
+</mapper>

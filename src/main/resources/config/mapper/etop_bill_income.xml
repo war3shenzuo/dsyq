@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopBillIncomeDao">
+	<select id="findById" resultType="com.etop.management.entity.EtopBillIncome">
+		SELECT * FROM etop_bill_income WHERE income_id=#{_parameter}
+	</select>
+	<select id="list" parameterType="map"
+		resultType="com.etop.management.entity.EtopBillIncome">
+		SELECT * FROM etop_bill_income WHERE deleted=0
+		<if test="incomeId != null and incomeId != ''">
+			AND income_id LIKE '%${incomeId}%'
+		</if>
+		<if test="incomeIds != null">
+			AND income_id IN
+			<foreach collection="incomeIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="parkId != null and parkId != ''">
+			AND park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="companyId != null and companyId != ''">
+			AND company_id=#{companyId}
+		</if>
+		<if test="companyIds != null">
+			AND company_id IN
+			<foreach collection="companyIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+		<if test="companyName != null and companyName != ''">
+			AND company_name LIKE '%${companyName}%'
+		</if>
+		<if test="payType != null">
+			AND pay_type=#{payType}
+		</if>
+		<if test="beginDate != null">
+			AND pay_time &gt;= #{beginDate}
+		</if>
+		<if test="endDate != null">
+			AND pay_time &lt;= #{endDate}
+		</if>
+	</select>
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="com.etop.management.entity.EtopBillPay">
+		INSERT INTO etop_bill_income
+		(income_id,park_id,company_id,company_name,amount,balance,pay_type,pay_no_out,description,pay_time,recorder)
+		VALUES(#{incomeId},#{parkId},#{companyId},#{companyName},#{amount},#{balance},#{payType},
+		#{payNoOut},#{description},#{payTime},#{recorder})
+	</insert>
+
+	<!-- 批量插入记录 -->
+	<insert id="adds" parameterType="com.etop.management.entity.EtopBillPay">
+		INSERT INTO	etop_bill_income
+		(income_id,park_id,company_id,company_name,amount,balance,pay_type,pay_no_out,description,pay_time,recorder)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{incomeId},#{parkId},#{companyId},#{companyName},#{amount},#{balance},#{payType},
+			#{payNoOut},#{description},#{payTime},#{recorder})
+		</foreach>
+	</insert>
+
+	<!-- 删除记录 -->
+	<update id="delete" parameterType="string">
+		UPDATE etop_bill_income SET deleted=1 WHERE income_id=#{_parameter}
+	</update>
+	
+	<update id="deletes">
+		UPDATE etop_bill_income SET deleted=1
+		WHERE income_id IN
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+</mapper>

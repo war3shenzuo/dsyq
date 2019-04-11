@@ -1,0 +1,188 @@
+	*{
+				margin:0;
+				padding:0;	
+			}
+			.wrap{
+				width:1147px;
+				margin:0 auto 100px auto;
+			
+			}
+			
+			.title{
+				margin:30px 0;
+				border-bottom:1px solid #e4e1e1;
+				padding:20px 0;
+			}
+			.p1{
+				font-size:25px;
+				font-weight: bolder;
+				text-align: center;
+				margin-bottom:30px;
+				margin-top:-50px;
+			}
+			.thing{
+				display: inline-block;
+				margin-left:47px;
+				margin-right:47px;
+			}
+			.thing a{
+				color:black;
+				text-decoration: none;
+			}
+			.thing a:hover{
+				color:red;
+			}
+			.thing p{
+				text-align:center;
+				margin-top:10px;
+				font-size:14px;
+			}
+	
+			.conttitle{
+				
+				width:1180;
+				display:block;
+				margin-left:0;
+				border-bottom:1px solid #E4E1E1;
+				padding-bottom:10px;
+			}
+			
+		 .title2 .a1{
+		 		color:black;
+				font-size:30px;
+				font-weight:bolder;
+				text-decoration: none;
+				display:inline-block;
+				margin-top:-20px;
+			}
+		.title2	.a1:hover{
+				color:red;
+			}
+			.address{
+				display:inline-block;
+				float:right;
+				
+			}
+			.address a{
+				color:black;
+				text-decoration: none;
+			}
+			.address a:hover{
+				color:red;
+			}
+			.address .line{
+				display:inline-block;
+				width:10px;
+				border-left:2px solid #e4e1e1;
+				margin:0 -5px 0 1px;
+			}
+			.screenO{display: block; overflow: hidden; } 
+			.screenO h2{float: left; height:32px; line-height: 32px; font-size: 16px; }
+			.screenO ul{padding-left: 90px;}
+			.screenO li{ float: left; height:12px; line-height:12px; border-left: 1px solid #ccc; margin: 8px 6px;  padding: 0 8px; }
+			
+			.screenO_so{display: block; overflow: hidden; margin-left: 20px; } 
+			.screenO_so h2{float: left; height:32px; line-height: 32px; font-size: 16px; }
+			.screenO_so ul{padding-left: 90px;}
+			.screenO_so li{ float: left; height:12px; line-height:12px; border-left: 1px solid #ccc; margin: 8px 6px;  padding: 0 8px; }
+			
+			.course{
+				overflow:hidden;
+				margin:40px -20px 40px 0;
+				
+			}
+			.imgl{
+			width:369px;height:250px; float: left;
+				position: relative;
+				display:block;
+				overflow: hidden;
+				margin: 0 20px 20px 0;
+			}
+			.imgl img{width:369px;height:250px;
+			}
+			.imgl a:hover p{
+				 color:#fff; padding: 0 5%;
+			}
+			.imgl:hover .imgword{height:250px;;	opacity: 0.8;}
+			.imgword{
+				position:absolute;
+				bottom:0;
+				width:100%;
+				background-color: black;
+				line-height:24px;
+				height:50px;
+				opacity: 0.6;
+			}
+			.imgword p{
+				color:white;
+				text-align: center;
+			}
+			.word { display:block; float: left;width:60%; }
+			.word span{
+				margin-left:10px;
+				font-size:25px;
+				font-weight: bold;
+			}
+			.word p{
+				font-size:18px;
+				line-height:30px;
+				
+				margin-top:20px;
+			}
+			.pagination>.disabled>a{
+			background-color:white;
+			color:grey;
+			}
+			.up img{
+				margin-top:-8px;
+			}
+			
+		.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover,
+		.pagination>.active>span, .pagination>.active>span:focus,
+		.pagination>.active>span:hover{
+			color:grey;
+			background-color:white;
+			border:none;
+			}
+		.foot{
+			margin:0 auto;
+			width:440px;
+			}
+		.foot ul li a{
+			margin:1px;
+			background:#F6F6F6;
+			color:black;
+			}
+			
+		input.text{ font-size:14px; height:32px; line-height:32px; width:240px; }
+		.Esreach{ text-align: left;}	
+	/*下面的是gardenlist.html的css文件部分 */ 
+		.middletitle{
+			padding:28px 10px;
+			margin-top:-30px;
+			margin-bottom: 80px;
+			border-top: 1px solid #E4E1E1;
+			border-bottom:1px solid #E4E1E1;
+			}
+			.middletitle a{
+				color:black;
+				text-decoration: none;
+			}
+			.middletitle a:hover{
+				color:red;
+			}
+			.middletitle span{
+				border-left:1px solid #E4E1E1;
+				margin: 0 5px;
+			}
+			.img2{
+				width:315px;
+				height:190px;
+			}
+			
+			.word .p4{
+				
+				line-height:32px;
+				font-size:16px;
+			}
+			

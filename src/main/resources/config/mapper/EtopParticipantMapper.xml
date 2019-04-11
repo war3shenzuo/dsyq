@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopParticipantDao">
+
+    <sql id="Base_Column_List" >
+        t1.id,t1.user_id,t1.course_id,t1.score,t1.answer_at
+    </sql>
+
+    <sql id="Example_Where_Clause_Object">
+        <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="userId != null" >
+            and t1.user_id =  #{userId}
+        </if>
+        <if test="courseId != null" >
+            and t1.course_id =  #{courseId}
+        </if>
+        <if test="score != null" >
+            and t1.score =  #{score}
+        </if>
+        <if test="answerAt != null" >
+            and t1.answer_at =  #{answerAt}
+        </if>
+    </sql>
+
+    <insert id="insert">
+        insert into etop_participant(id,user_id,course_id,score,answer_at)
+            values(#{id},#{userId},#{courseId},#{score},#{answerAt})
+    </insert>
+    
+    <insert id="insertFeed">
+        insert into etop_train_feedback(id,participant_id,course_id,user_id)
+            values(uuid(),#{participantId},#{courseId},#{userId})
+    </insert>
+
+    <select id="select" resultType="com.etop.management.bean.EtopParticipant">
+        SELECT
+            t2.user_name,
+            t4.park_name,
+            t8.park_group_name,
+            t5.company_name,
+            t6.course_name,
+            t6.course_type,
+			t6.platform,
+            t1.content_level,
+			t1.teacher_level,
+			t1.play_smooth,
+			t1.video_clarity,
+			t1.remark,
+			t1.id as feedId,
+            t7.id,
+            t7.user_id,
+            t7.course_id,
+            t7.score,
+            t7.answer_at
+        FROM
+           etop_train_feedback t1
+		LEFT JOIN etop_participant t7 ON t1.participant_id = t7.id 
+		LEFT JOIN etop_user t2 ON t1.user_id = t2.id
+		LEFT JOIN etop_park t4 ON t2.park_id = t4.id
+		LEFT JOIN etop_park_group t8 ON t8.id = t4.park_group_id
+		LEFT JOIN etop_company t5 ON t2.company_id = t5.company_id
+		LEFT JOIN etop_online_training t6 ON t1.course_id = t6.id
+        <where>
+            <include refid="Example_Where_Clause_Object"/>
+            <if test="userName != null and userName != '' ">
+                and t2.user_name like CONCAT ('%', #{userName} ,'%')
+            </if>
+            <if test="parkName != null and parkName != '' ">
+                and t4.park_name like CONCAT ('%', #{parkName} ,'%')
+            </if>
+            <if test="parkGroupName != null and parkGroupName != '' ">
+                and t8.park_group_name like CONCAT ('%', #{parkGroupName} ,'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getEtopParticipantById" resultType="com.etop.management.bean.EtopParticipant">
+        SELECT
+            t2.user_name,
+            t4.park_name,
+            t5.company_name,
+            t6.course_name,
+            t6.course_type,
+			t6.platform,
+            t1.content_level,
+			t1.teacher_level,
+			t1.play_smooth,
+			t1.video_clarity,
+			t1.remark,
+			t1.id as feedId,
+        	t7.id,
+            t7.user_id,
+            t7.course_id,
+            t7.score,
+            t7.answer_at
+        FROM
+           etop_train_feedback t1
+		LEFT JOIN etop_participant t7 ON t1.participant_id = t7.id 
+		LEFT JOIN etop_user t2 ON t1.user_id = t2.id
+		LEFT JOIN etop_park t4 ON t2.park_id = t4.id
+		LEFT JOIN etop_park_group t8 ON t8.id = t4.park_group_id
+		LEFT JOIN etop_company t5 ON t2.company_id = t5.company_id
+		LEFT JOIN etop_online_training t6 ON t1.course_id = t6.id
+        WHERE
+            t1.id = #{id}
+    </select>
+
+    <select id="selectTestNum" resultType="java.lang.Integer">
+        SELECT
+            IFNULL(COUNT(*),0) AS num
+        FROM
+            etop_participant
+        WHERE
+            course_id = #{courseId};
+    </select>
+    <select id="getAvg" resultType="com.etop.management.bean.EtopParticipant">
+        SELECT
+			*, IFNULL(AVG(content_level),0) avgContent,
+			IFNULL(AVG(teacher_level),0) avgTeacher,
+			IFNULL(avg(play_smooth),0) avgpPlay,
+			IFNULL(avg(video_clarity),0) avgVideo,
+			IFNULL(SUM(
+				content_level + teacher_level + play_smooth + video_clarity
+			) / (COUNT(*) * 4),0) avgScore
+		FROM
+			etop_train_feedback
+		WHERE
+			course_id = #{courseId};
+    </select>
+    
+    <update id="updateFeedback">
+        update etop_train_feedback
+        <set>
+            <if test="contentLevel != null  ">
+                content_level=#{contentLevel},
+            </if>
+            <if test="teacherLevel != null  ">
+                teacher_level=#{teacherLevel},
+            </if>
+            <if test="playSmooth != null  ">
+                play_smooth=#{playSmooth},
+            </if>
+            <if test="videoClarity != null  ">
+                video_clarity=#{videoClarity},
+            </if>
+            <if test="remark != null  ">
+                remark=#{remark},
+            </if>
+        </set>
+        where
+        id = #{feedId}
+    </update>
+</mapper>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopCompanyTurnoverDao">
+
+    <sql id="Base_Column_List" >
+        t1.id,t1.company_id,t1.platform,t1.turnover,t1.yearsDate,t1.created_by,t1.updated_at,t1.updated_by,t1.created_at
+    </sql>
+
+    <sql id="Example_Where_Clause_Object">
+        <if test="id != null" >
+            t1.id =  #{id}
+        </if>
+        <if test="companyId != null" >
+            and t1.company_id =  #{companyId}
+        </if>
+        <if test="platform != null and platform != '' " >
+            and t1.platform =  #{platform}
+        </if>
+        <if test="turnover != null" >
+            and t1.turnover =  #{turnover}
+        </if>
+        <if test="yearsDate != null" >
+            and t1.yearsDate =  #{yearsDate}
+        </if>
+        <if test="createdBy != null" >
+            and t1.created_by =  #{createdBy}
+        </if>
+        <if test="updatedAt != null" >
+            and t1.updated_at =  #{updatedAt}
+        </if>
+        <if test="updatedBy != null" >
+            and t1.updated_by =  #{updatedBy}
+        </if>
+        <if test="createdAt != null" >
+            and t1.created_at =  #{createdAt}
+        </if>
+    </sql>
+
+    <insert id="insert">
+        insert into etop_company_turnover(id,company_id,platform,turnover,yearsDate,created_by,updated_at,updated_by,created_at)
+            values(uuid(),#{companyId},#{platform},#{turnover},#{yearsDate},#{createdBy},sysdate(),#{updatedBy},sysdate())
+    </insert>
+
+    <update id="updateById">
+        update etop_company_turnover
+        <set>
+            <if test="companyId != null  ">
+                company_id=#{companyId},
+            </if>
+            <if test="platform != null  ">
+                platform=#{platform},
+            </if>
+            <if test="turnover != null  ">
+                turnover=#{turnover},
+            </if>
+            <if test="yearsDate != null  ">
+                yearsDate=#{yearsDate},
+            </if>
+            <if test="createdBy != null  ">
+                created_by=#{createdBy},
+            </if>
+            <if test="updatedAt != null  ">
+                updated_at=sysdate(),
+            </if>
+            <if test="updatedBy != null  ">
+                updated_by=#{updatedBy},
+            </if>
+            <if test="createdAt != null  ">
+                created_at=#{createdAt},
+            </if>
+        </set>
+        where id = #{id}
+        order by updated_at desc
+    </update>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+            etop_company_turnover
+        WHERE
+            id IN
+        <foreach collection="ids" item="ids" index="index" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <select id="select" resultType="com.etop.management.bean.EtopCompanyTurnover">
+        SELECT
+            <include refid="Base_Column_List"/>,t2.company_name
+        FROM
+            etop_company_turnover t1
+        INNER JOIN etop_company t2 ON t1.company_id = t2.company_id
+        <where>
+            <include refid="Example_Where_Clause_Object"/>
+        </where>
+    </select>
+
+    <select id="getTurnoverInfoById" resultType="com.etop.management.bean.EtopCompanyTurnover">
+        SELECT
+            <include refid="Base_Column_List"/>,t2.company_name
+        FROM
+            etop_company_turnover t1
+        INNER JOIN etop_company t2 ON t1.company_id = t2.company_id
+        WHERE
+            t1.id = #{id}
+    </select>
+
+    <select id="selectTurnover" resultType="com.etop.management.bean.EtopCompanyTurnover">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_company_turnover t1
+        WHERE
+            t1.platform = #{platform}
+        and t1.company_id = #{companyId}
+        and t1.yearsDate like CONCAT ('%',#{yearsDate},'%')
+    </select>
+    
+    <select id="SumTurnover" resultType="com.etop.management.bean.EtopCompanyTurnover">
+       SELECT
+			SUM(turnover) AS SumTurnover,COUNT(turnover) AS CountTurnover
+		FROM
+			etop_company_turnover t1
+		WHERE
+			t1.company_id = #{companyId}
+    </select>
+
+</mapper>

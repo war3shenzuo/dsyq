@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopCompanyIntentionDao">
+
+    <!-- etop_company_intention table all fields -->
+    <sql id="Base_Column_List">
+         t1.id,t1.room_id,t1.smallArea,t1.area,t1.lowPrice,t1.price,t1.orientation,t1.lowLayer_high,t1.layer_high,t1.floor_num,t1.floor_partition,t1.floor_layer,
+         t1.floor_room,t1.floor_num_spare,t1.floor_partition_spare,t1.floor_layer_spare,t1.floor_room_spare,t1.company_type,t1.company_status,t1.review_status,
+         t1.company_capital,t1.business_type,t1.number,t1.beforeseat,t1.company_name,t1.contact,t1.mobile,t1.company_mobile,t1.company_fax,
+         t1.spare_contact,t1.spare_mobile,t1.email,t1.remarks,t1.created_at,t1.created_by,t1.park_id,t1.updated_at,t1.updated_by
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause_Object">
+        <if test="id != null">
+            t1.id = #{id}
+        </if>
+        <if test="roomId != null">
+            and t1.room_id = #{roomId}
+        </if>
+        <if test="companyName != null" >
+            and t1.company_name like CONCAT('%',#{companyName},'%')
+        </if>
+        <if test="contact != null" >
+            and t1.contact =  #{contact}
+        </if>
+        <if test="mobile != null" >
+            and t1.mobile =  #{mobile}
+        </if>
+        <if test="companyMobile != null" >
+            and t1.company_mobile =  #{companyMobile}
+        </if>
+        <if test="companyFax != null" >
+            and t1.company_fax =  #{companyFax}
+        </if>
+        <if test="spareContact != null" >
+            and t1.spare_contact =  #{spareContact}
+        </if>
+        <if test="spareMobile != null" >
+            and t1.spare_mobile =  #{spareMobile}
+        </if>
+        <if test="email != null" >
+            and t1.email =  #{email}
+        </if>
+        <if test="area != null">
+            <![CDATA[
+                 and t1.smallArea <= #{area} and t1.area >= #{area}
+            ]]>
+        </if>
+        <if test="price != null">
+            <![CDATA[
+                 and t1.lowPrice <= #{price} and t1.price >= #{price}
+            ]]>
+        </if>
+        <if test="orientation != null and orientation != '' ">
+            and t1.orientation = #{orientation}
+        </if>
+        <if test="layerHigh != null">
+            <![CDATA[
+                and t1.lowLayer_high <= #{layerHigh} and t1.layer_high >= #{layerHigh}
+            ]]>
+        </if>
+        <if test="floorNum != null">
+            and t1.floor_num = #{floorNum}
+        </if>
+        <if test="floorPartition != null">
+            and t1.floor_partition = #{floorPartition}
+        </if>
+        <if test="floorLayer != null">
+            and t1.floor_layer = #{floorLayer}
+        </if>
+        <if test="floorRoom != null">
+            and t1.floor_room = #{floorRoom}
+        </if>
+        <if test="floorNumSpare != null">
+            and t1.floor_num_spare = #{floorNumSpare}
+        </if>
+        <if test="floorPartitionSpare != null">
+            and t1.floor_partition_spare = #{floorPartitionSpare}
+        </if>
+        <if test="floorLayerSpare != null">
+            and t1.floor_layer_spare = #{floorLayerSpare}
+        </if>
+        <if test="floorRoomSpare != null">
+            and t1.floor_room_spare = #{floorRoomSpare}
+        </if>
+        <if test="companyType != null" >
+            and t1.company_type =  #{companyType}
+        </if>
+        <if test="companyStatus != null" >
+            and t1.company_status =  #{companyStatus}
+        </if>
+        <if test="companyCapital != null and companyCapital != '' " >
+            and t1.company_capital =  #{companyCapital}
+        </if>
+        <if test="businessType != null" >
+            and t1.business_type like CONCAT('%',#{businessType},'%')
+        </if>
+        <if test="number != null" >
+            and t1.number =  #{number}
+        </if>
+        <if test="beforeseat != null" >
+            and t1.beforeseat =  #{beforeseat}
+        </if>
+        <if test="remarks != null" >
+            and t1.remarks =  #{remarks}
+        </if>
+        <if test="createdAt != null" >
+            and t1.created_at =  #{createdAt}
+        </if>
+        <if test="createdAtStr != null and  createdAtStr !=''" >
+<!--            		 and t1.created_at like CONCAT('%',#{createdAtStr},'%') -->
+           	<![CDATA[
+                and t1.created_at >= #{createdAtStr}
+            ]]>
+       	</if>
+        <if test="createdAtStr2 != null and  createdAtStr2 !=''" >
+<!--            		 and t1.created_at like CONCAT('%',#{createdAtStr2},'%') -->
+           	<![CDATA[
+                and t1.created_at <= #{createdAtStr2}
+            ]]>
+       	</if>
+        <if test="createdBy != null" >
+            and t1.created_by =  #{createdBy}
+        </if>
+        <if test="parkId != null" >
+            and t1.park_id =  #{parkId}
+        </if>
+        <if test="updatedAt != null" >
+            and t1.updated_at =  #{updatedAt}
+        </if>
+        <if test="updatedBy != null" >
+            and t1.updated_by =  #{updatedBy}
+        </if>
+    </sql>
+
+    <select id="select" resultType="com.etop.management.bean.EtopCompanyIntention">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_company_intention t1
+        <where>
+            <include refid="Example_Where_Clause_Object"/>
+             <if test="number1 != null" >
+             	<![CDATA[
+           		 and t1.number >=  #{number1}
+           		  ]]>
+       		 </if>
+             <if test="number2 != null" >
+             	<![CDATA[
+           		 and t1.number <=  #{number2}
+           		  ]]>
+       		 </if>
+        </where>
+        order by updated_at DESC
+    </select>
+
+    <insert id="insert" parameterType="com.etop.management.bean.EtopCompanyIntention" useGeneratedKeys="true" keyProperty="id">
+        insert into etop_company_intention(id,review_status,room_id,smallArea,area,lowPrice,price,orientation,lowLayer_high,layer_high,floor_num,floor_partition,floor_layer,floor_room,floor_num_spare,
+        floor_partition_spare,floor_layer_spare,floor_room_spare,company_type,company_status,company_capital,business_type,number,beforeseat,company_name,
+        contact,mobile,company_mobile,company_fax,spare_contact,spare_mobile,email,remarks,created_at,created_by,park_id,updated_at,updated_by)
+        VALUES (#{id}, #{reviewStatus}, #{roomId}, #{smallArea}, #{area}, #{lowPrice}, #{price}, #{orientation}, #{lowLayerHigh}, #{layerHigh}, #{floorNum}, #{floorPartition}, #{floorLayer}, #{floorRoom}, #{floorNumSpare},
+        #{floorPartitionSpare}, #{floorLayerSpare}, #{floorRoomSpare}, #{companyType}, #{companyStatus}, #{companyCapital}, #{businessType}, #{number},#{beforeseat}, #{companyName},
+        #{contact}, #{mobile}, #{companyMobile}, #{companyFax}, #{spareContact}, #{spareMobile}, #{email}, #{remarks}, #{createdAt}, #{createdBy}, #{parkId}, #{updatedAt}, #{updatedBy})
+    </insert>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+            etop_company_intention
+        WHERE
+            id IN
+        <foreach collection="ids" item="ids" index="index" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <select id="getCompInfoById" resultType="com.etop.management.bean.EtopCompanyIntention">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_company_intention t1
+        WHERE
+            t1.id IN
+        <foreach collection="id" item="id" index="index" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getCompIntention" parameterType="string" resultType="com.etop.management.bean.EtopCompanyIntention">
+        SELECT
+            <include refid="Base_Column_List"/>,p.park_name
+        FROM
+            etop_company_intention t1
+        INNER JOIN etop_park p ON t1.park_id = p.id
+        WHERE
+            t1.id = #{companyId}
+    </select>
+
+    <select id="getCompanyInfoByParkId" resultType="com.etop.management.bean.EtopCompanyIntention">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_company_intention t1
+        where
+            t1.park_id =#{parkId}
+    </select>
+    
+    <select id="getCompInfoByParkId" resultType="com.etop.management.bean.EtopCompanyIntention">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_company_intention t1
+        where
+            t1.park_id IN
+        <foreach collection="parkIds" item="parkIds" index="index" open="(" separator="," close=")">
+            #{parkIds}
+        </foreach>
+    </select>
+
+    <select id="selectCompanyIntention" resultType="com.etop.management.bean.EtopCompanyIntention">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_company_intention t1
+        WHERE
+            t1.company_name = #{companyName}
+        <if test="id != null and id != ''">
+            AND t1.id = #{id}
+        </if>
+        <if test="parkId != null" >
+            and t1.park_id =  #{parkId}
+        </if>
+    </select>
+
+    <update id="updateById">
+        update etop_company_intention
+        <set>
+            company_status= 1,
+            <if test="smallArea != null  ">
+                smallArea=#{smallArea},
+            </if>
+            <if test="area != null  ">
+                area=#{area},
+            </if>
+            <if test="reviewStatus != null">
+                review_status=#{reviewStatus},
+            </if>
+            <if test="lowPrice != null  ">
+                lowPrice=#{lowPrice},
+            </if>
+            <if test="price != null  ">
+                price=#{price},
+            </if>
+            <if test="orientation != null  ">
+                orientation=#{orientation},
+            </if>
+            <if test="lowLayerHigh != null  ">
+                lowLayer_high=#{lowLayerHigh},
+            </if>
+            <if test="layerHigh != null  ">
+                layer_high=#{layerHigh},
+            </if>
+            <if test="floorNum != null  ">
+                floor_num=#{floorNum},
+            </if>
+            <if test="floorPartition != null  ">
+                floor_partition=#{floorPartition},
+            </if>
+            <if test="floorLayer != null  ">
+                floor_layer=#{floorLayer},
+            </if>
+            <if test="floorRoom != null  ">
+                floor_room=#{floorRoom},
+            </if>
+            <if test="floorNumSpare != null  ">
+                floor_num_spare=#{floorNumSpare},
+            </if>
+            <if test="floorPartitionSpare != null  ">
+                floor_partition_spare=#{floorPartitionSpare},
+            </if>
+            <if test="floorLayerSpare != null  ">
+                floor_layer_spare=#{floorLayerSpare},
+            </if>
+            <if test="floorRoomSpare != null  ">
+                floor_room_spare=#{floorRoomSpare},
+            </if>
+            <if test="companyType != null  ">
+                company_type=#{companyType},
+            </if>
+            <if test="companyCapital != null  ">
+                company_capital=#{companyCapital},
+            </if>
+            <if test="businessType != null  ">
+                business_type=#{businessType},
+            </if>
+            <if test="number != null  ">
+                number=#{number},
+            </if>
+            <if test="beforeseat != null  ">
+                beforeseat=#{beforeseat},
+            </if>
+            <if test="companyName != null  ">
+                company_name=#{companyName},
+            </if>
+            <if test="contact != null  ">
+                contact=#{contact},
+            </if>
+            <if test="mobile != null  ">
+                mobile=#{mobile},
+            </if>
+            <if test="companyMobile != null  ">
+                company_mobile=#{companyMobile},
+            </if>
+            <if test="companyFax != null  ">
+                company_fax=#{companyFax},
+            </if>
+            <if test="spareContact != null  ">
+                spare_contact=#{spareContact},
+            </if>
+            <if test="spareMobile != null  ">
+                spare_mobile=#{spareMobile},
+            </if>
+            <if test="email != null  ">
+                email=#{email},
+            </if>
+            <if test="remarks != null  ">
+                remarks=#{remarks},
+            </if>
+            <if test="createdAt != null  ">
+                created_at=#{createdAt},
+            </if>
+            <if test="createdBy != null  ">
+                created_by=#{createdBy},
+            </if>
+            <if test="parkId != null  ">
+                park_id=#{parkId},
+            </if>
+            <if test="updatedAt != null" >
+                updated_at =  #{updatedAt},
+            </if>
+            <if test="updatedBy != null" >
+                updated_by =  #{updatedBy}
+            </if>
+        </set>
+        where id = #{id}
+        order by updated_at desc
+    </update>
+    
+ 	<select id="proveIntentionCompanyName" resultType="String">
+		      SELECT
+					id as company_id
+				FROM
+					 etop_company_intention 
+				WHERE
+					company_name = #{companyName}	
+				AND park_id =#{parkId}	
+    </select> 
+    
+ 	<select id="proveCompanyName"  resultType="String">
+		      SELECT
+					company_id
+				FROM
+					etop_company 
+				WHERE
+					company_name = #{companyName}	
+				AND park_id =#{parkId}
+    </select> 
+</mapper>

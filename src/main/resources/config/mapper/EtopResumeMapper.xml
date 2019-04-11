@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopResumeDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.entity.EtopResume" >
+	<result column="id" property="id"/>
+	<result column="serviceId" property="serviceId"/>
+	<result column="name" property="name"/>
+	<result column="mobile" property="mobile"/>
+	<result column="email" property="email"/>
+	<result column="fileUrl" property="fileUrl"/>
+	<result column="isAffirm" property="isAffirm"/>
+</resultMap>
+       
+<!-- etop_resume table all fields -->
+<sql id="Base_Column_List" >
+	 id,serviceId,name,mobile,email,fileUrl,isAffirm
+	 
+</sql>
+   
+   
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="condition.id != null and condition.id != ''" >
+	    and id =  #{condition.id}
+	</if>
+	
+			<if test="nocondition.id != null and nocondition.id != ''" >
+	    and id not in  (#{nocondition.id})
+	</if>
+	
+		<if test="condition.serviceId != null and condition.serviceId != ''" >
+	    and serviceId =  #{condition.serviceId}
+	</if>
+	
+			<if test="nocondition.serviceId != null and nocondition.serviceId != ''" >
+	    and serviceId not in  (#{nocondition.serviceId})
+	</if>
+	
+		<if test="condition.name != null and condition.name != ''" >
+	    and name =  #{condition.name}
+	</if>
+	
+			<if test="nocondition.name != null and nocondition.name != ''" >
+	    and name not in  (#{nocondition.name})
+	</if>
+	
+		<if test="condition.mobile != null and condition.mobile != ''" >
+	    and mobile =  #{condition.mobile}
+	</if>
+	
+			<if test="nocondition.mobile != null and nocondition.mobile != ''" >
+	    and mobile not in  (#{nocondition.mobile})
+	</if>
+	
+		<if test="condition.email != null and condition.email != ''" >
+	    and email =  #{condition.email}
+	</if>
+	
+			<if test="nocondition.email != null and nocondition.email != ''" >
+	    and email not in  (#{nocondition.email})
+	</if>
+	
+		<if test="condition.fileUrl != null and condition.fileUrl != ''" >
+	    and fileUrl =  #{condition.fileUrl}
+	</if>
+	
+			<if test="nocondition.fileUrl != null and nocondition.fileUrl != ''" >
+	    and fileUrl not in  (#{nocondition.fileUrl})
+	</if>
+	
+		<if test="condition.isAffirm != null and condition.isAffirm != ''" >
+	    and isAffirm =  #{condition.isAffirm}
+	</if>
+	
+			<if test="nocondition.isAffirm != null and nocondition.isAffirm != ''" >
+	    and isAffirm not in  (#{nocondition.isAffirm})
+	</if>
+	
+</trim>
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="id != null" >
+	    and id =  #{id}
+	</if>
+	
+		<if test="serviceId != null" >
+	    and serviceId =  #{serviceId}
+	</if>
+	
+		<if test="name != null" >
+	    and name =  #{name}
+	</if>
+	
+		<if test="mobile != null" >
+	    and mobile =  #{mobile}
+	</if>
+	
+		<if test="email != null" >
+	    and email =  #{email}
+	</if>
+	
+		<if test="fileUrl != null" >
+	    and fileUrl =  #{fileUrl}
+	</if>
+	
+		<if test="isAffirm != null" >
+	    and isAffirm =  #{isAffirm}
+	</if>
+	
+</trim>
+</sql>   
+
+<!-- 插入记录 -->
+<insert id="add" parameterType="com.etop.management.entity.EtopResume" >
+  insert into etop_resume(id,serviceId,name,mobile,email,fileUrl,isAffirm)
+ values(#{id},#{serviceId},#{name},#{mobile},#{email},#{fileUrl},#{isAffirm})
+</insert>
+
+<!-- 批量插入记录 -->
+<insert id="adds" parameterType="com.etop.management.entity.EtopResume" >
+  insert into etop_resume(id,serviceId,name,mobile,email,fileUrl,isAffirm)
+  values
+  <foreach collection="list" item="item" index="index" separator="," > 
+  	(#{item.id},#{item.serviceId},#{item.name},#{item.mobile},#{item.email},#{item.fileUrl},#{item.isAffirm})
+  </foreach>
+</insert>
+
+<!-- 根据id，修改记录-->  
+ <update id="update" parameterType="com.etop.management.entity.EtopResume" >
+  update etop_resume set serviceId=#{serviceId},name=#{name},mobile=#{mobile},email=#{email},fileUrl=#{fileUrl},isAffirm=#{isAffirm} where id=#{id}
+ </update>
+ 
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="updateBySelective" parameterType="com.etop.management.entity.EtopResume" >
+	update etop_resume set 
+	<trim  suffixOverrides="," >
+	<if test="serviceId != null  ">
+		serviceId=#{serviceId},
+	</if>
+	<if test="name != null  ">
+		name=#{name},
+	</if>
+	<if test="mobile != null  ">
+		mobile=#{mobile},
+	</if>
+	<if test="email != null  ">
+		email=#{email},
+	</if>
+	<if test="fileUrl != null  ">
+		fileUrl=#{fileUrl},
+	</if>
+	<if test="isAffirm != null  ">
+		isAffirm=#{isAffirm},
+	</if>
+	</trim>
+	where id=#{id}
+</update>
+
+<!-- 删除记录 -->
+<delete id="delete" parameterType="com.etop.management.entity.EtopResume">
+	delete 	 from etop_resume
+	<include refid="Example_Where_Clause_Object"/>
+</delete>
+ 
+<!-- 根据id查询  -->
+<select id="queryById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_resume where id = #{id}
+</select>
+
+<select id="queryObject" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopResume">
+	select <include refid="Base_Column_List" />
+	from etop_resume
+	<include refid="Example_Where_Clause_Object"/>
+</select>
+
+<!--  列表总数-->
+<select id="queryByCount" resultType="java.lang.Integer"  parameterType="com.etop.management.bean.Criteria">
+	select count(1) from etop_resume 
+	<include refid="Example_Where_Clause"/>
+</select>
+  	
+<!-- 查询列表 -->
+<select id="queryByList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+	select 
+	<include refid="Base_Column_List"/>
+	from etop_resume 
+	<include refid="Example_Where_Clause"/>
+	<if test="otherCondition != null" >
+	    #{otherCondition}
+	</if>
+	
+	<if test="orderByClause != null and orderByClause != ''" >
+       order by  ${orderByClause}
+    </if>
+    <if test="limitClause != null and limitClause != ''" >
+       ${limitClause}
+    </if>
+</select>
+
+<select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</select>
+
+<insert id="myDefinedAdd" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</insert>
+
+<update id="myDefinedUpdate" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</update>  	
+
+<delete id="myDefinedDelete" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</delete>  	
+<!-- 根据serviceId查询  -->
+<select id="queryByServiceId"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_resume where serviceId = #{serviceId}
+</select>
+</mapper>   

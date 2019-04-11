@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.ParkDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.bean.Park" >
+	<result column="id" property="id"/>
+	<result column="park_code" property="parkCode"/>
+	<result column="city" property="city"/>
+	<result column="park_name" property="parkName"/>
+	<result column="park_title" property="parkTitle"/>
+	<result column="park_describe" property="parkDescribe"/>
+	<result column="address" property="address"/>
+	<result column="address_img" property="addressImg"/>
+	<result column="contacts" property="contacts"/>
+	<result column="mobile" property="mobile"/>
+	<result column="spare_mobile" property="spareMobile"/>
+	<result column="qq" property="qq"/>
+	<result column="wechat" property="wechat"/>
+	<result column="wechat_qr" property="wechatQr"/>
+	<result column="policy" property="policy"/>
+	<result column="park_img" property="parkImg"/>
+	<result column="approval" property="approval"/>
+	<result column="park_group_id" property="parkGroupId"/>
+	<result column="create_at" property="createAt"/>
+	<result column="activated" property="activated"/>
+	<result column="park_group_name" property="parkGroupName"/>
+</resultMap>
+       
+<!-- etop_park table all fields -->
+<sql id="Base_Column_List" >
+	 ep.id,ep.park_code,ep.park_name,ep.park_title,ep.park_describe,ep.address,
+	 ep.address_img,ep.contacts,ep.mobile,ep.spare_mobile,ep.qq,
+	 ep.wechat,ep.wechat_qr,ep.policy,ep.park_img,ep.approval,ep.park_group_id,
+	 ep.create_at,ep.activated,ep.finance_approval,ep.city
+	 
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="id != null and id !=''"  >
+	    and ep.id =  #{id}
+	</if>
+	
+		<if test="parkName != null and parkName != ''"  >
+	    and ep.park_name like '%${parkName}%'
+	</if>
+	
+			<if test="parkCode != null and parkCode !=''" >
+	    and ep.park_code =  #{parkCode}
+	</if>
+	
+		<if test="parkTitle != null and parkTitle !=''" >
+	    and ep.park_title =  #{parkTitle}
+	</if>
+	
+		<if test="parkDescribe != null" >
+	    and ep.park_describe =  #{parkDescribe}
+	</if>
+	
+		<if test="address != null" >
+	    and ep.address =  #{address}
+	</if>
+	
+		<if test="addressImg != null" >
+	    and ep.address_img =  #{addressImg}
+	</if>
+	
+		<if test="contacts != null" >
+	    and ep.contacts =  #{contacts}
+	</if>
+	
+		<if test="mobile != null" >
+	    and ep.mobile =  #{mobile}
+	</if>
+	
+		<if test="spareMobile != null" >
+	    and ep.spare_mobile =  #{spareMobile}
+	</if>
+	
+		<if test="qq != null" >
+	    and ep.qq =  #{qq}
+	</if>
+	
+		<if test="wechat != null" >
+	    and ep.wechat =  #{wechat}
+	</if>
+	
+		<if test="wechatQr != null" >
+	    and ep.wechat_qr =  #{wechatQr}
+	</if>
+	
+		<if test="policy != null" >
+	    and ep.policy =  #{policy}
+	</if>
+	
+		<if test="parkImg != null" >
+	    and ep.park_img =  #{parkImg}
+	</if>
+	
+		<if test="approval != null" >
+	    and ep.approval =  #{approval}
+	</if>
+	
+		<if test="parkGroupId != null" >
+	    and ep.park_group_id =  #{parkGroupId}
+	</if>
+	
+		<if test="createAt != null" >
+	    and ep.create_at =  #{createAt}
+	</if>
+	
+		<if test="activated != null and activated != ''" >
+	    and ep.activated =  #{activated}
+	</if>
+	
+</trim>
+</sql>   
+
+<!-- 插入记录 -->
+<insert id="addPark" parameterType="com.etop.management.bean.Park" >
+  insert into etop_park(id,park_code,park_name,park_title,park_describe,address,address_img,contacts,mobile,spare_mobile,qq,wechat,wechat_qr,policy,park_img,approval,park_group_id,create_at,activated,city)
+ values(#{id},#{parkCode},#{parkName},#{parkTitle},#{parkDescribe},#{address},#{addressImg},#{contacts},#{mobile},#{spareMobile},#{qq},#{wechat},#{wechatQr},#{policy},#{parkImg},#{approval},#{parkGroupId},#{createAt},#{activated},#{city})
+</insert>
+
+
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="updatePark" parameterType="com.etop.management.bean.Park" >
+	update etop_park set 
+	<trim  suffixOverrides="," >
+	<if test="parkName != null  ">
+		park_name=#{parkName},
+	</if>
+	<if test="parkCode!= null  ">
+		park_code=#{parkCode},
+	</if>
+	<if test="parkTitle != null  ">
+		park_title=#{parkTitle},
+	</if>
+	<if test="parkDescribe != null  ">
+		park_describe=#{parkDescribe},
+	</if>
+	<if test="address != null  ">
+		address=#{address},
+	</if>
+	<if test="addressImg != null  ">
+		address_img=#{addressImg},
+	</if>
+	<if test="contacts != null  ">
+		contacts=#{contacts},
+	</if>
+	<if test="mobile != null  ">
+		mobile=#{mobile},
+	</if>
+	<if test="spareMobile != null  ">
+		spare_mobile=#{spareMobile},
+	</if>
+	<if test="qq != null  ">
+		qq=#{qq},
+	</if>
+	<if test="wechat != null  ">
+		wechat=#{wechat},
+	</if>
+	<if test="wechatQr != null  ">
+		wechat_qr=#{wechatQr},
+	</if>
+	<if test="policy != null  ">
+		policy=#{policy},
+	</if>
+	<if test="parkImg != null  ">
+		park_img=#{parkImg},
+	</if>
+	<if test="approval != null  ">
+		approval=#{approval},
+	</if>
+	<if test="financeApproval != null  ">
+		finance_approval=#{financeApproval},
+	</if>
+	<if test="parkGroupId != null  ">
+		park_group_id=#{parkGroupId},
+	</if>
+	<if test="createAt != null  ">
+		create_at=#{createAt},
+	</if>
+	<if test="activated != null  ">
+		activated=#{activated},
+	</if>
+	<if test="city != null  ">
+		city=#{city},
+	</if>
+	</trim>
+	where id = #{id}
+</update>
+
+<!-- 修改记录，只修改只不为空的字段 -->
+<update id="activeOrClosePark" parameterType="com.etop.management.bean.Park" >
+	update etop_park set 
+	activated=#{activated}
+	where id = #{id}
+</update>
+
+	<update id="updateCode">
+
+	</update>
+
+	<!-- 根据id查询  -->
+<select id="getParkInfo"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_park ep where id = #{id}
+</select>
+
+	<!-- 根据code查询  -->
+<select id="getParkInfoByCode"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_park ep where park_code = #{value}
+</select>
+
+<select id="getParkList" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Park">
+	select <include refid="Base_Column_List" />,epg.park_group_name 
+	from etop_park ep
+	left join etop_park_group epg on (epg.id = ep.park_group_id)
+	<include refid="Example_Where_Clause_Object"/>
+	order by  ep.create_at
+</select>
+
+<select id="getAllParkForParkGroupId" resultMap="BaseResultMap" parameterType="String">
+	select <include refid="Base_Column_List" />
+	from etop_park ep 
+	where ep.park_group_id = #{parkGroupId}
+</select>
+
+<select id="getParkListForControl" resultType="Map" parameterType="String">
+SELECT * from (
+	select ep.id ,ep.park_name as parkName
+	from etop_park ep 
+	where ep.park_group_id = #{parkGroupId}
+	union
+	select epr.id ,'本园区组' as parkName
+	from etop_park_GROUP  epr
+	where epr.id = #{parkGroupId}
+	) a 
+ORDER BY  a.parkName
+</select>
+
+<select id="getParkCode" parameterType="com.etop.management.bean.Park" resultType="String">
+SELECT
+	park_code
+FROM
+	etop_park
+WHERE
+	id =#{value}
+</select>
+
+	<select id="getParkName" resultType="com.etop.management.bean.Park">
+		SELECT
+			<include refid="Base_Column_List"/>
+		FROM
+			etop_park ep
+		WHERE
+			ep.id IN
+		<foreach collection="parkIds" item="parkIds" index="index" open="(" separator="," close=")">
+			#{parkIds}
+		</foreach>
+		ORDER BY
+			create_at
+	</select>
+	
+	 <select id="getParkCitys" resultType="map" parameterType="map">
+	 
+	     select city,count(*) as num from etop_park ep 
+	     
+	     where  1=1 
+	     
+	     <if test="parkGroupId!=null and parkGroupId!=''">
+			and	 ep.park_group_id=#{parkGroupId}
+		</if>
+	     and activated= '1'
+	     group by city
+	     
+	     order by num desc
+	     
+	 </select>
+
+	<select id="getParkIdList" resultType="java.lang.String">
+		select ep.id from etop_park ep
+	</select>
+
+	<select id="getParkNameList" resultType="com.etop.management.bean.Park">
+		SELECT
+			<include refid="Base_Column_List"/>
+		FROM
+			etop_park ep
+	</select>
+
+<select id="getParkInfoList"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_park ep where id = #{id}
+</select>
+
+<select id="getParkNameList2"  resultMap="BaseResultMap" parameterType="string">
+	SELECT
+			<include refid="Base_Column_List"/>
+		FROM
+			etop_park ep
+	where park_group_id = #{parkGroupId}
+</select>
+
+<select id="getCity"  resultType="String" parameterType="string">
+	SELECT
+		city
+	FROM
+		etop_park
+	JOIN
+	etop_user ON etop_user.park_id=etop_park.id
+	WHERE etop_user.id =  #{id}
+</select>
+
+<select id="getParkTitle"  resultType="String" parameterType="string">
+	SELECT
+		park_name
+	FROM
+		etop_park
+	JOIN
+	etop_user ON etop_user.park_id=etop_park.id
+	WHERE etop_user.id =  #{id}
+</select>
+
+<select id="getGroupCode"  resultType="String" parameterType="string">
+	SELECT
+		epg.park_group_name
+	FROM
+		etop_park ep
+	JOIN etop_park_group epg ON ep.park_group_id = epg.id
+	JOIN etop_user eu ON eu.park_id = ep.id
+	WHERE
+		eu.id =  #{id}
+</select>
+
+<select id="getAllParkNum"  resultType="int">
+	SELECT
+		count(*)
+	FROM
+		etop_park
+	where activated = 1	
+</select>
+
+<select id="getParkNumByParkGroupName"  resultType="int">
+	SELECT
+		COUNT(*)
+	FROM
+		etop_park t1
+	JOIN etop_park_group t2 ON t1.park_group_id = t2.id
+	where 
+	 t2.park_group_name =#{parkGroupName}
+</select>
+
+</mapper>   

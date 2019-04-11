@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopFacilityDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.entity.EtopFacility" >
+	<result column="id" property="id"/>
+	<result column="parkId" property="parkId"/>
+	<result column="facilityName" property="facilityName"/>
+	<result column="facilityType" property="facilityType"/>
+	<result column="facilityPrice" property="facilityPrice"/>
+	<result column="activated" property="activated"/>
+	<result column="description" property="description"/>
+	<result column="remark" property="remark"/>
+	<result column="startTime" property="startTime"/>
+	<result column="endTime" property="endTime"/>
+</resultMap>
+       
+<!-- etop_facility table all fields -->
+<sql id="Base_Column_List" >
+	 id,parkId,facilityName,facilityType,facilityPrice,activated,description,remark,startTime,endTime
+	 
+</sql>
+   
+   
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="condition.id != null and condition.id != ''" >
+	    and id =  #{condition.id}
+	</if>
+	
+			<if test="nocondition.id != null and nocondition.id != ''" >
+	    and id not in  (#{nocondition.id})
+	</if>
+	
+		<if test="condition.parkId != null and condition.parkId != ''" >
+	    and parkId =  #{condition.parkId}
+	</if>
+	
+			<if test="nocondition.parkId != null and nocondition.parkId != ''" >
+	    and parkId not in  (#{nocondition.parkId})
+	</if>
+	
+		<if test="condition.facilityName != null and condition.facilityName != ''" >
+	    and facilityName like  '%${condition.facilityName}%'
+	</if>
+	
+			<if test="nocondition.facilityName != null and nocondition.facilityName != ''" >
+	    and facilityName not in  (#{nocondition.facilityName})
+	</if>
+	
+		<if test="condition.facilityType != null and condition.facilityType != ''" >
+	    and facilityType like  '%${condition.facilityType}%'
+	</if>
+	
+			<if test="nocondition.facilityType != null and nocondition.facilityType != ''" >
+	    and facilityType not in  (#{nocondition.facilityType})
+	</if>
+	
+		<if test="condition.facilityPrice != null and condition.facilityPrice != ''" >
+	    and facilityPrice =  #{condition.facilityPrice}
+	</if>
+	
+			<if test="nocondition.facilityPrice != null and nocondition.facilityPrice != ''" >
+	    and facilityPrice not in  (#{nocondition.facilityPrice})
+	</if>
+	
+		<if test="condition.activated != null and condition.activated != ''" >
+	    and activated =  #{condition.activated}
+	</if>
+	
+			<if test="nocondition.activated != null and nocondition.activated != ''" >
+	    and activated not in  (#{nocondition.activated})
+	</if>
+		<if test="condition.startTime != null and condition.startTime != ''" >
+	    and startTime =  #{condition.startTime}
+	</if>
+	
+			<if test="nocondition.startTime != null and nocondition.startTime != ''" >
+	    and startTime not in  (#{nocondition.startTime})
+	</if>
+		<if test="condition.endTime != null and condition.endTime != ''" >
+	    and endTime =  #{condition.endTime}
+	</if>
+	
+			<if test="nocondition.endTime != null and nocondition.endTime != ''" >
+	    and endTime not in  (#{nocondition.endTime})
+	</if>
+	
+</trim>
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="id != null" >
+	    and id =  #{id}
+	</if>
+	
+		<if test="parkId != null" >
+	    and parkId =  #{parkId}
+	</if>
+	
+		<if test="facilityName != null" >
+	    and facilityName  like '%${facilityName}%'
+	</if>
+	
+		<if test="facilityType != null" >
+	    and facilityType like  '%${facilityType}%'
+	</if>
+	
+		<if test="facilityPrice != null" >
+	    and facilityPrice =  #{facilityPrice}
+	</if>
+	
+		<if test="activated != null" >
+	    and activated =  #{activated}
+	</if>
+		<if test="description != null" >
+	    and description like  '%${description}%'
+	</if>
+		<if test="remark != null" >
+	    and remark like  '%${remark}%'
+	</if>
+		<if test="startTime != null" >
+	    and startTime =  #{startTime}
+	</if>
+		<if test="endTime != null" >
+	    and endTime =  #{endTime}
+	</if>
+	
+</trim>
+</sql>   
+
+<!-- 插入记录 -->
+<insert id="add" parameterType="com.etop.management.entity.EtopFacility" >
+  insert into etop_facility(id,parkId,facilityName,facilityType,facilityPrice,activated,description,remark,startTime,endTime)
+ values(#{id},#{parkId},#{facilityName},#{facilityType},#{facilityPrice},#{activated},#{description},#{remark},#{startTime},#{endTime})
+</insert>
+
+<!-- 批量插入记录 -->
+<insert id="adds" parameterType="com.etop.management.entity.EtopFacility" >
+  insert into etop_facility(id,parkId,facilityName,facilityType,facilityPrice,activated,description,remark,startTime,endTime)
+  values
+  <foreach collection="list" item="item" index="index" separator="," > 
+  	(#{item.id},#{item.parkId},#{item.facilityName},#{item.facilityType},#{item.facilityPrice},#{item.activated},#{item.description},#{item.remark},#{item.startTime},#{item.endTime})
+  </foreach>
+</insert>
+
+<!-- 根据id，修改记录-->  
+ <update id="update" parameterType="com.etop.management.entity.EtopFacility" >
+  update etop_facility set parkId=#{parkId},facilityName=#{facilityName},facilityType=#{facilityType},facilityPrice=#{facilityPrice},activated=#{activated},description=#{description},remark=#{remark},startTime=#{startTime},endTime=#{endTime} where id=#{id}
+ </update>
+ 
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="updateBySelective" parameterType="com.etop.management.entity.EtopFacility" >
+	update etop_facility set 
+	<trim  suffixOverrides="," >
+	<if test="parkId != null  ">
+		parkId=#{parkId},
+	</if>
+	<if test="facilityName != null  ">
+		facilityName=#{facilityName},
+	</if>
+	<if test="facilityType != null  ">
+		facilityType=#{facilityType},
+	</if>
+	<if test="facilityPrice != null  ">
+		facilityPrice=#{facilityPrice},
+	</if>
+	<if test="activated != null  ">
+		activated=#{activated},
+	</if>
+	<if test="description != null" >
+	   description =#{description},
+	</if>
+		<if test="remark != null" >
+	   remark =#{remark},
+	</if>
+		<if test="startTime != null" >
+	   startTime =  #{startTime},
+	</if>
+		<if test="endTime != null" >
+	   endTime =  #{endTime},
+	</if>
+	</trim>
+	where id=#{id}
+</update>
+
+<!-- 删除记录 -->
+<delete id="delete" parameterType="com.etop.management.entity.EtopFacility">
+	delete 	 from etop_facility
+	<include refid="Example_Where_Clause_Object"/>
+</delete>
+ 
+<!-- 根据id查询  -->
+<select id="queryById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_facility where id = #{id}
+</select>
+
+<select id="queryObject" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopFacility">
+	select <include refid="Base_Column_List" />
+	from etop_facility
+	<include refid="Example_Where_Clause_Object"/>
+</select>
+
+<!--  列表总数-->
+<select id="queryByCount" resultType="java.lang.Integer"  parameterType="com.etop.management.bean.Criteria">
+	select count(1) from etop_facility 
+	<include refid="Example_Where_Clause"/>
+</select>
+  	
+<!-- 查询列表 -->
+<select id="queryByList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+	select 
+	<include refid="Base_Column_List"/>
+	from etop_facility 
+	<include refid="Example_Where_Clause"/>
+	<if test="otherCondition != null" >
+	    #{otherCondition}
+	</if>
+	
+	<if test="orderByClause != null and orderByClause != ''" >
+       order by  ${orderByClause}
+    </if>
+    <if test="limitClause != null and limitClause != ''" >
+       ${limitClause}
+    </if>
+</select>
+
+<select id="queryByListGroup" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+	select 
+	<include refid="Base_Column_List"/>
+	from etop_facility 
+	<include refid="Example_Where_Clause"/>
+	<if test="otherCondition != null" >
+	    #{otherCondition}
+	</if>
+	
+	<if test="orderByClause != null and orderByClause != ''" >
+       order by  ${orderByClause}
+    </if>
+    <if test="limitClause != null and limitClause != ''" >
+       ${limitClause}
+    </if>
+    GROUP BY facilityType
+</select>
+
+<select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</select>
+
+<insert id="myDefinedAdd" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</insert>
+
+<update id="myDefinedUpdate" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</update>  	
+
+<delete id="myDefinedDelete" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</delete>  	
+
+     <select id="getfacilityTypeList" resultType="com.etop.management.entity.EtopFacility"  parameterType="Map"  >
+
+		SELECT
+			facilityType
+		FROM
+			etop_facility
+		WHERE 
+		    parkId =#{parkId}	
+		AND
+			activated = '1'
+		GROUP BY
+			facilityType
+
+     </select>
+     <!-- 根据类别获得服务名称 -->
+      <select id="getfacilityName" resultType="Map"  parameterType="Map"  >
+
+		SELECT
+			*
+		FROM
+			etop_facility
+		WHERE
+		  facilityType=#{facilityType}
+		AND
+			parkId =#{parkId}	
+     </select>
+     
+     <!--     验证是否存在重复服务     -->
+       <select id="provefacilityName" parameterType="Map" resultType="String">
+		       SELECT
+					count(*)
+				FROM
+					etop_facility
+				WHERE
+					facilityName =#{facilityName}
+       			AND 
+			  		parkId =#{parkId}
+       </select> 
+</mapper>   

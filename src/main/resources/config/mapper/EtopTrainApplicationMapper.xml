@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopTrainApplicationDao">
+
+    <sql id="Base_Column_List" >
+        t1.id,t1.training_id,t1.name,t1.work_units,t1.post,t1.position,t1.post_year,t1.train,join_time,t1.contact_information,t1.email,
+        t1.organization_score,t1.content_score,t1.professional_score,t1.feedback,t1.user_id,t1.park_title,t1.park_group_code
+    </sql>
+
+    <sql id="Example_Where_Clause_Object">
+        <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="trainingId != null" >
+            and t1.training_id =  #{trainingId}
+        </if>
+        <if test="name != null and name != ''" >
+            and t1.name like CONCAT ('%', #{name} ,'%')
+        </if>
+        <if test="workUnits != null" >
+            and t1.work_units =  #{workUnits}
+        </if>
+        <if test="post != null" >
+            and t1.post =  #{post}
+        </if>
+        <if test="position != null" >
+            and t1.position =  #{position}
+        </if>
+        <if test="postYear != null" >
+            and t1.post_year =  #{postYear}
+        </if>
+        <if test="train != null" >
+            and t1.train =  #{train}
+        </if>
+        <if test="joinTime != null" >
+            and t1.join_time =  #{joinTime}
+        </if>
+        <if test="contactInformation != null" >
+            and t1.contact_information =  #{contactInformation}
+        </if>
+        <if test="email != null" >
+            and t1.email =  #{email}
+        </if>
+        <if test="organizationScore != null" >
+            and t1.organization_score =  #{organizationScore}
+        </if>
+        <if test="contentScore != null" >
+            and t1.content_score =  #{contentScore}
+        </if>
+        <if test="professionalScore != null" >
+            and t1.professional_score =  #{professionalScore}
+        </if>
+        <if test="feedback != null" >
+            and t1.feedback =  #{feedback}
+        </if>
+        <if test="userId != null" >
+            and t1.user_id =  #{userId}
+        </if>
+        <if test="parkTitle != null and parkTitle != ''" >
+            and t1.park_title =  #{parkTitle}
+        </if>
+        <if test="parkGroupCode != null and parkGroupCode != ''" >
+            and t1.park_group_code =  #{parkGroupCode}
+        </if>
+    </sql>
+
+    <insert id="insert">
+        insert into etop_train_application(id,training_id,name,work_units,post,position,post_year,train,join_time,contact_information,
+        email,organization_score,content_score,professional_score,feedback,user_id,park_title,park_group_code)
+        values(uuid(),#{trainingId},#{name},#{workUnits},#{post},#{position},#{postYear},#{train},#{joinTime},#{contactInformation},
+        #{email},#{organizationScore},#{contentScore},#{professionalScore},#{feedback},#{userId},#{parkTitle}, #{parkGroupCode})
+    </insert>
+
+    <update id="updateTrainApplication">
+        update etop_train_application
+        <set>
+            <if test="trainingId != null  ">
+                training_id=#{trainingId},
+            </if>
+            <if test="name != null  ">
+                name=#{name},
+            </if>
+            <if test="workUnits != null  ">
+                work_units=#{workUnits},
+            </if>
+            <if test="post != null  ">
+                post=#{post},
+            </if>
+            <if test="position != null  ">
+                position=#{position},
+            </if>
+            <if test="postYear != null  ">
+                post_year=#{postYear},
+            </if>
+            <if test="train != null  ">
+                train=#{train},
+            </if>
+            <if test="joinTime != null  ">
+                join_time=#{joinTime},
+            </if>
+            <if test="contactInformation != null  ">
+                contact_information=#{contactInformation},
+            </if>
+            <if test="email != null  ">
+                email=#{email},
+            </if>
+            <if test="organizationScore != null  ">
+                organization_score=#{organizationScore},
+            </if>
+            <if test="contentScore != null  ">
+                content_score=#{contentScore},
+            </if>
+            <if test="professionalScore != null  ">
+                professional_score=#{professionalScore},
+            </if>
+            <if test="feedback != null  ">
+                feedback=#{feedback},
+            </if>
+            <if test="userId != null" >
+              	user_id =  #{userId}
+	        </if>
+	        <if test="parkTitle != null" >
+	             park_title =  #{parkTitle}
+	        </if>
+	        <if test="parkGroupCode != null" >
+	             park_group_code =  #{parkGroupCode}
+	        </if>
+        </set>
+        where
+        id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+            etop_train_application
+        WHERE
+            id IN
+        <foreach collection="ids" item="ids" index="index" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <select id="select" resultType="com.etop.management.bean.EtopTrainApplication">
+        SELECT
+            IFNULL(SUM(
+            t1.organization_score + t1.content_score + t1.professional_score
+            ) / (COUNT(*) * 3),0) AS avgScore,
+            COUNT(*) AS totalPeople
+        FROM
+            etop_train_application t1
+        WHERE
+            t1.training_id = #{trainingId}
+    </select>
+
+    <select id="selectList" resultType="com.etop.management.bean.EtopTrainApplication">
+        SELECT
+        	t2.course_name,t2.offline_type,t2.course_type,t2.platform,t2.post,
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_train_application t1
+        LEFT JOIN etop_offline_training t2 ON t1.training_id = t2.id
+        <where>
+            <include refid="Example_Where_Clause_Object"/>
+            <if test="courseName != null and courseName !='' ">
+            	and    t2.course_name=#{courseName}
+            </if>
+            <if test="type == 1 ">
+            	 and   t2.offline_type IN ('2', '3')
+            </if>
+            <if test="type == 2 ">
+            	 and   t2.offline_type IN ('0', '1', '4')
+            </if>
+        </where>
+    </select>
+
+    <select id="getTrainApplicationInfoById" resultType="com.etop.management.bean.EtopTrainApplication">
+        SELECT
+        	t2.course_name,t2.offline_type,t2.course_type,t2.platform,t2.post,t2.course_status,
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_train_application t1
+       	LEFT JOIN etop_offline_training t2 ON t1.training_id = t2.id
+        WHERE
+            t1.id = #{id}
+    </select>
+
+
+</mapper>

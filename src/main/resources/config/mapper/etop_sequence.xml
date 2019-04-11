@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopSequenceDao">
+	<select id="findByParkId" parameterType="string" resultType="com.etop.management.entity.EtopSequence">
+		SELECT * FROM etop_sequence WHERE park_id=#{_parameter}
+	</select>
+	<insert id="add" parameterType="com.etop.management.entity.EtopSequence">
+		INSERT INTO
+	etop_sequence(park_id, count, update_time)
+	VALUES(#{parkId}, #{count}, #{updateTime})
+</insert>
+<update id="increaseCount" parameterType="string">
+UPDATE etop_sequence SET count=count+1, update_time=NOW() WHERE park_id=#{_parameter}
+</update>
+<update id="clearCount" parameterType="string">
+UPDATE etop_sequence SET count=0, update_time=NOW() WHERE park_id=#{_parameter}
+</update>
+	<select id="nextSeq" parameterType="string" resultType="int">
+		SELECT getNextSeq(#{_parameter})
+	</select>
+</mapper>

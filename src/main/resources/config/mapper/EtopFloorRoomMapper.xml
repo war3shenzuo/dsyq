@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopFloorRoomDao" > 
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.entity.EtopFloorRoom" >
+	<result column="id" property="id"/>
+	<result column="room_num" property="roomNum"/>
+	<result column="orientation" property="orientation"/>
+	<result column="build_area" property="buildArea"/>
+	<result column="user_area" property="userArea"/>
+	<result column="layer_high" property="layerHigh"/>
+	<result column="located" property="located"/>
+	<result column="renovation" property="renovation"/>
+	<result column="month_price" property="monthPrice"/>
+	<result column="day_price" property="dayPrice"/>
+	<result column="floor_status" property="floorStatus"/>
+	<result column="remark" property="remark"/>
+	<result column="contract_num" property="contractNum"/>
+	<result column="room_img" property="roomImg"/>
+	<result column="companyId" property="companyId"/>
+	<result column="constract_id" property="constractId"/>
+	<result column="ref_floor_id" property="refFloorId"/>
+	<result column="ref_storey_id" property="refStoreyId"/>
+	<result column="ref_area_id" property="refAreaId"/>
+	<result column="floorName" property="floorName"/>
+	<result column="storeyName" property="storeyName"/>
+	<result column="areaName" property="areaName"/>
+	<result column="created_at" property="createdAt"/>
+	<result column="showOut" property="showOut"/>
+</resultMap>
+       
+<!-- etop_floor_room table all fields -->
+<sql id="Base_Column_List" >
+	 id,room_num,orientation,build_area,user_area,layer_high,located,renovation,month_price,day_price,floor_status,remark,contract_num,room_img,
+	 companyId,constract_id,ref_floor_id,ref_storey_id,ref_area_id,activated,created_at,showOut
+</sql>
+
+<sql id="Base_Column_List_Object" >
+	 efr.id,efr.room_num,efr.orientation,efr.build_area,efr.user_area,efr.layer_high,efr.located,efr.renovation,efr.month_price,efr.day_price,efr.floor_status,efr.remark,efr.contract_num,efr.room_img,
+	 efr.companyId,efr.constract_id,efr.ref_floor_id,efr.ref_storey_id,efr.ref_area_id,efr.activated,efr.created_at,efr.showOut
+</sql>
+   
+   
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="condition.id != null and condition.id != ''" >
+	    and id =  #{condition.id}
+	</if>
+	
+			<if test="nocondition.id != null and nocondition.id != ''" >
+	    and id not in  (#{nocondition.id})
+	</if>
+	
+		<if test="condition.roomNum != null and condition.roomNum != ''" >
+	    and room_num =  #{condition.roomNum}
+	</if>
+	
+			<if test="nocondition.roomNum != null and nocondition.roomNum != ''" >
+	    and room_num not in  (#{nocondition.roomNum})
+	</if>
+	
+		<if test="condition.orientation != null and condition.orientation != ''" >
+	    and orientation =  #{condition.orientation}
+	</if>
+	
+			<if test="nocondition.orientation != null and nocondition.orientation != ''" >
+	    and orientation not in  (#{nocondition.orientation})
+	</if>
+	
+		<if test="condition.buildArea != null and condition.buildArea != ''" >
+	    and build_area =  #{condition.buildArea}
+	</if>
+	
+			<if test="nocondition.buildArea != null and nocondition.buildArea != ''" >
+	    and build_area not in  (#{nocondition.buildArea})
+	</if>
+	
+		<if test="condition.userArea != null and condition.userArea != ''" >
+	    and user_area =  #{condition.userArea}
+	</if>
+	
+			<if test="nocondition.userArea != null and nocondition.userArea != ''" >
+	    and user_area not in  (#{nocondition.userArea})
+	</if>
+	
+		<if test="condition.layerHigh != null and condition.layerHigh != ''" >
+	    and layer_high =  #{condition.layerHigh}
+	</if>
+	
+			<if test="nocondition.layerHigh != null and nocondition.layerHigh != ''" >
+	    and layer_high not in  (#{nocondition.layerHigh})
+	</if>
+	
+		<if test="condition.located != null and condition.located != ''" >
+	    and located =  #{condition.located}
+	</if>
+	
+			<if test="nocondition.located != null and nocondition.located != ''" >
+	    and located not in  (#{nocondition.located})
+	</if>
+	
+		<if test="condition.renovation != null and condition.renovation != ''" >
+	    and renovation =  #{condition.renovation}
+	</if>
+	
+			<if test="nocondition.renovation != null and nocondition.renovation != ''" >
+	    and renovation not in  (#{nocondition.renovation})
+	</if>
+	
+		<if test="condition.monthPrice != null and condition.monthPrice != ''" >
+	    and month_price =  #{condition.monthPrice}
+	</if>
+	
+			<if test="nocondition.monthPrice != null and nocondition.monthPrice != ''" >
+	    and month_price not in  (#{nocondition.monthPrice})
+	</if>
+	
+		<if test="condition.dayPrice != null and condition.dayPrice != ''" >
+	    and day_price =  #{condition.dayPrice}
+	</if>
+	
+			<if test="nocondition.dayPrice != null and nocondition.dayPrice != ''" >
+	    and day_price not in  (#{nocondition.dayPrice})
+	</if>
+	
+		<if test="condition.floorStatus != null and condition.floorStatus != ''" >
+	    and floor_status =  #{condition.floorStatus}
+	</if>
+	
+			<if test="nocondition.floorStatus != null and nocondition.floorStatus != ''" >
+	    and floor_status not in  (#{nocondition.floorStatus})
+	</if>
+	
+		<if test="condition.remark != null and condition.remark != ''" >
+	    and remark =  #{condition.remark}
+	</if>
+	
+			<if test="nocondition.remark != null and nocondition.remark != ''" >
+	    and remark not in  (#{nocondition.remark})
+	</if>
+	
+		<if test="condition.contractNum != null and condition.contractNum != ''" >
+	    and contract_num =  #{condition.contractNum}
+	</if>
+	
+			<if test="nocondition.contractNum != null and nocondition.contractNum != ''" >
+	    and contract_num not in  (#{nocondition.contractNum})
+	</if>
+	
+		<if test="condition.roomImg != null and condition.roomImg != ''" >
+	    and room_img =  #{condition.roomImg}
+	</if>
+	
+			<if test="nocondition.roomImg != null and nocondition.roomImg != ''" >
+	    and room_img not in  (#{nocondition.roomImg})
+	</if>
+	
+		<if test="condition.companyId != null and condition.companyId != ''" >
+	    and companyId =  #{condition.companyId}
+	</if>
+	
+			<if test="nocondition.companyId != null and nocondition.companyId != ''" >
+	    and companyId not in  (#{nocondition.companyId})
+	</if>
+	
+		<if test="condition.constractId != null and condition.constractId != ''" >
+	    and constract_id =  #{condition.constractId}
+	</if>
+	
+			<if test="nocondition.constractId != null and nocondition.constractId != ''" >
+	    and constract_id not in  (#{nocondition.constractId})
+	</if>
+	
+		<if test="condition.refFloorId != null and condition.refFloorId != ''" >
+	    and ref_floor_id =  #{condition.refFloorId}
+	</if>
+	
+			<if test="nocondition.refFloorId != null and nocondition.refFloorId != ''" >
+	    and ref_floor_id not in  (#{nocondition.refFloorId})
+	</if>
+	
+		<if test="condition.refStoreyId != null and condition.refStoreyId != ''" >
+	    and ref_storey_id =  #{condition.refStoreyId}
+	</if>
+	
+			<if test="nocondition.refStoreyId != null and nocondition.refStoreyId != ''" >
+	    and ref_storey_id not in  (#{nocondition.refStoreyId})
+	</if>
+	
+		<if test="condition.refAreaId != null and condition.refAreaId != ''" >
+	    and ref_area_id =  #{condition.refAreaId}
+	</if>
+	
+			<if test="nocondition.refAreaId != null and nocondition.refAreaId != ''" >
+	    and ref_area_id not in  (#{nocondition.refAreaId})
+	</if>
+	
+		<if test="condition.activated != null and condition.activated != ''" >
+	    and activated =  #{condition.activated}
+	</if>
+		<if test="condition.showOut != null and condition.showOut != ''" >
+	    and showOut =  #{condition.showOut}
+	</if>
+	<if test="nocondition.showOut != null and nocondition.showOut != ''" >
+	    and showOut not in  (#{nocondition.showOut})
+	</if>
+</trim>
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause_Object">
+where 1=1
+<trim  suffixOverrides="," >
+		<if test="id != null" >
+	    and id =  #{id}
+	</if>
+	
+		<if test="roomNum != null" >
+	    and room_num =  #{roomNum}
+	</if>
+	
+		<if test="orientation != null" >
+	    and orientation =  #{orientation}
+	</if>
+	
+		<if test="buildArea != null" >
+	    and build_area =  #{buildArea}
+	</if>
+	
+		<if test="userArea != null" >
+	    and user_area =  #{userArea}
+	</if>
+	
+		<if test="layerHigh != null" >
+	    and layer_high =  #{layerHigh}
+	</if>
+	
+		<if test="located != null" >
+	    and located =  #{located}
+	</if>
+	
+		<if test="renovation != null" >
+	    and renovation =  #{renovation}
+	</if>
+	
+		<if test="monthPrice != null" >
+	    and month_price =  #{monthPrice}
+	</if>
+	
+		<if test="dayPrice != null" >
+	    and day_price =  #{dayPrice}
+	</if>
+	
+		<if test="floorStatus != null" >
+	    and floor_status =  #{floorStatus}
+	</if>
+	
+		<if test="remark != null" >
+	    and remark =  #{remark}
+	</if>
+	
+		<if test="contractNum != null" >
+	    and contract_num =  #{contractNum}
+	</if>
+	
+		<if test="roomImg != null" >
+	    and room_img =  #{roomImg}
+	</if>
+	
+		<if test="companyId != null" >
+	    and companyId =  #{companyId}
+	</if>
+	
+		<if test="constractId != null" >
+	    and constract_id =  #{constractId}
+	</if>
+	
+		<if test="refFloorId != null" >
+	    and ref_floor_id =  #{refFloorId}
+	</if>
+	
+		<if test="refStoreyId != null" >
+	    and ref_storey_id =  #{refStoreyId}
+	</if>
+	
+		<if test="refAreaId != null" >
+	    and ref_area_id =  #{refAreaId}
+	</if>
+	
+</trim>
+</sql>   
+
+<!-- 插入记录 -->
+<insert id="add" parameterType="com.etop.management.entity.EtopFloorRoom" >
+  insert into etop_floor_room(id,room_num,orientation,build_area,user_area,layer_high,located,renovation,month_price,day_price,floor_status,remark,contract_num,room_img,companyId,constract_id,ref_floor_id,ref_storey_id,ref_area_id,activated,created_at,showOut)
+ values(#{id},#{roomNum},#{orientation},#{buildArea},#{userArea},#{layerHigh},#{located},#{renovation},#{monthPrice},#{dayPrice},#{floorStatus},#{remark},#{contractNum},#{roomImg},#{companyId},#{constractId},#{refFloorId},#{refStoreyId},#{refAreaId},'1',#{createdAt},#{showOut})
+</insert>
+
+<!-- 批量插入记录 -->
+<insert id="adds" parameterType="com.etop.management.entity.EtopFloorRoom" >
+  insert into etop_floor_room(id,room_num,orientation,build_area,user_area,layer_high,located,renovation,month_price,day_price,floor_status,remark,contract_num,room_img,companyId,constract_id,ref_floor_id,ref_storey_id,ref_area_id,created_at,showOut)
+  values
+  <foreach collection="list" item="item" index="index" separator="," > 
+  	(#{item.id},#{item.roomNum},#{item.orientation},#{item.buildArea},#{item.userArea},#{item.layerHigh},#{item.located},#{item.renovation},#{item.monthPrice},#{item.dayPrice},#{item.floorStatus},#{item.remark},#{item.contractNum},#{item.roomImg},#{item.companyId},#{item.constractId},#{item.refFloorId},#{item.refStoreyId},#{item.refAreaId},#{createdAt},#{showOut})
+  </foreach>
+</insert>
+
+<!-- 根据id，修改记录-->  
+ <update id="update" parameterType="com.etop.management.entity.EtopFloorRoom" >
+  update etop_floor_room set room_num=#{roomNum},orientation=#{orientation},build_area=#{buildArea},user_area=#{userArea},layer_high=#{layerHigh},located=#{located},renovation=#{renovation},month_price=#{monthPrice},day_price=#{dayPrice},floor_status=#{floorStatus},remark=#{remark},contract_num=#{contractNum},room_img=#{roomImg},companyId=#{companyId},constract_id=#{constractId},ref_floor_id=#{refFloorId},ref_storey_id=#{refStoreyId},ref_area_id=#{refAreaId},showOut=#{showOut} where id=#{id}
+ </update>
+ 
+ <!-- 修改记录，只修改只不为空的字段 -->
+<update id="updateBySelective" parameterType="com.etop.management.entity.EtopFloorRoom" >
+	update etop_floor_room set 
+	<trim  suffixOverrides="," >
+	<if test="roomNum != null  ">
+		room_num=#{roomNum},
+	</if>
+	<if test="orientation != null  ">
+		orientation=#{orientation},
+	</if>
+	<if test="buildArea != null  ">
+		build_area=#{buildArea},
+	</if>
+	<if test="userArea != null  ">
+		user_area=#{userArea},
+	</if>
+	<if test="layerHigh != null  ">
+		layer_high=#{layerHigh},
+	</if>
+	<if test="located != null  ">
+		located=#{located},
+	</if>
+	<if test="renovation != null  ">
+		renovation=#{renovation},
+	</if>
+	<if test="monthPrice != null  ">
+		month_price=#{monthPrice},
+	</if>
+	<if test="dayPrice != null  ">
+		day_price=#{dayPrice},
+	</if>
+	<if test="floorStatus != null  ">
+		floor_status=#{floorStatus},
+	</if>
+	<if test="remark != null  ">
+		remark=#{remark},
+	</if>
+	<if test="contractNum != null  ">
+		contract_num=#{contractNum},
+	</if>
+	<if test="roomImg != null  ">
+		room_img=#{roomImg},
+	</if>
+	<if test="companyId != null  ">
+		companyId=#{companyId},
+	</if>
+	<if test="constractId != null  ">
+		constract_id=#{constractId},
+	</if>
+	<if test="refFloorId != null  ">
+		ref_floor_id=#{refFloorId},
+	</if>
+	<if test="refStoreyId != null  ">
+		ref_storey_id=#{refStoreyId},
+	</if>
+	<if test="refAreaId != null  ">
+		ref_area_id=#{refAreaId},
+	</if>
+	<if test="showOut != null  ">
+		showOut=#{showOut},
+	</if>
+	</trim>
+	 where id=#{id}
+</update>
+
+<!-- 删除记录 -->
+<delete id="delete" parameterType="com.etop.management.entity.EtopFloorRoom">
+	delete 	 from etop_floor_room
+	<include refid="Example_Where_Clause_Object"/>
+</delete>
+ 
+<!-- 根据id查询  -->
+<select id="queryById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_floor_room where id = #{id}
+</select>
+
+<select id="queryObject" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopFloorRoom">
+	select <include refid="Base_Column_List" />
+	from etop_floor_room
+	<include refid="Example_Where_Clause_Object"/>
+</select>
+
+<!--  列表总数-->
+<select id="queryByCount" resultType="java.lang.Integer"  parameterType="com.etop.management.bean.Criteria">
+	select count(1) from etop_floor_room 
+	<include refid="Example_Where_Clause"/>
+</select>
+  	
+<!-- 查询列表 -->
+<select id="queryByList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+	select 
+	<include refid="Base_Column_List"/>
+	from etop_floor_room 
+	<include refid="Example_Where_Clause"/>
+	<if test="otherCondition != null" >
+	    #{otherCondition}
+	</if>
+	
+       order by  room_num
+    <if test="limitClause != null and limitClause != ''" >
+       ${limitClause}
+    </if>
+</select>
+
+<!-- 查询列表 -->
+<select id="queryByList2" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+	select 
+	<include refid="Base_Column_List_Object"/>,ef1.build_name as floorName,ef2.build_name as storeyName,ef3.build_name as areaName
+	from etop_floor_room  efr
+	
+	join etop_floor ef1 on ef1.id=efr.ref_floor_id
+	
+	join etop_floor ef2 on ef2.id=efr.ref_storey_id
+	
+	join etop_floor ef3 on ef3.id=efr.ref_area_id 
+	
+	<include refid="Example_Where_Clause"/>
+	
+	<if test="condition.parkId != null  ">
+		and ef1.park_id=#{condition.parkId}
+	</if>
+	
+	<if test="condition.buildArea1 != null and  condition.buildArea2 != null">
+		and efr.build_area >= #{condition.buildArea1} and efr.build_area &lt;= #{condition.buildArea2}
+	</if>
+	<if test="condition.buildArea1 == null and  condition.buildArea2 != null">
+		and efr.build_area &lt;= #{condition.buildArea2}
+	</if>
+	<if test="condition.buildArea1 != null and  condition.buildArea2 == null">
+		and efr.build_area >= #{condition.buildArea1}
+	</if>
+	
+	<if test="condition.layerHigh != null and  condition.layerHigh2 != null">
+		and efr.layer_high >= #{condition.layerHigh} and efr.layer_high &lt;= #{condition.layerHigh2}
+	</if>
+	<if test="condition.layerHigh1 == null and  condition.layerHigh2 != null">
+		and efr.layer_high &lt;= #{condition.layerHigh2}
+	</if>
+	<if test="condition.layerHigh1 != null and  condition.layerHigh2 == null">
+		and efr.layer_high >= #{condition.layerHigh1}
+	</if>
+	
+	<if test="condition.dayPrice1 != null and  condition.dayPrice2 != null">
+		and efr.day_price >= #{condition.dayPrice1} and efr.day_price &lt;= #{condition.dayPrice2}
+	</if>
+	<if test="condition.dayPrice1 == null and  condition.dayPrice2 != null">
+		and efr.day_price &lt;= #{condition.dayPrice2}
+	</if>
+	<if test="condition.dayPrice1 != null and  condition.dayPrice2 == null">
+		and efr.day_price >= #{condition.dayPrice1}
+	</if>
+	
+	<if test="condition.monthPrice1 != null and  condition.monthPrice2 != null">
+		and efr.month_price >= #{condition.monthPrice1} and efr.month_price &lt;= #{condition.monthPrice2}
+	</if>
+	<if test="condition.monthPrice1 == null and  condition.monthPrice2 != null">
+		and efr.month_price &lt;= #{condition.monthPrice2}
+	</if>
+	<if test="condition.monthPrice1 != null and  condition.monthPrice2 == null">
+		and efr.month_price >= #{condition.monthPrice1}
+	</if>
+	
+
+    order by  ef1.build_name,ef2.build_name,ef3.build_name
+</select>
+
+<select id="getFloorIdByAreaId" resultType="map"  parameterType="String">
+	select id,parent_id as parentId  from  etop_floor where  id=(
+	select  parent_id from  etop_floor where id=#{areaId,jdbcType=VARCHAR})
+</select>
+
+<!-- 查询列表 -->
+<select id="queryRooms" resultMap="BaseResultMap">
+	select 
+		<include refid="Base_Column_List"/>,activated
+	from
+		etop_floor_room
+	where 1=1
+	
+	
+	<if test="refBuildingId !=null and refBuildingId !=''">
+		and	ref_floor_id=#{refBuildingId} 
+	</if>
+		
+	<if test="areaId !=null and areaId !=''">
+		and ref_area_id=#{areaId} 
+	</if>
+	
+	<if test="activated != null and activated != ''">
+		
+		and activated = #{activated}
+		
+	</if>
+		
+	<if test="floorStatus != null and floorStatus != ''">
+		
+		and floor_status in ${floorStatus}
+		
+	</if>
+		
+		
+		
+		
+	order by room_num asc
+    
+    
+</select>
+
+<select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</select>
+
+
+	<select id="getRooms" resultType="com.etop.management.entity.EtopFloorRoom">
+		select
+			t1.id,t1.room_num,t1.orientation,t1.build_area,t1.user_area,t1.layer_high,t1.located,t1.renovation,t1.month_price,t1.day_price,t1.floor_status,t1.remark,
+			t1.contract_num,t1.room_img,t1.companyId,t1.constract_id,t1.ref_floor_id,t1.ref_storey_id,t1.ref_area_id
+		from
+			etop_floor_room t1
+		INNER JOIN etop_floor t2 ON t1.ref_area_id = t2.id
+		where
+			t1.ref_area_id in
+		<foreach collection="areaIds" index="index" item="areaIds" open="(" separator="," close=")">
+			#{areaIds}
+		</foreach>
+		AND t2.park_id = #{parkId}
+		order by t1.room_num asc
+	</select>
+
+	<insert id="myDefinedAdd" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</insert>
+
+<update id="myDefinedUpdate" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</update>  	
+
+<delete id="myDefinedDelete" parameterType="com.etop.management.bean.Criteria">
+	${myDefinedSql}
+</delete>  	
+
+<select id="getSumOfBuildArea" resultType="float">
+
+	select sum(a.build_area) from etop_floor_room a 
+	
+	where a.floor_status=1 and a.ref_floor_id=#{refBuildingId};
+
+</select>
+
+	<select id="getFloorRoomsListByparkId" resultType="com.etop.management.entity.EtopFloorRoom">
+		SELECT
+			<include refid="Base_Column_List_Object"/>
+		FROM
+			etop_floor_room efr
+		join etop_floor ef	
+		where
+			efr.floor_status = 0
+		and ef.park_id =#{parkId}	;
+	</select>
+
+	<select id="getFloorRoomsList" resultType="com.etop.management.entity.EtopFloorRoom">
+		SELECT
+			<include refid="Base_Column_List_Object"/>
+		FROM
+			etop_floor_room efr
+		where
+			efr.floor_status = 0;
+	</select>
+
+	
+<select id="getRoomCountByBuilding" resultType="integer">
+
+
+	select count(*) from etop_floor_room
+	
+	where 1=1
+	<if test="refBuildingId != null and refBuildingId != '' ">
+	
+	and ref_floor_id=#{refBuildingId}
+	
+	</if>
+	
+	<if test="recordDate !=null and recordDate !='' ">
+		and created_at &lt;=#{recordDate}
+	</if>
+
+	<if test="activated != null ">
+	
+	and activated=#{activated}
+	
+	</if>
+
+
+</select>
+
+<update id="activeOrCloseRoom" parameterType="com.etop.management.entity.EtopFloorRoom">
+
+	update etop_floor_room set 
+	
+	activated=#{activated}
+
+	where id = #{id}
+</update>
+
+
+<select id="getRoomIdsByParent" resultType="string">
+
+	select id from etop_floor_room 
+	
+	where 1=1
+	
+	<if test="parentType==0">
+	
+	 and ref_floor_id=#{refParentId}
+	 
+	 </if> 
+	 
+	 <if test="parentType==1">
+	
+	 and ref_storey_id=#{refParentId}
+	 
+	 </if> 
+	
+	<if test="parentType==2">
+	
+	 and ref_area_id=#{refParentId}
+	 
+	 </if> 
+
+</select>
+
+<select id="checkRoom" resultType="int" parameterType="list">
+	select count(1) from etop_floor_room efr
+
+	join etop_contract ec 
+	
+	on efr.constract_id = ec.id
+	
+	where ec.contract_status=3 and   now() &lt;ec.contract_end_date 
+	
+	and efr.id in
+	<foreach collection="list" open="(" close=")" separator="," item="id">
+		#{id}
+	</foreach>
+	
+</select>
+
+	<select id="getRoomsNum" resultType="com.etop.management.entity.EtopFloorRoom">
+		SELECT
+			COUNT(*) roomsNum
+		FROM
+			etop_floor_room t1
+		INNER JOIN etop_floor t2 ON t1.ref_floor_id = t2.id
+		INNER JOIN etop_park t3 ON t2.park_id = t3.id
+		WHERE
+			t2.park_id = #{parkId}
+		AND t1.activated = 1
+	</select>
+	
+    <select id="selectRoomsList" resultType="com.etop.management.entity.EtopFloorRoom">
+       SELECT
+			*
+		FROM
+			etop_floor_room
+    </select>
+    
+ 	<update id="updateForLet">
+        UPDATE etop_floor_room
+		SET floor_status = 1
+		WHERE
+			id = #{id}
+    </update>
+    
+ 	<update id="updateToLet">
+        UPDATE etop_floor_room
+		SET floor_status = 0
+		WHERE
+			id = #{id}
+    </update>
+    
+    <delete id="deleteAll" parameterType="string">
+
+		delete from  etop_floor_room where id in 
+		<foreach collection="list" open="(" close=")" separator="," item="id">
+			#{id}
+		</foreach>
+
+	</delete>
+</mapper>   

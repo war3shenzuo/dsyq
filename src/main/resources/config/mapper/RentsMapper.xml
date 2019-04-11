@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.RentsDao">
+
+    <select id="select" resultType="com.etop.management.bean.Rents">
+        SELECT
+            IFNULL(SUM(t2.buildArea), 0) AS buildArea,
+            t2.park_name
+        FROM
+            (
+                SELECT
+                    t1.*, t3.park_name
+                FROM
+                    etop_floor t1
+                LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_floor_id
+                INNER JOIN etop_park t3 ON t1.park_id = t3.id
+                WHERE
+                    t1.build_type = 'floor'
+                AND t1.park_id = #{parkId}
+                GROUP BY
+                    t1.id
+            ) t2
+    </select>
+
+    <select id="selectByParkId" resultType="java.lang.Double">
+        SELECT
+            COUNT(*) AS totalNum
+        FROM
+            etop_floor t1
+        INNER JOIN etop_floor_room t2 ON t1.id = t2.ref_floor_id
+        INNER JOIN etop_park t3 ON t1.park_id = t3.id
+        WHERE
+            t1.build_type = 'floor'
+        AND t1.park_id = #{parkId}
+    </select>
+
+    <select id="selectUserAreaByParkId" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t2.user_area), 0) AS user_area
+        FROM
+            etop_floor t1
+        INNER JOIN etop_floor_room t2 ON t1.id = t2.ref_floor_id
+        INNER JOIN etop_park t3 ON t1.park_id = t3.id
+        WHERE
+            t1.build_type = 'floor'
+        AND t1.park_id = #{parkId}
+        AND t2.activated = 1
+    </select>
+
+    <select id="selectByFloorId" resultType="java.lang.Double">
+        SELECT
+            COUNT(DISTINCT(t1.id)) AS rentNum
+        FROM
+            etop_floor_room t1
+        INNER JOIN etop_floor t2 ON t1.ref_floor_id = t2.id
+        WHERE
+            t1.ref_floor_id = #{floorId}
+        AND t1.floor_status = 1
+    </select>
+
+    <select id="selectByFloorIds" resultType="com.etop.management.bean.Rents">
+        SELECT
+            t1.ref_floor_id,
+            t2.id,
+            t2.build_name AS floor,
+            IFNULL(t2.buildArea, 0) AS buildArea,
+            t3.park_name
+        FROM
+            etop_floor_room t1
+        RIGHT JOIN etop_floor t2 ON t1.ref_floor_id = t2.id
+        INNER JOIN etop_park t3 ON t2.park_id = t3.id
+        WHERE
+            t2.build_type = 'floor'
+        AND t2.park_id = #{parkId}
+        GROUP BY
+            t2.id
+        ORDER BY
+	    t2.build_name
+    </select>
+
+    <select id="selectUserArea" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t2.user_area), 0) AS user_area
+        FROM
+            etop_floor t1
+        LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_floor_id
+        WHERE
+            t1.id = #{id}
+        AND t1.park_id = #{parkId}
+        and t2.activated = 1
+    </select>
+
+    <select id="selectByStoreyIds" resultType="com.etop.management.bean.Rents">
+        SELECT
+            t5.*
+        FROM
+            (
+                SELECT
+                    t1.id,
+                    t1.build_name AS storey,
+                    t2.build_name AS floor,
+                    t3.park_name,
+                    IFNULL(t1.buildArea, 0) AS buildArea,
+                    t1.created_at
+                FROM
+                    etop_floor t1
+                INNER JOIN etop_floor t2 ON t1.parent_id = t2.id
+                INNER JOIN etop_park t3 ON t2.park_id = t3.id
+                LEFT JOIN etop_floor_room t4 ON t4.ref_storey_id = t1.id
+                WHERE
+                    t1.build_type = 'storey'
+                AND t1.park_id = #{parkId}
+                GROUP BY
+                    t1.id
+            ) t5
+        ORDER BY
+            t5.floor,t5.storey
+    </select>
+
+    <select id="selectByStoreyId" resultType="java.lang.Double">
+        SELECT
+            COUNT(DISTINCT(t1.id)) AS rentNum
+        FROM
+            etop_floor_room t1
+        INNER JOIN etop_floor t2 ON t1.ref_floor_id = t2.id
+        WHERE
+            t1.ref_storey_id = #{storeyId}
+        AND t1.floor_status = 1
+    </select>
+
+    <select id="selectUserAreaByStoreyId" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t2.user_area), 0) AS user_area
+        FROM
+            etop_floor t1
+        LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_storey_id
+        WHERE
+            t1.id = #{id}
+        AND t1.park_id = #{parkId}
+        AND t2.activated = 1
+    </select>
+
+    <select id="selectByAreaIds" resultType="com.etop.management.bean.Rents">
+        SELECT
+            t5.*
+        FROM
+            (
+                SELECT
+                    t1.id,
+                    t3.park_name,
+                    t5.build_name AS floor,
+                    t2.build_name AS storey,
+                    t1.build_name AS area,
+                    IFNULL(t1.buildArea, 0) AS buildArea,
+			        t1.created_at
+                FROM
+                    etop_floor t1
+                INNER JOIN etop_floor t2 ON t1.parent_id = t2.id
+                INNER JOIN etop_floor t5 ON t2.parent_id = t5.id
+                INNER JOIN etop_park t3 ON t2.park_id = t3.id
+                LEFT JOIN etop_floor_room t4 ON t4.ref_area_id = t1.id
+                WHERE
+                    t1.build_type = 'area'
+                AND t1.park_id = #{parkId}
+                GROUP BY
+                    t1.id
+            ) t5
+        ORDER BY
+            t5.floor,t5.storey,t5.area
+    </select>
+
+    <select id="selectByAreaId" resultType="java.lang.Double">
+        SELECT
+            COUNT(DISTINCT(t1.id)) AS rentNum
+        FROM
+            etop_floor_room t1
+        INNER JOIN etop_floor t2 ON t1.ref_floor_id = t2.id
+        WHERE
+            t1.ref_area_id = #{areaId}
+        AND t1.floor_status = 1
+    </select>
+
+    <select id="selectUserAreaByAreaId" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t2.user_area), 0) AS user_area
+        FROM
+            etop_floor t1
+        LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_area_id
+        WHERE
+            t1.id = #{id}
+        AND t1.park_id = #{parkId}
+        AND t2.activated = 1
+    </select>
+
+    <select id="selectRentArea" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t2.build_area), 0) AS build_area
+        FROM
+            etop_floor t1
+        INNER JOIN etop_floor_room t2 ON t1.id = t2.ref_floor_id
+        INNER JOIN etop_park t3 ON t1.park_id = t3.id
+        WHERE
+            t1.build_type = 'floor'
+        AND t1.park_id = #{parkId}
+        AND t2.floor_status IN (1, 3)
+        AND t2.activated = 1
+    </select>
+
+    <select id="selectVacatArea" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t2.build_area), 0) AS build_area
+        FROM
+            etop_floor t1
+        INNER JOIN etop_floor_room t2 ON t1.id = t2.ref_floor_id
+        INNER JOIN etop_park t3 ON t1.park_id = t3.id
+        WHERE
+            t1.build_type = 'floor'
+        AND t1.park_id = #{parkId}
+        AND t2.floor_status = 0
+        AND t2.activated = 1
+    </select>
+
+    <select id="selectRentAreaFloorId" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t2.build_area), 0) AS build_area
+        FROM
+            etop_floor t1
+        LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_floor_id
+        WHERE
+            t1.id = #{id}
+        AND t1.park_id = #{parkId}
+        AND t2.floor_status IN (1, 3)
+        AND t2.activated = 1
+    </select>
+
+    <select id="selectVacatAreaFloorId" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t2.build_area), 0) AS build_area
+        FROM
+            etop_floor t1
+        LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_floor_id
+        WHERE
+            t1.id = #{id}
+        AND t1.park_id = #{parkId}
+        AND t2.floor_status = 0
+        AND t2.activated = 1
+    </select>
+
+    <select id="selectRentAreaStoreyId" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t2.build_area), 0) AS build_area
+        FROM
+            etop_floor t1
+        LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_storey_id
+        WHERE
+            t1.id = #{id}
+        AND t1.park_id = #{parkId}
+        AND t2.floor_status IN (1, 3)
+        AND t2.activated = 1
+    </select>
+
+    <select id="selectVacatAreaStoreyId" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t2.build_area), 0) AS build_area
+        FROM
+            etop_floor t1
+        LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_storey_id
+        WHERE
+            t1.id = #{id}
+        AND t1.park_id = #{parkId}
+        AND t2.floor_status = 0
+        AND t2.activated = 1
+    </select>
+
+    <select id="selectRentAreaAreaId" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t2.build_area), 0) AS build_area
+        FROM
+            etop_floor t1
+        LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_area_id
+        WHERE
+            t1.id = #{id}
+        AND t1.park_id = #{parkId}
+        AND t2.floor_status IN (1, 3)
+        AND t2.activated = 1
+    </select>
+
+    <select id="selectVacatAreaAreaId" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t2.build_area), 0) AS build_area
+        FROM
+            etop_floor t1
+        LEFT JOIN etop_floor_room t2 ON t1.id = t2.ref_area_id
+        WHERE
+            t1.id = #{id}
+        AND t1.park_id = #{parkId}
+        AND t2.floor_status = 0
+        AND t2.activated = 1
+    </select>
+
+</mapper>

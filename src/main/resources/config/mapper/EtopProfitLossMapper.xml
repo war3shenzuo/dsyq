@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopProfitLossDao">
+
+<!--      <sql id="Base_Column_List" >
+        t1.id,t1.reportType,t1.periods,t1.park_id,t1.items,t1.fine,t1.current_limit,t1.created_at,t1.created_by,t1.updated_at,t1.updated_by
+    </sql>  -->
+         <sql id="Base_Column_List" >
+        t1.id,t1.reportType,t1.periods,t1.park_id,t1.items,t1.fine,t1.current_limit,t1.last_current,t1.previous_limit,t1.year_growth,mom_growth,
+        t1.year_cumulative,t1.lastyear_period,t1.lastyear_growth,t1.back_total,t1.created_at,t1.created_by,t1.updated_at,t1.updated_by
+    </sql> 
+
+    <sql id="Example_Where_Clause_Object">
+        <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="reportType != null" >
+            and t1.reportType =  #{reportType}
+        </if>
+        <if test="periods != null" >
+            and t1.periods =  #{periods}
+        </if>
+        <if test="parkId != null" >
+            and t1.park_id =  #{parkId}
+        </if>
+        <if test="items != null" >
+            and t1.items =  #{items}
+        </if>
+        <if test="fine != null" >
+            and t1.fine =  #{fine}
+        </if>
+        <if test="currentLimit != null" >
+            and t1.current_limit =  #{currentLimit}
+        </if>
+         <if test="lastCurrent != null" >
+            and t1.last_current =  #{lastCurrent}
+        </if>
+        <if test="previousLimit != null" >
+            and t1.previous_limit =  #{previousLimit}
+        </if>
+        <if test="yearGrowth != null" >
+            and t1.year_growth =  #{yearGrowth}
+        </if>
+        <if test="momGrowth != null" >
+            and t1.mom_growth =  #{momGrowth}
+        </if>
+        <if test="yearCumulative != null" >
+            and t1.year_cumulative =  #{yearCumulative}
+        </if>
+        <if test="lastyearPeriod != null" >
+            and t1.lastyear_period =  #{lastyearPeriod}
+        </if>
+        <if test="lastyearGrowth != null" >
+            and t1.lastyear_growth =  #{lastyearGrowth}
+        </if>
+        <if test="backTotal != null" >
+            and t1.back_total =  #{backTotal}
+        </if> 
+        <if test="createdAt != null" >
+            and t1.created_at =  #{createdAt}
+        </if>
+        <if test="createdBy != null" >
+            and t1.created_by =  #{createdBy}
+        </if>
+        <if test="updatedAt != null" >
+            and t1.updated_at =  #{updatedAt}
+        </if>
+        <if test="updatedBy != null" >
+            and t1.updated_by =  #{updatedBy}
+        </if>
+    </sql>
+
+<!--     <insert id="insert">
+        insert into etop_profit_loss(id,reportType,periods,park_id,items,fine,current_limit,created_at,created_by,updated_at)
+            values(uuid(),#{reportType},#{periods},#{parkId},#{items},#{fine},#{currentLimit},sysdate(),#{createdBy},sysdate())
+    </insert> -->
+     <insert id="insert">
+        insert into etop_profit_loss(id,reportType,periods,park_id,items,fine,current_limit,last_current,previous_limit,year_growth,mom_growth,
+                          year_cumulative,lastyear_period,lastyear_growth,back_total,created_at,created_by,updated_at)
+            values(uuid(),#{reportType},#{periods},#{parkId},#{items},#{fine},#{currentLimit},#{lastCurrent},#{previousLimit},#{yearGrowth},#{momGrowth},
+                          #{yearCumulative},#{lastyearPeriod},#{lastyearGrowth},#{backTotal},sysdate(),#{createdBy},sysdate())
+    </insert> 
+
+    <select id="search" resultType="com.etop.management.bean.ProfitLoss">
+        SELECT
+            t1.*
+        FROM
+            etop_contract_item t1
+        INNER JOIN etop_contract t2 ON t1.ref_contract_id = t2.id
+        INNER JOIN etop_park t3 ON t2.ref_park_id = t3.id
+        WHERE
+            t2.contract_category = #{fine}
+		 <if test="parkId != null and parkId != ''">
+	        AND t2.ref_park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t2.ref_park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+        <if test="periods != null and periods != ''">
+            <![CDATA[
+                    AND t1.start_date <= #{periods}
+                ]]>
+            <![CDATA[
+                    AND #{periods} <= t1.end_date
+                ]]>
+        </if>
+    </select>
+
+    <select id="searchLastMonth" resultType="com.etop.management.bean.ProfitLoss">
+        SELECT
+            t1.*
+        FROM
+            etop_contract_item t1
+        INNER JOIN etop_contract t2 ON t1.ref_contract_id = t2.id
+        INNER JOIN etop_park t3 ON t2.ref_park_id = t3.id
+        WHERE
+            t2.contract_category = #{fine}
+        <if test="parkId != null and parkId != ''">
+	        AND t2.ref_park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t2.ref_park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+        <if test="periods != null and periods != ''">
+            <![CDATA[
+                    AND t1.start_date <= #{lastMonth}
+                ]]>
+            <![CDATA[
+                    AND #{lastMonth} <= t1.end_date
+                ]]>
+        </if>
+    </select>
+
+    <select id="searchLastYearMonth" resultType="com.etop.management.bean.ProfitLoss">
+        SELECT
+            t1.*
+        FROM
+            etop_contract_item t1
+        INNER JOIN etop_contract t2 ON t1.ref_contract_id = t2.id
+        INNER JOIN etop_park t3 ON t2.ref_park_id = t3.id
+        WHERE
+            t2.contract_category = #{fine}
+        <if test="parkId != null and parkId != ''">
+	        AND t2.ref_park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t2.ref_park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+        <if test="periods != null and periods != ''">
+            <![CDATA[
+                    AND t1.start_date <= #{lastYear}
+                ]]>
+            <![CDATA[
+                    AND #{lastYear} <= t1.end_date
+                ]]>
+        </if>
+    </select>
+
+
+    <select id="searchContractLastMonth" resultType="com.etop.management.bean.ProfitLoss">
+        SELECT
+            t1.id,
+			 t1.ref_contract_id,
+			 t1.start_date,
+			 t1.end_date,
+			 t1.daily_unit_price,
+			 t1.monthly_unit_price,
+			 t1.total_amount,
+			 t1.bill_type,
+			 t1.bill_date,
+			 t1.bill_dates,
+			 t1.bill_period,
+			 t1.payment_date,
+			 t1.balance_monthly,
+			 t1.created_at,
+			 t1.created_by,
+			 t1.updated_at,
+			 t1.updated_by
+        FROM
+            etop_contract_item t1
+        INNER JOIN etop_contract t2 ON t1.ref_contract_id = t2.id
+        INNER JOIN etop_park t3 ON t2.ref_park_id = t3.id
+        WHERE
+            t2.contract_category = #{fine}
+       <if test="parkId != null and parkId != ''">
+	        AND t2.ref_park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t2.ref_park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+        <if test="periods != null and periods != ''">
+            <![CDATA[
+                    AND t1.start_date <= #{lastMonth}
+                ]]>
+            <![CDATA[
+                    AND #{lastMonth} <= t1.end_date
+                ]]>
+        </if>
+    </select>
+    
+        <select id="searchContractLastYearMonth" resultType="com.etop.management.bean.ProfitLoss">
+        SELECT
+            t1.id,
+			 t1.ref_contract_id,
+			 t1.start_date,
+			 t1.end_date,
+			 t1.daily_unit_price,
+			 t1.monthly_unit_price,
+			 t1.total_amount,
+			 t1.bill_type,
+			 t1.bill_date,
+			 t1.bill_dates,
+			 t1.bill_period,
+			 t1.payment_date,
+			 t1.balance_monthly,
+			 t1.created_at,
+			 t1.created_by,
+			 t1.updated_at,
+			 t1.updated_by
+        FROM
+            etop_contract_item t1
+        INNER JOIN etop_contract t2 ON t1.ref_contract_id = t2.id
+        INNER JOIN etop_park t3 ON t2.ref_park_id = t3.id
+        WHERE
+            t2.contract_category = #{fine}
+        <if test="parkId != null and parkId != ''">
+	        AND t2.ref_park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t2.ref_park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+        <if test="periods != null and periods != ''">
+            <![CDATA[
+                    AND t1.start_date <= #{lastYear}
+                ]]>
+            <![CDATA[
+                    AND #{lastYear} <= t1.end_date
+                ]]>
+        </if>
+    </select>
+    
+    <select id="getLastMonthMoney" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t1.current_limit),0) AS current_limit
+        FROM
+            etop_profit_loss t1
+        WHERE
+            t1.periods = #{lastMonth}
+        and t1.items = #{items}
+        and t1.fine = #{fine}
+         <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+    </select>
+
+    <select id="getLastYearMoney" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t1.current_limit),0) AS current_limit
+        FROM
+            etop_profit_loss t1
+        WHERE
+            t1.periods = #{lastYear}
+        and t1.items = #{items}
+        and t1.fine = #{fine}
+         <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+    </select>
+
+    <select id="getSumAllYear" resultType="java.lang.Double">
+        SELECT
+            IFNULL(sum(t1.current_limit), 0) AS year_cumulative
+        FROM
+            etop_profit_loss t1
+        WHERE
+            t1.periods >=#{yearFirst}
+        and t1.periods &lt;=#{periods}    
+        and t1.items = #{items}
+        and t1.fine = #{fine}
+         <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+    </select>
+    
+    <select id="getSumLastAllYear" resultType="java.lang.Double">
+        SELECT
+            IFNULL(sum(t1.current_limit), 0) AS lastyearPeriod
+        FROM
+            etop_profit_loss t1
+        WHERE
+            t1.periods >=#{yearFirst}
+        and t1.periods &lt;=#{lastYear}    
+        and t1.items = #{items}
+        and t1.fine = #{fine}
+        <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+    </select>
+    
+    <select id="getSumYear" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t1.year_cumulative), 0) AS year_cumulative
+        FROM
+            etop_profit_loss t1
+        WHERE
+            t1.periods like CONCAT('%',#{periods},'%')
+        and t1.items = #{items}
+        and t1.fine = #{fine}
+        <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+    </select>
+
+    <select id="getPushMonths" resultType="java.lang.Double">
+        SELECT
+            IFNULL(sum(t1.current_limit), 0) AS back_total
+        FROM
+            etop_profit_loss t1
+        WHERE
+            <![CDATA[
+                    t1.periods >= #{lastYear}
+                ]]>
+            <![CDATA[
+                    and t1.periods <= #{periods}
+                ]]>
+        and t1.items = #{items}
+        and t1.fine = #{fine}
+        <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+    </select>
+
+    <select id="getLastyearPeriod" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t1.year_cumulative), 0) AS year_cumulative
+        FROM
+            etop_profit_loss t1
+        WHERE
+            t1.periods like CONCAT('%',#{pushMonths},'%')
+        and t1.items = #{items}
+        and t1.fine = #{fine}
+         <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+    </select>
+
+    <select id="searchContract" resultType="com.etop.management.bean.ProfitLoss">
+        SELECT
+            t1.id,
+			 t1.ref_contract_id,
+			 t1.start_date,
+			 t1.end_date,
+			 t1.daily_unit_price,
+			 t1.monthly_unit_price,
+			 t1.total_amount,
+			 t1.bill_type,
+			 t1.bill_date,
+			 t1.bill_dates,
+			 t1.bill_period,
+			 t1.payment_date,
+			 t1.balance_monthly,
+			 t1.created_at,
+			 t1.created_by,
+			 t1.updated_at,
+			 t1.updated_by
+        FROM
+            etop_contract_item t1
+        INNER JOIN etop_contract t2 ON t1.ref_contract_id = t2.id
+        INNER JOIN etop_park t3 ON t2.ref_park_id = t3.id
+        WHERE
+            t2.contract_category = #{fine}
+<!--         <if test="parkId != null and parkId != ''"> -->
+<!--             AND t2.ref_park_id = #{parkId} -->
+<!--         </if> -->
+         <if test="parkId != null and parkId != ''">
+	        AND t2.ref_park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t2.ref_park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+        <if test="periods != null and periods != ''">
+            <![CDATA[
+                    AND t1.start_date <= #{periods}
+                ]]>
+            <![CDATA[
+                    AND #{periods} <= t1.end_date
+                ]]>
+        </if>
+    </select>
+
+    <select id="searchService" resultType="com.etop.management.bean.ProfitLoss">
+        SELECT
+            t1.amount AS currentLimit
+        FROM
+            etop_bill t1
+        WHERE
+            t1.bill_source = #{fine}
+        and t1.created_time like CONCAT ('%',#{periodsStr},'%')
+        <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+    </select>
+
+    <select id="searchProfitLoss" resultType="com.etop.management.bean.ProfitLoss">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_profit_loss t1
+        WHERE
+            t1.reportType = #{reportType}
+        AND t1.periods = #{periods}
+         <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+        AND t1.items = #{items}
+        AND t1.fine = #{fine}
+    </select>
+
+    <select id="getProfitLoss" resultType="com.etop.management.bean.ProfitLoss">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_profit_loss t1
+       WHERE
+      	 t1.periods = #{periods}
+            <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+            ORDER BY
+        t1.items,t1.fine
+    </select>
+    <select id="getProfit" resultType="com.etop.management.bean.ProfitLoss">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_profit_loss t1
+       WHERE
+            t1.reportType = #{reportType}
+        <if test="parkId != null and parkId != ''">
+        AND t1.park_id = #{parkId}
+        </if>
+        <if test="parkIds != null">
+			AND  t1.park_id IN
+			<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+				#{parkIds}
+			</foreach>
+		</if>
+        AND t1.periods = #{periods}
+            ORDER BY
+        t1.items,t1.fine
+    </select>
+
+    <select id="getLoss" resultType="com.etop.management.bean.ProfitLoss">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_profit_loss t1
+        WHERE
+            t1.reportType = #{reportType}
+         <if test="parkId != null and parkId != ''">
+        AND t1.park_id = #{parkId}
+        </if>
+        <if test="parkIds != null">
+			AND  t1.park_id IN
+			<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+				#{parkIds} 
+			</foreach>
+		</if>
+        AND t1.periods = #{periods}
+        ORDER BY
+        t1.items,t1.fine
+    </select>
+
+    <select id="getProfitLossList" resultType="com.etop.management.bean.ProfitLoss">
+        SELECT
+            IFNULL(SUM(t1.current_limit), 0) AS current_limit,
+            t1.periods,t1.reportType,t1.park_id,t1.items,t1.fine,
+            IFNULL(SUM(t1.last_current), 0) AS last_current,
+            IFNULL(SUM(t1.previous_limit), 0) AS previous_limit,
+            IFNULL(SUM(t1.year_cumulative), 0) AS year_cumulative,
+            IFNULL(SUM(t1.lastyear_period), 0) AS lastyear_period,
+            IFNULL(SUM(t1.back_total), 0) AS back_total 
+        FROM
+            etop_profit_loss t1
+        WHERE
+            t1.reportType = #{reportType}
+         <if test="parkId != null and parkId != ''">
+        AND t1.park_id = #{parkId}
+        </if>
+        <if test="parkIds != null">
+			AND  t1.park_id IN
+			<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+				#{parkIds}
+			</foreach>
+		</if>
+        AND t1.periods = #{periods}
+    </select>
+    
+    <select id="getProfitLastLossList" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t1.current_limit), 0) AS last_current
+        FROM
+            etop_profit_loss t1
+        WHERE
+            t1.reportType = #{reportType}
+         <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+        AND t1.periods = #{lastYear}
+    </select>
+    
+    <select id="getProfitMonthLossList" resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(t1.current_limit), 0) AS previous_limit
+        FROM
+            etop_profit_loss t1
+        WHERE
+            t1.reportType = #{reportType}
+        <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+        AND t1.periods = #{lastMonth}
+    </select>
+    
+        <select id="getSumYearAllYear" resultType="java.lang.Double">
+        SELECT
+            IFNULL(sum(t1.current_limit), 0) AS year_cumulative
+        FROM
+            etop_profit_loss t1
+        WHERE
+        	t1.reportType = #{reportType}
+        and t1.periods >=#{yearFirst}
+        and t1.periods &lt;=#{periods}    
+         <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+    </select>
+    
+    
+    <select id="getSumYearLastYear" resultType="java.lang.Double">
+        SELECT
+            IFNULL(sum(t1.current_limit), 0) AS lastyearPeriod
+        FROM
+            etop_profit_loss t1
+        WHERE
+            t1.reportType = #{reportType}
+        and t1.periods >=#{yearFirst}
+        and t1.periods &lt;=#{lastYear}    
+         <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+    </select>
+    
+        <select id="getYearPushMonths" resultType="java.lang.Double">
+        SELECT
+            IFNULL(sum(t1.current_limit), 0) AS back_total
+        FROM
+            etop_profit_loss t1
+        WHERE
+            <![CDATA[
+                    t1.periods >= #{lastYear}
+                ]]>
+            <![CDATA[
+                    and t1.periods <= #{periods}
+                ]]>
+        and t1.reportType = #{reportType}
+         <if test="parkId != null and parkId != ''">
+	        AND t1.park_id = #{parkId}
+	        </if>
+	        <if test="parkIds != null">
+				AND  t1.park_id IN
+				<foreach collection="parkIds" item="parkIds" open="(" separator="," close=")">
+					#{parkIds}
+				</foreach>
+			</if>
+    </select>
+    <delete id="deleteExist">
+    	DELETE
+			FROM
+				etop_profit_loss
+			WHERE
+				items = #{items}
+			AND fine = #{fine}
+			AND park_id =  #{parkId}
+			AND periods = #{moreperiods}
+    </delete>
+</mapper>

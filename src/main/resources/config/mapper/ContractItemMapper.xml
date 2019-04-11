@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.ContractItemDao">
+
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.bean.ContractItem" >
+	<result column="id" property="id"/>
+	<result column="ref_contract_id" property="refContractId"/>
+	<result column="start_date" property="startDate"/>
+	<result column="end_date" property="endDate"/>
+	<result column="daily_unit_price" property="dailyUnitPrice"/>
+	<result column="monthly_unit_price" property="monthlyUnitPrice"/>
+	<result column="total_amount" property="totalAmount"/>
+	<result column="content" property="content"/>
+	<result column="bill_type" property="billType"/>
+<!-- 	<result column="bill_date_ahead" property="billDateAhead"/> -->
+	<result column="bill_dates" property="billDates"/>
+	<result column="bill_date" property="billDate"/>
+	<result column="payment_date" property="paymentDate"/>
+	<result column="bill_period" property="billPeriod"/>	
+	<result column="balance_monthly" property="balanceMonthly"/>
+<!-- 	<result column="last_fee_date" property="lastFeeDate"/>	 -->
+    <result column="created_at" property="createdAt"/>
+    <result column="created_by" property="createdBy"/>
+    <result column="updated_at" property="updatedAt"/>
+    <result column="updated_by" property="updatedBy"/>
+		
+</resultMap>
+       
+<!-- etop_park table all fields -->
+<sql id="Base_Column_List" >
+	 id,ref_contract_id,start_date,end_date,
+	 daily_unit_price,monthly_unit_price,total_amount,content,
+	 bill_type,bill_dates,bill_date,payment_date,bill_period,balance_monthly,
+<!-- 	 bill_date_ahead, -->
+<!-- 	 last_fee_date, -->
+	 <include refid="com.etop.management.dao.CommonsDao.AUDIT_INFO_COLUMNS"/>
+</sql>
+
+<sql id="insert_value">
+
+	#{refContractId},#{startDate},#{endDate},
+	#{dailyUnitPrice},#{monthlyUnitPrice},#{totalAmount},#{content},
+	#{billType},#{billDates},#{billDate},#{paymentDate},#{billPeriod},#{balanceMonthly},
+<!-- 	#{billDateAhead}, -->
+<!-- 	#{lastFeeDate,jdbcType=DATE}, -->
+	<include refid="com.etop.management.dao.CommonsDao.INSERT_WITH_AUDIT_INFO_COLUMNS"/>
+
+</sql>
+
+<select id="getContractItemById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract_item where id = #{id}
+</select>
+
+<select id="getContractItemList" resultMap="BaseResultMap" parameterType="string">
+
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract_item where ref_contract_id = #{contractId}
+	 order by start_date asc
+
+</select>
+
+<delete id="deleteContractItem" parameterType="string">
+
+	delete from etop_contract_item where id=#{id}
+
+</delete>
+
+<delete id="deleteContractItemByContractId" parameterType="string">
+
+	delete from etop_contract_item where ref_contract_id=#{refContractId}
+
+</delete>
+
+<insert id="createContractItem" parameterType="com.etop.management.bean.ContractItem">
+
+insert into etop_contract_item (<include refid="Base_Column_List" />)
+values
+(#{id},<include refid="insert_value" />)
+
+</insert>
+
+<update id="updateContractItem" parameterType="com.etop.management.bean.ContractItem">
+
+
+	update etop_contract_item set 
+	
+	ref_contract_id=#{refContractId},
+	start_date=#{startDate},end_date=#{endDate},
+	daily_unit_price=#{dailyUnitPrice},monthly_unit_price=#{monthlyUnitPrice},
+	total_amount=#{totalAmount},content=#{content},balance_monthly=#{balanceMonthly},
+<!-- 	bill_type=#{billType},bill_dates=#{billDates}, -->
+<!-- 	bill_date=#{billDate},payment_date=#{paymentDate},bill_period=#{billPeriod}, -->
+	updated_at=#{updatedAt},updated_by=#{updatedBy}
+	
+	where id=#{id}
+
+</update>
+
+
+
+<update id="updateContractItemBillRule" parameterType="com.etop.management.bean.ContractItem">
+
+
+	update etop_contract_item set 
+	
+<!-- 	ref_contract_id=#{refContractId}, -->
+<!-- 	start_date=#{startDate},end_date=#{endDate}, -->
+<!-- 	daily_unit_price=#{dailyUnitPrice},monthly_unit_price=#{monthlyUnitPrice}, -->
+<!-- 	total_amount=#{totalAmount},content=#{content}, -->
+	bill_type=#{billType},bill_dates=#{billDates},
+	bill_date=#{billDate},payment_date=#{paymentDate},bill_period=#{billPeriod}
+<!-- 	, -->
+<!-- 	bill_date_ahead=#{billDateAhead} -->
+<!-- 	updated_at=#{updatedAt},updated_by=#{updatedBy} -->
+	
+	where ref_contract_id=#{refContractId}
+
+</update>
+
+<select id="getOneOfItem" resultType="com.etop.management.bean.ContractItem">
+
+
+
+	select * from etop_contract_item 
+	
+	where ref_contract_id=#{refContractId}
+	 
+	 limit 1
+
+
+</select>
+
+
+<!-- <update id="updateContractItemlastFeeDate" parameterType="com.etop.management.bean.ContractItem"> -->
+
+
+<!-- 	update etop_contract_item set  -->
+	
+<!-- 	last_fee_date=#{lastFeeDate}, -->
+	
+<!-- 	updated_at=#{updatedAt},updated_by=#{updatedBy} -->
+	
+<!-- 	where id=#{id} -->
+
+
+<!-- </update> -->
+
+<select id="getContractItemsForBill" parameterType="string" resultMap="BaseResultMap">
+
+
+	select * from etop_contract_item a
+	
+	left join etop_contract b on a.ref_contract_id=b.id
+	
+	where b.contract_status=3
+	
+<!-- 	and b.audit_status=2 -->
+<!-- 	开始日期应小于当天，结束日期大于当天 -->
+	and a.start_date &lt;= #{now} 
+	
+	and a.end_date >= #{now}
+		
+	and (b.last_balance_date is null or
+	
+		b.last_balance_date &lt; a.end_date
+			
+	)
+	
+	
+	<if test="refParkId != null and refParkId != ''" >
+
+	and b.ref_park_id = #{refParkId}
+
+	</if>
+
+
+</select>
+
+<select id="getContractItemsByContractId" parameterType="string" resultMap="BaseResultMap">
+
+
+	select * from etop_contract_item a
+	
+	left join etop_contract b on a.ref_contract_id=b.id
+	
+	where 1=1 
+	
+	
+<!-- 	and b.contract_status=3 -->
+	
+<!-- 	and b.audit_status=2 -->
+		
+<!-- 	and a.start_date &lt;= #{now}  -->
+	
+<!-- 	and a.end_date >= #{now} -->
+		
+	<if test="refContractId != null and refContractId != ''" >
+
+		and a.ref_contract_id = #{refContractId}
+
+	</if>
+
+
+</select>
+
+
+</mapper>
+

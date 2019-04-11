@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.EtopAnswerDao">
+
+    <sql id="Base_Column_List" >
+        t1.id,t1.dict_key,t1.dict_value,t1.dict_description,t1.parent_key,t1.sort,t1.removed,t1.created_at,t1.created_by,t1.updated_by,t1.updated_at
+    </sql>
+
+    <sql id="Example_Where_Clause_Object">
+        <if test="id != null" >
+            and t1.id =  #{id}
+        </if>
+        <if test="dictKey != null" >
+            and t1.dict_key =  #{dictKey}
+        </if>
+        <if test="dictValue != null" >
+            and t1.dict_value =  #{dictValue}
+        </if>
+        <if test="dictDescription != null" >
+            and t1.dict_description =  #{dictDescription}
+        </if>
+        <if test="parentKey != null" >
+            and t1.parent_key =  #{parentKey}
+        </if>
+        <if test="sort != null" >
+            and t1.sort =  #{sort}
+        </if>
+        <if test="removed != null" >
+            and t1.removed =  #{removed}
+        </if>
+        <if test="createdAt != null" >
+            and t1.created_at =  #{createdAt}
+        </if>
+        <if test="createdBy != null" >
+            and t1.created_by =  #{createdBy}
+        </if>
+        <if test="updatedBy != null" >
+            and t1.updated_by =  #{updatedBy}
+        </if>
+        <if test="updatedAt != null" >
+            and t1.updated_at =  #{updatedAt}
+        </if>
+    </sql>
+
+    <select id="search" resultType="com.etop.management.bean.EtopAnswer">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            etop_answer t1
+        WHERE
+            t1.parent_key = #{key}
+    </select>
+
+</mapper>

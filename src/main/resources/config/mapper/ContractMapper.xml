@@ -1,0 +1,822 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.ContractDao">
+
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.bean.Contract" >
+	<result column="id" property="id"/>
+	<result column="ref_contract_lease_id" property="refContractLeaseId"/>
+	<result column="contract_no" property="contractNo"/>
+	<result column="paper_no" property="paperNo"/>
+	<result column="ref_company_id" property="refCompanyId"/>
+	<result column="company_name" property="companyName"/>
+	<result column="company_contacts_name" property="companyContactsName"/>
+	<result column="company_contacts_phone" property="companyContactsPhone"/>
+
+	<result column="company_registration_date" property="companyRegistrationDate"/>
+	<result column="ref_park_id" property="refParkId"/>
+	<result column="park" property="park"/>
+	<result column="building" property="building"/>
+	<result column="floor" property="floor"/>
+	<result column="block" property="block"/>
+	<result column="room" property="room"/>
+	<result column="ref_room_id" property="refRoomId"/>
+	<result column="contract_category" property="contractCategory"/>
+	<result column="contract_type" property="contractType"/>
+	<result column="contract_status" property="contractStatus"/>
+<!-- 	<result column="audit_status" property="auditStatus"/> -->
+	<result column="terminate_reason" property="terminateReason"/>
+	<result column="terminate_date" property="terminateDate"/>
+	<result column="contract_start_date" property="contractStartDate"/>
+	<result column="contract_end_date" property="contractEndDate"/>
+	<result column="contract_sign_date" property="contractSignDate"/>
+	<result column="last_balance_date" property="lastBalanceDate"/>
+		
+	<result column="contract_notes" property="contractNotes"/>
+	<result column="contract_pay_method" property="contractPayMethod"/>
+	<result column="deposit" property="deposit"/>
+	<result column="deposit_bill_status" property="depositBillStatus"/>
+	
+	    <result column="created_at" property="createdAt"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="updated_by" property="updatedBy"/>
+		
+</resultMap>
+       
+<!-- etop_park table all fields -->
+<sql id="Base_Column_List" >
+	 id,ref_contract_lease_id,contract_no,paper_no,
+	 ref_company_id,company_name,company_contacts_name,company_contacts_phone,company_registration_date,
+	 ref_park_id,park,building,floor,block,room,ref_room_id,
+	 contract_category,contract_type,contract_status,
+<!-- 	 audit_status, -->
+	 terminate_reason,terminate_date,
+	 contract_start_date,contract_end_date,contract_sign_date,
+	 last_balance_date,contract_notes,contract_pay_method,deposit,deposit_bill_status,
+	 <include refid="com.etop.management.dao.CommonsDao.AUDIT_INFO_COLUMNS"/>
+</sql>
+
+<sql id="insert_value">
+
+#{refContractLeaseId,jdbcType=VARCHAR},#{contractNo},#{paperNo},
+#{refCompanyId},#{companyName},#{companyContactsName},#{companyContactsPhone},#{companyRegistrationDate},
+#{refParkId},#{park},#{building},#{floor},#{block},#{room},#{refRoomId},
+#{contractCategory},#{contractType},#{contractStatus},
+<!-- #{auditStatus}, -->
+#{terminateReason},#{terminateDate},
+#{contractStartDate},#{contractEndDate},#{contractSignDate},
+#{lastBalanceDate},#{contractNotes},#{contractPayMethod},#{deposit},#{depositBillStatus},
+<include refid="com.etop.management.dao.CommonsDao.INSERT_WITH_AUDIT_INFO_COLUMNS"/>
+
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+where 1=1
+<trim  suffixOverrides="," >
+	<if test="condition.id != null and condition.id != ''" >
+	    and id =  #{condition.id}
+	</if>
+	
+	<if test="nocondition.id != null and nocondition.id != ''" >
+	    and id not in  (#{nocondition.id})
+	</if>
+	
+	<if test="condition.refContractLeaseId != null and condition.refContractLeaseId != ''" >
+		and ref_contract_lease_id  in  (#{condition.refContractLeaseId})
+	</if>
+	
+	<if test="nocondition.refContractLeaseId != null and nocondition.refContractLeaseId != ''" >
+	    and ref_contract_lease_id not in  (#{nocondition.refContractLeaseId})
+	</if>
+	
+	<if test="condition.contractCategory != null and condition.contractCategory != ''" >
+		    and contract_category  in  (#{condition.contractCategory})
+	</if>
+	
+	<if test="nocondition.contractCategory != null and nocondition.contractCategory != ''" >
+	    and contract_category not in  (#{nocondition.contractCategory})
+	</if>
+	
+	
+	
+</trim>
+</sql>
+
+<select id="query"  resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract 
+	 <include refid="Example_Where_Clause"/>
+</select>
+<select id="queryLeaseListByCompanyAndRoom"  resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract 
+	 
+	 where 1=1 
+	 
+	 and contract_status &lt;> 7
+	 
+<!-- 	 and contract_status not in (-7,-9) -->
+	 
+	 <if test="condition.contractCategory != null and condition.contractCategory != ''" >
+		    and contract_category  in  (#{condition.contractCategory})
+	</if>
+	  
+	 
+	<if test="condition.refRoomId != null and condition.refRoomId != ''" >
+		    and ref_room_id  in  (#{condition.refRoomId})
+	</if>
+	
+	<if test="condition.refCompanyId != null and condition.refCompanyId != ''" >
+		    and ref_company_id  in  (#{condition.refCompanyId})
+	</if>
+	
+	<if test="condition.contractStartDate != null and condition.contractStartDate != '' and condition.contractEndDate != null and condition.contractEndDate != ''" >
+		    and 
+<!-- 		    (( -->
+<!-- 		    	terminate_date is null and -->
+		    
+		    	contract_start_date  &lt;= #{condition.contractEndDate} 
+		    	
+		    	and contract_end_date  >= #{condition.contractStartDate}
+<!-- 		    ) -->
+<!-- 		    or -->
+<!-- 		    ( -->
+<!-- 		    	terminate_date is not null and -->
+		    
+<!-- 		    	contract_start_date  &lt;= #{condition.contractEndDate}  -->
+		    	
+<!-- 		    	and terminate_date  >= #{condition.contractStartDate} -->
+<!-- 		    ))	 -->
+	</if>
+	 
+	 
+</select>
+
+
+
+<select id="getContractById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract where id = #{id}
+</select>
+
+<select id="getLastActiveContractByRoom" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract where contract_status = 3
+	 
+	 and ref_room_id=#{refRoomId}
+	 
+	 and contract_category=${contractCategory}
+	 
+	 order by created_at desc
+	 
+	 limit 1
+</select>
+
+
+<select id="getActiveEnergyContractsByRoom" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract where 
+	 
+	  ref_room_id=#{refRoomId}
+	 
+	 and contract_category=3
+	 
+	 and last_balance_date &lt; #{recordDate}
+	 
+	 and ( (terminate_date is null and last_balance_date &lt; contract_end_date )
+	 
+	 	or (terminate_date is not null and last_balance_date &lt; terminate_date 
+	 
+	 ))
+	 
+	 
+	 order by created_at desc
+	 	 
+</select> 
+
+<insert id="createContract" parameterType="com.etop.management.bean.Contract">
+
+insert into etop_contract (<include refid="Base_Column_List" />)
+values
+(#{id},<include refid="insert_value" />)
+
+</insert>
+
+<update id="updateContract" parameterType="com.etop.management.bean.Contract">
+
+
+update etop_contract set 
+
+ref_contract_lease_id=#{refContractLeaseId},contract_no=#{contractNo},paper_no=#{paperNo},
+ref_company_id=#{refCompanyId},company_name=#{companyName},
+company_contacts_name=#{companyContactsName},company_contacts_phone=#{companyContactsPhone},
+company_registration_date=#{companyRegistrationDate},
+ref_park_id=#{refParkId},park=#{park},building=#{building},floor=#{floor},block=#{block},room=#{room},ref_room_id=#{refRoomId},
+contract_category=#{contractCategory},contract_type=#{contractType},contract_status=#{contractStatus},
+<!-- audit_status=#{auditStatus}, -->
+terminate_reason=#{terminateReason},terminate_date=#{terminateDate},
+contract_start_date=#{contractStartDate},contract_end_date=#{contractEndDate},contract_sign_date=#{contractSignDate},
+last_balance_date=#{lastBalanceDate},contract_notes=#{contractNotes},contract_pay_method=#{contractPayMethod},
+deposit=#{deposit},deposit_bill_status=#{depositBillStatus},
+updated_at=#{updatedAt},updated_by=#{updatedBy}
+
+
+where id=#{id}
+
+
+</update>
+<select id="getContractListbyCompanyId" parameterType="com.etop.management.bean.PageContract" resultType="com.etop.management.model.ContractListModel">
+
+
+	select * from etop_contract a where 1=1 
+	
+    and a.ref_company_id=#{refCompanyId}  
+    
+	<if test="category != null and category != ''" >
+		and a.contract_category=${category}       
+    </if>
+    
+	<if test="searchValue != null and searchValue != ''" >
+	and (a.contract_no like '%${searchValue}%' or a.company_name like '%${searchValue}%')       
+	    </if>
+	
+	  
+	<if test="endDate != null and endDate != ''" >
+	
+	and a.contract_end_date &lt; #{endDate}
+	
+	</if>
+	
+	
+
+order by ${orderColumn} ${orderDir} 
+
+limit ${start},${length}
+
+</select>
+
+
+<select id="getContractList" parameterType="com.etop.management.bean.PageContract" resultType="com.etop.management.model.ContractListModel">
+
+
+	select 
+	
+	a.id as id,
+	
+	a.ref_contract_lease_id as refContractLeaseId,
+	
+	a.contract_no as contractNo,
+	
+	a.ref_room_id as refRoomId,
+	
+	a.ref_company_id as refCompanyId,
+	
+	a.company_name as companyName,
+	
+	a.contract_status as contractStatus,
+	
+	a.contract_category as contractCategory,
+	
+	a.contract_start_date as contractStartDate,
+	
+	(CASE
+		
+		WHEN
+			a.contract_status=5
+		THEN
+			a.terminate_date
+		ELSE 
+			a.contract_end_date
+	END)
+		
+		 AS	contractEndDate,
+	
+	
+	
+	a.last_balance_date as lastBalanceDate,
+	
+	a.created_at as createdAt,
+	
+	a.updated_at as updatedAt,
+	
+	b.room_num as room,
+	
+	c.build_name as building,
+	
+	d.build_name as floor,
+	
+	e.build_name as block,
+	
+	a.deposit,
+	
+	a.deposit_bill_status as depositBillStatus
+	
+	
+	 from etop_contract a 
+	
+	left join etop_floor_room b on a.ref_room_id=b.id
+	
+	left join etop_floor c on c.id=b.ref_floor_id
+	
+	left join etop_floor d on d.id=b.ref_storey_id
+	
+	left join etop_floor e on e.id=b.ref_area_id
+	
+	where 1=1 
+
+	<if test="room != null and room != ''" >
+		and b.room_num like '%${room}%'       
+    </if>
+
+	<if test="category != null and category != ''" >
+		and a.contract_category=${category}       
+    </if>
+ 
+	<if test="searchValue != null and searchValue != ''" >
+		and (a.contract_no like '%${searchValue}%' or a.company_name like '%${searchValue}%')       
+    </if>
+    
+<!-- 	<if test="refParkId != null and refParkId != ''" > -->
+		and a.ref_park_id IN
+        <foreach collection="refParkIds" item="refParkIds" index="index" open="(" separator="," close=")">
+            #{refParkIds}
+        </foreach>      
+<!--     </if> -->
+
+
+	<if test="refBuildingId != null and refBuildingId != ''" >
+		and c.id=#{refBuildingId}       
+    </if>
+    
+    <if test="refFloorId != null and refFloorId != ''" >
+		and d.id=#{refFloorId}       
+    </if>
+  	<if test="refBlockId != null and refBlockId != ''" >
+		and e.id=#{refBlockId}       
+    </if>
+  
+<if test="startDate != null and startDate != ''" >
+
+and a.contract_start_date >= #{startDate}
+
+</if>
+  
+<if test="endDate != null and endDate != ''" >
+
+and ((a.contract_status &lt;> 5 and a.contract_end_date &lt;= #{endDate})
+
+
+
+
+
+or (a.contract_status =5 and a.terminate_date &lt;= #{endDate})
+
+)
+
+
+</if>
+	<if test="contractStatus != null and contractStatus != ''" >
+	and a.contract_status in (${contractStatus})
+	</if>
+
+	order by a.contract_status asc,a.${orderColumn} ${orderDir} 
+	
+	limit ${start},${length}
+
+</select>
+
+
+<select id="getContractListCount" parameterType="com.etop.management.bean.PageContract" resultType="integer">
+
+
+	select count(*) from etop_contract a 
+	
+	left join etop_floor_room b on a.ref_room_id=b.id
+	
+	left join etop_floor c on c.id=b.ref_floor_id
+	
+	left join etop_floor d on d.id=b.ref_storey_id
+	
+	left join etop_floor e on e.id=b.ref_area_id
+	
+	where 1=1 
+
+	<if test="room != null and room != ''" >
+		and b.room_num like '%${room}%'       
+    </if>
+    
+	<if test="category != null and category != ''" >
+		and a.contract_category=${category}       
+    </if>
+ 
+<if test="searchValue != null and searchValue != ''" >
+	and (a.contract_no like '%${searchValue}%' or a.company_name like '%${searchValue}%')       
+    </if>
+<!-- 	<if test="refParkId != null and refParkId != ''" > -->
+		and a.ref_park_id IN
+        <foreach collection="refParkIds" item="refParkIds" index="index" open="(" separator="," close=")">
+            #{refParkIds}
+        </foreach>      
+<!--     </if> -->
+
+
+<if test="refBuildingId != null and refBuildingId != ''" >
+		and c.id=#{refBuildingId}       
+    </if>
+    
+    <if test="refFloorId != null and refFloorId != ''" >
+		and d.id=#{refFloorId}       
+    </if>
+  	<if test="refBlockId != null and refBlockId != ''" >
+		and e.id=#{refBlockId}       
+    </if>
+
+
+<if test="startDate != null and startDate != ''" >
+
+and a.contract_start_date >= #{startDate}
+
+</if>
+  
+<if test="endDate != null and endDate != ''" >
+
+
+
+
+and ((a.contract_status &lt;> 5 and a.contract_end_date &lt;= #{endDate})
+
+
+
+
+
+or (a.contract_status = 5 and a.terminate_date &lt;= #{endDate})
+
+)
+
+</if>
+<if test="contractStatus != null and contractStatus != ''" >
+	and a.contract_status in (${contractStatus})
+	</if>
+
+</select>
+
+<select id="getOtherContractByLease" resultMap="BaseResultMap" >
+
+
+select * from etop_contract a where 
+
+1=1
+
+
+<if test="ids != null">
+		and a.ref_contract_lease_id IN
+        <foreach collection="ids" item="ids" index="index" open="(" separator="," close=")">
+            #{ids}
+        </foreach>   
+</if>
+
+and a.contract_category =${category}
+
+
+
+
+</select>
+
+
+
+<select id="getContractListByLeaseId"  resultMap="BaseResultMap" parameterType="string">
+
+select * from etop_contract a where 
+
+a.ref_contract_lease_id=#{leaseId}
+
+</select>
+
+<select id="getValidContractListByLeaseId" resultMap="BaseResultMap">
+
+select * from etop_contract a where 
+
+a.ref_contract_lease_id=#{leaseId}
+
+and a.contract_start_date &lt;=#{today}
+
+and a.contract_end_date >=#{today}
+
+and a.contract_status != 5
+
+</select>
+
+	<select id="getContractNum" resultType="com.etop.management.bean.Contract">
+		SELECT
+			COUNT(*) contractNum
+		FROM
+			(
+				SELECT
+					*
+				FROM
+					etop_contract
+				WHERE
+					ref_park_id =  #{parkId}
+		<![CDATA[
+				AND contract_start_date <= now()
+		]]>
+				<![CDATA[
+				AND contract_end_date >= now()
+		]]>
+				AND contract_status = 3
+				UNION
+					SELECT
+						*
+					FROM
+						etop_contract
+					WHERE
+						ref_park_id =  #{parkId}
+		<![CDATA[
+					AND contract_start_date <= now()
+		]]>
+				<![CDATA[
+					AND terminate_date >= now()
+		]]>
+					AND contract_status IN (- 5, 5)
+			) t1
+	</select>
+
+	<delete id="deleteContract" parameterType="string">
+		delete from etop_contract where id=#{id}
+	</delete>
+	
+<select id="getContractByNo" parameterType="map" resultType="com.etop.management.model.ContractModel">
+	select *
+	 from etop_contract where contract_no = #{contractNo}
+</select>
+<select id="ListbyCompanyId" parameterType="map" resultType="com.etop.management.model.ContractListModel">
+
+
+	select *,
+	(CASE
+		
+		WHEN
+			a.contract_status=5
+		THEN
+			a.terminate_date
+		ELSE 
+			a.contract_end_date
+	END)
+		
+		 AS	contractEndDate
+	 from etop_contract a where 1=1
+    and a.ref_company_id=#{refCompanyId}  
+   	<if test="contractCategory != null" >
+		and a.contract_category=#{contractCategory}       
+    </if> 
+    <if test="contractNo != null and contractNo != ''" >
+		and a.contract_no=#{contractNo}       
+    </if> 
+    <if test="contractStartDate != null and contractStartDate != ''" >
+		and a.contract_start_date &gt; #{contractStartDate}       
+    </if> 
+    <if test="contractEndDate != null and contractEndDate != ''" >
+<!-- 		and a.contract_end_date &lt; #{contractEndDate}      -->
+		and ((a.contract_status &lt;> 5 and a.contract_end_date &lt;= #{contractEndDate})
+
+		or (a.contract_status =5 and a.terminate_date &lt;= #{contractEndDate})
+		
+		)
+		  
+    </if> 
+</select>
+
+<select id="getContractByCompanyAndCategoryAndRoom"  resultMap="BaseResultMap">
+
+select * from etop_contract 
+
+where 
+
+ref_company_id=#{refCompanyId}
+
+and contract_category=#{contractCategory}
+
+<if test="refRoomId != null and refRoomId !='' ">
+	and ref_room_id=#{refRoomId}
+</if>
+
+and contract_status &lt;> 5 
+
+and contract_end_date >= #{todayStr}
+
+</select>
+
+
+<select id="getActiveContractsByCompanyAndCategory"  resultMap="BaseResultMap">
+
+select * from etop_contract 
+
+where 
+
+ref_company_id=#{refCompanyId}
+
+and contract_category=#{contractCategory}
+
+and contract_status = 3 
+
+and contract_start_date &lt;= #{todayStr}
+
+and contract_end_date >= #{todayStr}
+
+</select>
+
+
+
+<select id="getContractBillListByPark" resultMap="BaseResultMap">
+
+	select * from etop_contract 
+	
+	where 
+	
+	contract_status = 3 
+	
+	and ref_park_id=#{refParkId}
+
+
+	and
+	
+	( last_balance_date is null
+	
+		or (last_balance_date is not null and last_balance_date &lt; contract_end_date)
+	)
+	
+<!-- 	( (last_balance_date is null and contract_start_date &lt;= #{today}) -->
+	
+<!-- 		or (last_balance_date is not null and last_balance_date &lt; contract_end_date) -->
+<!-- 	) -->
+<!-- 	and contract_start_date &lt;= #{today} -->
+	
+<!-- 	and contract_end_date >= #{today} -->
+
+</select>
+
+<select id="getNormalCompany"  resultMap="BaseResultMap">
+
+SELECT
+	ref_room_id,ref_company_id
+FROM
+	etop_contract t1
+INNER JOIN etop_floor_room t2 ON t1.id = t2.constract_id
+WHERE
+    contract_status = 3
+AND 
+	contract_end_date >= #{todayStr}
+GROUP BY
+	ref_room_id
+ORDER BY
+	ref_company_id;
+</select>
+
+
+
+
+
+<select id="getNormalCompanyTwo"  resultMap="BaseResultMap">
+
+SELECT
+	ref_room_id,ref_company_id
+FROM
+	etop_contract t1
+INNER JOIN etop_floor_room t2 ON t1.id = t2.constract_id
+WHERE
+    contract_status = 5
+AND 
+	terminate_date >= #{todayStr}
+GROUP BY
+	ref_room_id
+ORDER BY
+	ref_company_id;
+
+</select>
+
+
+<select id="chaeckNormalCompany"  resultMap="BaseResultMap">
+
+SELECT
+	*
+FROM
+	etop_contract
+WHERE
+	ref_company_id = #{companyId}
+AND 
+	contract_start_date &lt;= NOW()
+AND 
+	contract_end_date >= NOW()
+ 
+GROUP BY
+	ref_company_id
+</select>
+
+<select id="getContractDepositByPark" resultMap="BaseResultMap">
+
+
+select * 
+
+from etop_contract a
+
+where
+
+a.contract_category=1
+ 
+and a.ref_park_id=#{refParkId} 
+
+and a.deposit>0
+
+and 
+
+(
+
+	(
+		a.contract_status=3 
+	
+		and 
+	
+		(
+		
+		 (a.contract_end_date &lt;= #{today} and a.deposit_bill_status=1) 
+		 
+		 or
+		 
+		 (a.contract_end_date > #{today} and a.deposit_bill_status=0)
+		
+		 
+		 )
+	 
+	 )
+	 
+	 or
+	 
+	 (
+	 
+	 	a.contract_status=5 and a.deposit_bill_status=1 
+	 
+	 )
+)
+
+</select>
+
+
+<select id="getRoomList"  resultMap="BaseResultMap">
+
+SELECT
+	T.*
+FROM
+	(
+		SELECT
+			*, (
+				CASE
+				WHEN contract_status != 3 
+				THEN
+					terminate_date
+				ELSE
+					contract_end_date
+				END
+			) AS contractEndDate
+		FROM
+			etop_contract
+		WHERE
+			contract_category = 1
+	) T
+WHERE
+	ref_company_id = #{refCompanyId}
+AND contractEndDate > NOW()
+
+</select>
+
+<select id="getRoom"  resultMap="BaseResultMap">
+
+SELECT
+	T.*
+FROM
+	(
+		SELECT
+			*, (
+				CASE
+				WHEN contract_status != 3 
+				THEN
+					terminate_date
+				ELSE
+					contract_end_date
+				END
+			) AS contractEndDate
+		FROM
+			etop_contract
+		WHERE
+			contract_category = 1
+	) T
+WHERE
+	ref_company_id = #{refCompanyId}
+AND contractEndDate > NOW()
+AND room = #{room}
+
+</select>
+
+</mapper>
+

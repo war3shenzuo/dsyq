@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.ContractServiceItemDao">
+
+<!-- Result Map-->
+<resultMap id="BaseResultMap" type="com.etop.management.bean.ContractServiceItem" >
+	<result column="id" property="id"/>
+	<result column="ref_park_id" property="refParkId"/>
+	<result column="service_name" property="serviceName"/>
+	<result column="service_desc" property="serviceDesc"/>
+	<result column="is_valid" property="isValid"/>
+			
+</resultMap>
+       
+<!-- etop_park table all fields -->
+<sql id="Base_Column_List" >
+	 id,ref_park_id,service_name,service_desc,is_valid
+</sql>
+
+<sql id="insert_value">
+
+	#{refParkId},#{serviceName},#{serviceDesc},#{isValid}
+</sql>
+
+<select id="getContractServiceItemById"  resultMap="BaseResultMap" parameterType="string">
+	select <include refid="Base_Column_List" /> 
+	 from etop_contract_service_item where id = #{id}
+</select>
+
+
+<select id="getContractServiceItemList"  resultMap="BaseResultMap">
+	select <include refid="Base_Column_List" /> 
+	 
+	 from etop_contract_service_item 
+	 
+	  where 1=1
+	  
+	  
+	 <if test="refParkId != null and refParkId != ''" >
+		 and ref_park_id = #{refParkId}       
+    </if>
+	   
+	 <if test="isValid != null" >
+		 and is_valid = ${isValid}       
+    </if>
+	 	 
+	 
+</select>
+
+<delete id="deleteContractServiceItem" parameterType="string">
+
+	delete from etop_contract_service_item where id=#{id}
+
+</delete>
+
+
+<insert id="createContractServiceItem" parameterType="com.etop.management.bean.ContractServiceItem">
+
+insert into etop_contract_service_item (<include refid="Base_Column_List" />)
+values
+(#{id},<include refid="insert_value" />)
+
+</insert>
+
+<update id="updateContractServiceItem" parameterType="com.etop.management.bean.ContractServiceItem">
+
+
+	update etop_contract_service_item set 
+	
+	service_name=#{serviceName},
+	
+	service_desc=#{serviceDesc},is_valid=#{isValid}
+	
+	where id=#{id}
+
+
+</update>
+</mapper>
+

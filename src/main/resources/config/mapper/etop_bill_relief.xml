@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopBillReliefDao">
+	<select id="findById" resultType="com.etop.management.entity.EtopBillRelief">
+		SELECT * FROM etop_bill_relief WHERE relief_id=#{_parameter}
+	</select>
+	<select id="listByIds" resultType="com.etop.management.entity.EtopBillRelief">
+		SELECT * FROM etop_bill_relief WHERE relief_id IN
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+	<select id="listByBillId" parameterType="string"
+		resultType="com.etop.management.entity.EtopBillRelief">
+		SELECT * FROM etop_bill_relief
+		WHERE deleted=0 AND bill_id=#{_parameter}
+	</select>
+	
+	<select id="listByParkId" parameterType="map"
+		resultType="com.etop.management.entity.EtopBillRelief">
+		SELECT t1.* FROM
+		etop_bill_relief t1 INNER JOIN etop_bill t2
+		ON t1.bill_id=t2.bill_id
+		WHERE t1.deleted=0
+		<if test="auditStatus != null">
+			AND t1.audit_status=#{auditStatus}
+		</if>
+		<if test="parkId != null">
+			AND t2.park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND t2.park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="listWithBill" parameterType="map"
+		resultType="com.etop.management.bean.BillReliefBean">
+		SELECT t1.*, t2.company_name,t2.amount,t2.overdue_fine,t2.account_remission as amount_relieved, t2.overdue_remission as overdue_relieved
+		FROM etop_bill_relief t1 INNER JOIN etop_bill t2
+		ON t1.bill_id=t2.bill_id
+		WHERE t1.deleted=0
+		<if test="audited != null and audited">
+			AND t1.audit_status&gt;0
+		</if>
+		<if test="audited != null and !audited">
+			AND t1.audit_status=0
+		</if>
+		<if test="parkId != null">
+			AND t2.park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND t2.park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="listWithUserByParkId" parameterType="map"
+		resultType="com.etop.management.bean.BillReliefWithUser">
+		SELECT t1.*, t3.user_name AS applicant_name
+		FROM etop_bill_relief t1 INNER JOIN etop_bill t2 INNER JOIN etop_user t3
+		ON t1.bill_id=t2.bill_id AND t1.applicant=t3.id
+		WHERE t1.deleted=0
+		<if test="auditStatus != null">
+			AND t1.audit_status=#{auditStatus}
+		</if>
+		<if test="parkId != null">
+			AND t2.park_id=#{parkId}
+		</if>
+		<if test="parkIds != null">
+			AND t2.park_id IN
+			<foreach collection="parkIds" item="id" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="list" parameterType="map" resultType="com.etop.management.entity.EtopBillRelief">
+		SELECT * FROM etop_bill_relief WHERE deleted=0
+		<if test="billId != null">
+			AND bill_id=#{billId}
+		</if>
+		<if test="amountRemission != null">
+			AND amount_remission=#{amountRemission}
+		</if>
+		<if test="overdueRemission != null">
+			AND overdue_remission=#{overdueRemission}
+		</if>
+		<if test="reason != null">
+			AND reason=#{reason}
+		</if>
+		<if test="applicant != null">
+			AND applicant=#{applicant}
+		</if>
+		<if test="applyTime != null">
+			AND apply_time=#{applyTime}
+		</if>
+		<if test="auditStatus != null">
+			AND audit_status=#{auditStatus}
+		</if>
+		<if test="auditor != null">
+			AND auditor=#{auditor}
+		</if>
+		<if test="auditTime != null">
+			AND audit_time=#{auditTime}
+		</if>
+	</select>
+	<select id="listWithUser" parameterType="map" resultType="com.etop.management.bean.BillReliefWithUser">
+		SELECT t1.*,t2.user_name as applicant_name
+		FROM etop_bill_relief t1 LEFT JOIN etop_user t2
+		ON t1.applicant=t2.id
+		WHERE t1.deleted=0
+		<if test="billId != null">
+			AND t1.bill_id=#{billId}
+		</if>
+		<if test="amountRemission != null">
+			AND t1.amount_remission=#{amountRemission}
+		</if>
+		<if test="overdueRemission != null">
+			AND t1.overdue_remission=#{overdueRemission}
+		</if>
+		<if test="reason != null">
+			AND t1.reason=#{reason}
+		</if>
+		<if test="applicant != null">
+			AND t1.applicant=#{applicant}
+		</if>
+		<if test="auditStatus != null">
+			AND t1.audit_status=#{auditStatus}
+		</if>
+		<if test="auditor != null">
+			AND t1.auditor=#{auditor}
+		</if>
+	</select>
+	
+	<!-- 插入记录 -->
+	<insert id="add" parameterType="com.etop.management.entity.EtopBillRelief">
+		INSERT INTO etop_bill_relief
+		(relief_id,bill_id,amount_remission,overdue_remission,reason,applicant,apply_time,audit_status,auditor,audit_time)
+		VALUES(#{reliefId},#{billId},#{amountRemission},#{overdueRemission},#{reason},#{applicant},#{applyTime},#{auditStatus},#{auditor},#{auditTime})
+	</insert>
+
+	<!-- 批量插入记录 -->
+	<insert id="adds" parameterType="com.etop.management.entity.EtopBillRelief">
+		INSERT INTO
+		etop_bill_relief(relief_id,bill_id,amount_remission,overdue_remission,reason,applicant,apply_time,audit_status,auditor,audit_time)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{reliefId},#{billId},#{amountRemission},#{overdueRemission},#{reason},#{applicant},#{applyTime},#{auditStatus},#{auditor},#{auditTime})
+		</foreach>
+	</insert>
+
+	<!-- 根据id，修改记录 -->
+	<update id="update" parameterType="com.etop.management.entity.EtopBillRelief">
+		UPDATE etop_bill_relief SET
+		bill_id=#{billId},amount_remission=#{amountRemission},overdue_remission=#{overdueRemission},reason=#{reason},
+		applicant=#{applicant},apply_time=#{applyTime},audit_status=#{auditStatus},auditor=#{auditor},audit_time=#{auditTime}
+		where relief_id=#{reliefId}
+	</update>
+	
+	<update id="updateSelective" parameterType="com.etop.management.entity.EtopBillRelief">
+		UPDATE etop_bill_relief SET
+		<trim suffixOverrides=",">
+			<if test="billId != null">
+				bill_id=#{billId},
+			</if>
+			<if test="amountRemission != null">
+				amount_remission=#{amountRemission},
+			</if>
+			<if test="overdueRemission != null">
+				overdue_remission=#{overdueRemission},
+			</if>
+			<if test="reason != null">
+				reason=#{reason},
+			</if>
+			<if test="applicant != null">
+				applicant=#{applicant},
+			</if>
+			<if test="applyTime != null">
+				apply_time=#{applyTime},
+			</if>
+			<if test="auditor != null">
+				auditor=#{auditor},
+			</if>
+			<if test="auditTime != null">
+				audit_time=#{auditTime},
+			</if>
+		</trim>
+		where relief_id=#{reliefId}
+	</update>
+
+	<!-- 删除记录 -->
+	<update id="delete" parameterType="string">
+		UPDATE etop_bill_relief SET deleted=1 WHERE relief_id=#{_parameter}
+	</update>
+	
+	<update id="deletes">
+		UPDATE etop_bill_relief SET deleted=1
+		WHERE audit_status=0 AND relief_id IN
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	
+	<update id="setAuditByIds" parameterType="map">
+		UPDATE etop_bill_relief
+		SET audit_status=#{auditStatus},auditor=#{auditor},audit_time=NOW()
+		WHERE relief_id IN
+		<foreach collection="reliefIds" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+</mapper>
