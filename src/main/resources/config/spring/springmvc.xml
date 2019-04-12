@@ -16,12 +16,7 @@
 	  http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 
 	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
-	<context:component-scan base-package="com.etop.**.controller" />
-	
-<!-- 	<context:component-scan base-package="com.etop.**.job" /> -->
-
-<!-- <context:component-scan base-package="com.etop" /> -->
-
+	<context:component-scan base-package="com.etop.**.controller,com.etop.management.controllernew"  />
 
 	<!-- 开启注解方案 -->
 	<mvc:annotation-driven />
@@ -47,65 +42,65 @@
 		value="10485760000" /> <property name="maxInMemorySize" value="40960" /> 
 		</bean> -->
 
-	<mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/**" />
-			<bean id="loginInterceptor" class="com.etop.management.interceptor.LoginInterceptor">
-				<property name="allowUrls">
-					<list>
-						<!-- 如果请求中包含以下路径，则不进行拦截 -->
-						<value>/subdomain/forward.do</value>
-						<value>/getEtopOfflinePrograms.do</value>
-						<value>/getEtopOfflineTraining.do</value>
-						<value>/getOfflineProgramsInformation.do</value>
-						<value>/getOfflineTrainingInformation.do</value>
-						<value>/getOnlineInformation.do</value>
-						<value>/getProgramsInfo.do</value>
-						<value>/getTrainingInfo.do</value>
-						<value>/getOnlineInfo.do</value>
-						<value>/getOnlineTraining.do</value>
-						<value>/getEtopQuestionBank.do</value>
-						<value>/etopOnlineTrainingList.do</value>
-						<value>/getCity2.do</value>
-						<value>/getPGServiceTypeList.do</value>
-						<value>/login.do</value>
-						<value>/addEtopCompanyIntentionInfo.do</value>
-						<value>/loginCheck.do</value>
-						<value>/forgetPassword.do</value>
-						<value>/sendSmsCode.do</value>
-						<value>/logout.do</value>
-						<value>/webIndex.do</value>
-						<value>/managerlogin.do</value>
-						<value>/about</value>
-						<value>/webecollege</value>
-						<value>/siteIndex.do</value>
-						<value>/webinpark</value>
-						<value>/webolmerchants</value>
-						<value>/websettled</value>
-						<value>/webnews</value>
-						<value>/webparkservice</value>
-						<value>/register</value>
-						<value>/js</value>
-						<value>/myjs</value>
-						<value>/css</value>
-						<value>/img</value>
-						<value>/fonts</value>
-						<value>/plugins</value>
-						<value>/forgetPass.do</value>
-						<value>/accountManaget.do</value>
-						<value>/accountManaget2.do</value>
-						<value>/engagement</value>
-						<value>/remind</value>
-						<value>/quotation</value>
-						<value>/reply</value>
-						<value>/etopVote</value>
-						<value>/Parkactivity</value>
-						<value>/etopTrainSchedule</value>
-					</list>
-				</property>
-			</bean>
-		</mvc:interceptor>
-	</mvc:interceptors>
+	<!--<mvc:interceptors>-->
+		<!--<mvc:interceptor>-->
+			<!--<mvc:mapping path="/**" />-->
+			<!--<bean id="loginInterceptor" class="com.etop.management.interceptor.LoginInterceptor">-->
+				<!--<property name="allowUrls">-->
+					<!--<list>-->
+						<!--&lt;!&ndash; 如果请求中包含以下路径，则不进行拦截 &ndash;&gt;-->
+						<!--<value>/subdomain/forward.do</value>-->
+						<!--<value>/getEtopOfflinePrograms.do</value>-->
+						<!--<value>/getEtopOfflineTraining.do</value>-->
+						<!--<value>/getOfflineProgramsInformation.do</value>-->
+						<!--<value>/getOfflineTrainingInformation.do</value>-->
+						<!--<value>/getOnlineInformation.do</value>-->
+						<!--<value>/getProgramsInfo.do</value>-->
+						<!--<value>/getTrainingInfo.do</value>-->
+						<!--<value>/getOnlineInfo.do</value>-->
+						<!--<value>/getOnlineTraining.do</value>-->
+						<!--<value>/getEtopQuestionBank.do</value>-->
+						<!--<value>/etopOnlineTrainingList.do</value>-->
+						<!--<value>/getCity2.do</value>-->
+						<!--<value>/getPGServiceTypeList.do</value>-->
+						<!--<value>/login.do</value>-->
+						<!--<value>/addEtopCompanyIntentionInfo.do</value>-->
+						<!--<value>/loginCheck.do</value>-->
+						<!--<value>/forgetPassword.do</value>-->
+						<!--<value>/sendSmsCode.do</value>-->
+						<!--<value>/logout.do</value>-->
+						<!--<value>/webIndex.do</value>-->
+						<!--<value>/managerlogin.do</value>-->
+						<!--<value>/about</value>-->
+						<!--<value>/webecollege</value>-->
+						<!--<value>/siteIndex.do</value>-->
+						<!--<value>/webinpark</value>-->
+						<!--<value>/webolmerchants</value>-->
+						<!--<value>/websettled</value>-->
+						<!--<value>/webnews</value>-->
+						<!--<value>/webparkservice</value>-->
+						<!--<value>/register</value>-->
+						<!--<value>/js</value>-->
+						<!--<value>/myjs</value>-->
+						<!--<value>/css</value>-->
+						<!--<value>/img</value>-->
+						<!--<value>/fonts</value>-->
+						<!--<value>/plugins</value>-->
+						<!--<value>/forgetPass.do</value>-->
+						<!--<value>/accountManaget.do</value>-->
+						<!--<value>/accountManaget2.do</value>-->
+						<!--<value>/engagement</value>-->
+						<!--<value>/remind</value>-->
+						<!--<value>/quotation</value>-->
+						<!--<value>/reply</value>-->
+						<!--<value>/etopVote</value>-->
+						<!--<value>/Parkactivity</value>-->
+						<!--<value>/etopTrainSchedule</value>-->
+					<!--</list>-->
+				<!--</property>-->
+			<!--</bean>-->
+		<!--</mvc:interceptor>-->
+	<!--</mvc:interceptors>-->
 
 
 </beans>

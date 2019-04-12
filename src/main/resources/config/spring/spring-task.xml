@@ -1,66 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:p="http://www.springframework.org/schema/p" xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:task="http://www.springframework.org/schema/task"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
       http://www.springframework.org/schema/context
       http://www.springframework.org/schema/context/spring-context-4.0.xsd
-      http://www.springframework.org/schema/mvc
-      http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
-      http://www.springframework.org/schema/tx
-      http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
-      http://www.springframework.org/schema/aop
-	  http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
 	  http://www.springframework.org/schema/task
 	  http://www.springframework.org/schema/task/spring-task-4.0.xsd">
 
-<!-- <context:component-scan base-package="com.etop.**.dao" /> -->
-	<context:component-scan base-package="com.etop.**.service" />
-<context:component-scan base-package="com.etop.**.job" />
-	<task:scheduler id="scheduler" pool-size="5" />
+    <context:component-scan base-package="com.etop.**.service"/>
+    <context:component-scan base-package="com.etop.**.job"/>
+    <context:component-scan base-package="com.etop.**.servicenew"/>
+
+    <task:scheduler id="scheduler" pool-size="5"/>
 
 
+    <!-- 此处对于定时时间的配置会被注解中的时间配置覆盖，因此，以注解配置为准 -->
+    <task:scheduled-tasks scheduler="scheduler">
+
+        <task:scheduled ref="scheduledTaskManager" method="execute"
+                        cron="0 5 0 * * ?"/>
+        <!-- 		<task:scheduled ref="scheduledTaskManager" method="etopCompanyMaintainRemind" -->
+        <!-- 			cron="0 15 0 * * ?" /> -->
+        <task:scheduled ref="scheduledTaskManager" method="etopCompanyIntentionRemind"
+                        cron="0 30 0 * * ?"/>
+        <task:scheduled ref="scheduledTaskManager" method="etopTrainPlanRemind"
+                        cron="0 42 0 * * ?"/>
+        <task:scheduled ref="scheduledTaskManager" method="addBill"
+                        cron="0 58 0 * * ?"/>
+        <task:scheduled ref="scheduledTaskManager" method="FacilityStatus"
+                        cron="0 0 */1 * * ?"/>
+        <task:scheduled ref="scheduledTaskManager" method="OutStatusOfCompany"
+                        cron="0 27 1 * * ?"/>
+        <task:scheduled ref="scheduledTaskManager" method="FloorStatus"
+                        cron="0 42 1 * * ?"/>
+        <task:scheduled ref="scheduledTaskManager" method="profitLossRemind"
+                        cron="0 0 0 * * ?"/>
+        <task:scheduled ref="scheduledTaskManager" method="billForAllContract"
+                        cron="0 12 2 * * ?"/>
+        <task:scheduled ref="scheduledTaskManager" method="billForEnergy"
+                        cron="0 43 2 * * ?"/>
+        <task:scheduled ref="scheduledTaskManager" method="billForContractDeposit"
+                        cron="0 0 11 * * ?"/>
+        <task:scheduled ref="scheduledTaskManager" method="TrainStatus"
+                        cron="0 0 */1 * * ?"/>
 
 
-	<!-- 此处对于定时时间的配置会被注解中的时间配置覆盖，因此，以注解配置为准 -->
-	<task:scheduled-tasks scheduler="scheduler">
-	
-		<task:scheduled ref="scheduledTaskManager" method="execute"
-			cron="0 5 0 * * ?" />
-<!-- 		<task:scheduled ref="scheduledTaskManager" method="etopCompanyMaintainRemind" -->
-<!-- 			cron="0 15 0 * * ?" /> -->
-			<task:scheduled ref="scheduledTaskManager" method="etopCompanyIntentionRemind"
-			cron="0 30 0 * * ?" />
-		<task:scheduled ref="scheduledTaskManager" method="etopTrainPlanRemind"
-			cron="0 42 0 * * ?" />
-			<task:scheduled ref="scheduledTaskManager" method="addBill"
-			cron="0 58 0 * * ?" />
-		<task:scheduled ref="scheduledTaskManager" method="FacilityStatus"
-			cron="0 0 */1 * * ?" />
-			<task:scheduled ref="scheduledTaskManager" method="OutStatusOfCompany"
-			cron="0 27 1 * * ?" />
-		<task:scheduled ref="scheduledTaskManager" method="FloorStatus"
-			cron="0 42 1 * * ?" />
-		<task:scheduled ref="scheduledTaskManager" method="profitLossRemind"
-			cron="0 0 0 * * ?" />
-		<task:scheduled ref="scheduledTaskManager" method="billForAllContract"
-			cron="0 12 2 * * ?" />
-		<task:scheduled ref="scheduledTaskManager" method="billForEnergy"
-			cron="0 43 2 * * ?" />			
-		<task:scheduled ref="scheduledTaskManager" method="billForContractDeposit"
-			cron="0 0 11 * * ?" />
-		<task:scheduled ref="scheduledTaskManager" method="TrainStatus"
-			cron="0 0 */1 * * ?" />	
-		
-			
-	</task:scheduled-tasks>
+    </task:scheduled-tasks>
 
 
+    <task:annotation-driven scheduler="scheduler"/>
 
-	<task:annotation-driven scheduler="scheduler" />
 
-	
 </beans>
