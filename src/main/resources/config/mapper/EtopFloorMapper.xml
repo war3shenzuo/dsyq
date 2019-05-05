@@ -328,9 +328,33 @@ where 1=1
 
 </select>
 
+    <!-- 查询列表 -->
+    <select id="queryFloorList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+        select
+        <include refid="Base_Column_List"/>
+        from etop_floor
+        where 1=1 and
+
+        build_type = 'floor'
+
+        <if test="condition.parkId != null and condition.parkId != ''" >
+            and park_id =  #{condition.parkId}
+        </if>
+
+        <if test="condition.status != null and condition.status != ''" >
+            and status =  #{condition.status}
+        </if>
+
+        <if test="orderByClause != null and orderByClause != ''" >
+            order by  ${orderByClause}
+        </if>
+
+    </select>
 
 
-<select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+
+
+    <select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
 	${myDefinedSql}
 </select>
 

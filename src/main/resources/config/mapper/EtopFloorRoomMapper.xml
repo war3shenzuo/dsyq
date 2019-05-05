@@ -703,4 +703,22 @@ where 1=1
 		</foreach>
 
 	</delete>
+
+    <select id="getRoomCount" resultType="Map"  parameterType="com.etop.management.bean.Criteria">
+      select f.floor_status floorStatus,count(*) count from `etop_floor_room` f
+        <where>
+        <if test="condition.idType == 'area'">
+
+            and ref_area_id=#{condition.id}
+
+        </if>
+
+        <if test="condition.idType=='storey'">
+
+            and ref_storey_id=#{condition.id}
+
+        </if>
+        </where>
+        group by f.`floor_status`
+    </select>
 </mapper>   

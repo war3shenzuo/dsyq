@@ -1,14 +1,18 @@
-package com.etop.management.entity;
+package com.etop.management.bean;
+
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
- * <br>
- * <b>功能：</b>EtopFloorEntity<br>
+ * Created by Intellij IDEA
+ * User: shixianjie
+ * Date: 2019/4/15
+ * Time: 3:16 PM
  */
-public class EtopFloor {
+public class EtopFloorPage  extends PageParam{
+
 
 
     public static final String TYPE_FLOOR = "floor";
@@ -35,10 +39,6 @@ public class EtopFloor {
 
     private String energyBillDate;//能源出帐日，如3-1
 
-    //	private Date energyPowerFeeDate;
-//	private Date energyWaterFeeDate;
-//	private Date energyGasFeeDate;
-//	private Date energyAcFeeDate;
     private Date energyLastBillDate;//本楼最后出帐日，初始为创建日期
 
     private Date energyLastFeeDate;//本楼最后结算日，第一次录入楼能源时，会被要求补录
@@ -96,30 +96,7 @@ public class EtopFloor {
         this.energyBillDate = energyBillDate;
     }
 
-    //	public Date getEnergyPowerFeeDate() {
-//		return energyPowerFeeDate;
-//	}
-//	public void setEnergyPowerFeeDate(Date energyPowerFeeDate) {
-//		this.energyPowerFeeDate = energyPowerFeeDate;
-//	}
-//	public Date getEnergyWaterFeeDate() {
-//		return energyWaterFeeDate;
-//	}
-//	public void setEnergyWaterFeeDate(Date energyWaterFeeDate) {
-//		this.energyWaterFeeDate = energyWaterFeeDate;
-//	}
-//	public Date getEnergyGasFeeDate() {
-//		return energyGasFeeDate;
-//	}
-//	public void setEnergyGasFeeDate(Date energyGasFeeDate) {
-//		this.energyGasFeeDate = energyGasFeeDate;
-//	}
-//	public Date getEnergyAcFeeDate() {
-//		return energyAcFeeDate;
-//	}
-//	public void setEnergyAcFeeDate(Date energyAcFeeDate) {
-//		this.energyAcFeeDate = energyAcFeeDate;
-//	}
+
     public Integer getSourceCharge() {
         return sourceCharge;
     }
@@ -220,7 +197,7 @@ public class EtopFloor {
     }
 
     //	public Date getEnergyFeeDate(int energyType)
-//	{	
+//	{
 //		switch(energyType)
 //		{
 //		case 0:
@@ -291,4 +268,3 @@ public class EtopFloor {
         this.roomNum = roomNum;
     }
 }
-

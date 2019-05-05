@@ -62,5 +62,8 @@ public interface EtopFloorDao {
 	
 //	public EtopFloor updateByParentId(String id,String status);
 	public int updateByParentId(EtopFloor floor);
-	
+
+    List<EtopFloor> queryFloorList(Criteria c);
+
+
 }
