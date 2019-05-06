@@ -49,4 +49,28 @@ public interface NewEtopFloorService {
      * @return
      */
     EtopFloor getFloorInfo(String floorId);
+
+    /**
+     * 新增房间
+     * @param room
+     */
+    void addRoom(EtopFloorRoom room) throws Exception;
+
+    /**
+     * 删除层
+     * @param areaId
+     */
+    void delArea(String areaId) throws Exception;
+
+    /**
+     * 删除层
+     * @param storeyId
+     */
+    void delStorey(String storeyId);
+
+    /**
+     * 修改楼层区
+     * @param floor
+     */
+    void updateFloor(EtopFloor floor);
 }

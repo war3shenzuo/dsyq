@@ -6,6 +6,7 @@ import com.etop.management.controller.BaseAppController;
 import com.etop.management.entity.EtopFloor;
 import com.etop.management.entity.EtopFloorRoom;
 import com.etop.management.servicenew.NewEtopFloorService;
+import com.etop.website.bean.Floor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,28 @@ public class NewEtopFloorResource extends BaseAppController {
 
         try {
             newEtopFloorService.addArea(area);
+            return ResultType.getSuccess("新增成功");
+
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            e.printStackTrace();
+            return ResultType.getFail("服务器出错");
+        }
+
+    }
+
+    /**
+     * 新增区
+     *
+     * @param room
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/addRoom.do", method = RequestMethod.POST)
+    public ResultType addRoom(EtopFloorRoom room) {
+
+        try {
+            newEtopFloorService.addRoom(room);
             return ResultType.getSuccess("新增成功");
 
         } catch (Exception e) {
@@ -207,5 +230,38 @@ public class NewEtopFloorResource extends BaseAppController {
             }
         }
     }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/delStorey.do", method = RequestMethod.DELETE)
+    public ResultType delStorey(String storeyId) throws Exception {
+        if (StringUtils.isNotBlank(storeyId)) {
+            try {
+                newEtopFloorService.delStorey(storeyId);
+                return ResultType.getSuccess("操作成功");
+
+            } catch (Exception e) {
+                return ResultType.getFail(e.getMessage());
+            }
+        } else {
+            return ResultType.getFail("参数错误");
+        }
+
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/updateFloor.do", method = RequestMethod.PUT)
+    public ResultType updateFloor(EtopFloor floor) throws Exception {
+        try {
+            newEtopFloorService.updateFloor(floor);
+            return ResultType.getSuccess("操作成功");
+
+        } catch (Exception e) {
+            return ResultType.getFail(e.getMessage());
+        }
+    }
+
+
+
 
 }

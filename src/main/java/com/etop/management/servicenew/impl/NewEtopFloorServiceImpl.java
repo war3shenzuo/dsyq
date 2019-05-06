@@ -11,6 +11,7 @@ import com.etop.management.service.impl.EtopFloorServiceImpl;
 import com.etop.management.util.UserInfoUtil;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -22,6 +23,7 @@ import java.util.*;
  * @date 2019/4/15
  */
 @Service
+@Transactional
 public class NewEtopFloorServiceImpl implements NewEtopFloorService {
 
     @Resource
@@ -108,19 +110,81 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
 
     @Override
     public List<Map> getRoomCount(String id, String type) {
-        return etopFloorRoomDao.getRoomCount( new Criteria().put("id", id).put("idType", type));
+        return etopFloorRoomDao.getRoomCount(new Criteria().put("id", id).put("idType", type));
     }
 
     @Override
     public EtopFloor getFloorInfo(String floorId) {
 
-        EtopFloor etopFloor=new EtopFloor();
+        EtopFloor etopFloor = new EtopFloor();
         etopFloor.setId(floorId);
-        List<Map<String,Object>> map = etopFloorDao.getFloorEnergyInfo(floorId);
+        List<Map<String, Object>> map = etopFloorDao.getFloorEnergyInfo(floorId);
         EtopFloor ef = etopFloorDao.queryObject(etopFloor);
         ef.setNy(map);
         return ef;
 
+    }
+
+    @Override
+    public void addRoom(EtopFloorRoom room) throws Exception {
+        room.setId(UUID.randomUUID().toString());
+        room.setCreatedAt(new Date());
+
+        Map<String, String> res = etopFloorRoomDao.getFloorIdByAreaId(room.getRefAreaId());
+        if (res == null) {
+            throw new RuntimeException("没有找到对应的区域");
+        }
+        room.setRefStoreyId(res.get("id"));
+        room.setRefFloorId(res.get("parentId"));
+        //根据区id查楼和层id
+        EtopFloorRoom checkRoom = new EtopFloorRoom();
+        checkRoom.setRoomNum(room.getRoomNum());
+        checkRoom.setRefStoreyId(res.get("id"));
+        EtopFloorRoom check = etopFloorRoomDao.queryObject(checkRoom);
+        if (check != null) {
+            throw new RuntimeException("房间号已经存在");
+        }
+        etopFloorRoomDao.add(room);
+    }
+
+    @Override
+    public void delArea(String areaId) throws Exception {
+
+        //判断是否还有房间没有删除
+        int count = etopFloorRoomDao.queryByCount(new Criteria().put("refAreaId", areaId));
+        if (count > 0) {
+            throw new RuntimeException("此区域还有房间!请先删除房间");
+        }
+        EtopFloor ef = new EtopFloor();
+        ef.setId(areaId);
+        //删掉区的楼房
+        etopFloorDao.delete(ef);
+    }
+
+    @Override
+    public void delStorey(String storeyId) {
+        //判断楼层是否还有区
+        int count = etopFloorDao.queryByCount(new Criteria().put("parentId", storeyId));
+        if (count > 0) {
+            throw new RuntimeException("此楼层还有区域!请先删除区域");
+        }
+
+        EtopFloor ef = new EtopFloor();
+        ef.setId(storeyId);
+        //删掉区的楼房
+        etopFloorDao.delete(ef);
+
+    }
+
+    @Override
+    public void updateFloor(EtopFloor floor) {
+        updateAllFloor(floor);
+    }
+
+
+
+    public void updateAllFloor(EtopFloor floor) {
+        etopFloorDao.updateBySelective(floor);
     }
 
 
