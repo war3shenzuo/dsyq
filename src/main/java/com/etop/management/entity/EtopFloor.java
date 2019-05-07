@@ -39,19 +39,45 @@ public class EtopFloor {
 //	private Date energyWaterFeeDate;
 //	private Date energyGasFeeDate;
 //	private Date energyAcFeeDate;
-    private Date energyLastBillDate;//本楼最后出帐日，初始为创建日期
-
-    private Date energyLastFeeDate;//本楼最后结算日，第一次录入楼能源时，会被要求补录
+    //本楼最后出帐日，初始为创建日期
+    private Date energyLastBillDate;
+    //本楼最后结算日，第一次录入楼能源时，会被要求补录
+    private Date energyLastFeeDate;
 
     private String dian;
     private String shui;
     private String ranqi;
     private String kongtiao;
-
-
-
     private String roomNum;
 
+
+    private String floormj;//楼阀值-楼层面积
+    private String roomdj;//楼阀值-房间单价
+    private String roomyj;//楼阀值-房间押金
+
+    public String getFloormj() {
+        return floormj;
+    }
+
+    public void setFloormj(String floormj) {
+        this.floormj = floormj;
+    }
+
+    public String getRoomdj() {
+        return roomdj;
+    }
+
+    public void setRoomdj(String roomdj) {
+        this.roomdj = roomdj;
+    }
+
+    public String getRoomyj() {
+        return roomyj;
+    }
+
+    public void setRoomyj(String roomyj) {
+        this.roomyj = roomyj;
+    }
 
     public Date getCreatedAt() {
         return createdAt;
@@ -61,7 +87,8 @@ public class EtopFloor {
         this.createdAt = createdAt;
     }
 
-    private List<Map<String, Object>> ny;//所有能源
+    //所有能源
+    private List<Map<String, Object>> ny;
 
 
     public Integer getEnergyEnterType() {

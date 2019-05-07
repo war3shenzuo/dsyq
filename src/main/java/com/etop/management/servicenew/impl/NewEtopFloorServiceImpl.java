@@ -38,6 +38,8 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
     @Override
     public void addFloor(EtopFloor floor) throws Exception {
         addfloor(floor);
+        floor.setFloormj(floor.getBuildArea());
+        etopFloorDao.insertFloorFz(floor);
 
         for (int i = 0; i < 4; i++) {
             String s;
@@ -121,6 +123,12 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
         List<Map<String, Object>> map = etopFloorDao.getFloorEnergyInfo(floorId);
         EtopFloor ef = etopFloorDao.queryObject(etopFloor);
         ef.setNy(map);
+        Map fz = etopFloorDao.queryFloorFz(floorId);
+        if (fz != null) {
+            ef.setFloormj((String) fz.get("floormj"));
+            ef.setRoomdj((String) fz.get("roomdj"));
+            ef.setRoomyj((String) fz.get("roomyj"));
+        }
         return ef;
 
     }
@@ -167,8 +175,8 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
         int count = etopFloorDao.queryByCount(new Criteria().put("parentId", storeyId));
         if (count > 0) {
             throw new RuntimeException("此楼层还有区域!请先删除区域");
-        }
 
+        }
         EtopFloor ef = new EtopFloor();
         ef.setId(storeyId);
         //删掉区的楼房
@@ -177,10 +185,10 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
     }
 
     @Override
-    public void updateFloor(EtopFloor floor) {
+    public void updateFloor(EtopFloor floor) throws Exception {
         updateAllFloor(floor);
+        etopFloorDao.updateFloorFz(floor);
     }
-
 
 
     public void updateAllFloor(EtopFloor floor) {

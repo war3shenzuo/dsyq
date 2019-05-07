@@ -6,7 +6,6 @@ import com.etop.management.controller.BaseAppController;
 import com.etop.management.entity.EtopFloor;
 import com.etop.management.entity.EtopFloorRoom;
 import com.etop.management.servicenew.NewEtopFloorService;
-import com.etop.website.bean.Floor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -255,8 +254,8 @@ public class NewEtopFloorResource extends BaseAppController {
         try {
             newEtopFloorService.updateFloor(floor);
             return ResultType.getSuccess("操作成功");
-
         } catch (Exception e) {
+            e.printStackTrace();
             return ResultType.getFail(e.getMessage());
         }
     }

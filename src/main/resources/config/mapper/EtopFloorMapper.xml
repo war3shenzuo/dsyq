@@ -1,335 +1,338 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.etop.management.dao.EtopFloorDao" > 
-<!-- Result Map-->
-<resultMap id="BaseResultMap" type="com.etop.management.entity.EtopFloor" >
-	<result column="id" property="id"/>
-	<result column="build_name" property="buildName"/>
-	<result column="build_type" property="buildType"/>
-	<result column="parent_id" property="parentId"/>
-	<result column="remark" property="remark"/>
-	<result column="status" property="status"/>
-	<result column="build_img" property="buildImg"/>
-	<result column="park_id" property="parkId"/>
-	
-	<result column="source_charge" property="sourceCharge"/>
-	
-	<result column="energy_enter_type" property="energyEnterType"/>
-	<result column="energy_enter_day" property="energyEnterDay"/>
-	
-	<result column="energy_payment_day" property="energyPaymentDay"/>
-	<result column="energy_bill_date" property="energyBillDate"/>
-	
-<!-- 	<result column="energy_power_fee_date" property="energyPowerFeeDate"/> -->
-<!-- 	<result column="energy_water_fee_date" property="energyWaterFeeDate"/> -->
-<!-- 	<result column="energy_gas_fee_date" property="energyGasFeeDate"/> -->
-<!-- 	<result column="energy_ac_fee_date" property="energyAcFeeDate"/> -->
-	<result column="energy_last_bill_date" property="energyLastBillDate"/>
-	<result column="energy_last_fee_date" property="energyLastFeeDate"/>
-</resultMap>
-       
-<!-- etop_floor table all fields -->
-<sql id="Base_Column_List" >
-	 id,build_name,build_type,parent_id,remark,status,build_img,park_id,buildArea,
-	 sourceCharge,energy_enter_type,energy_enter_day,energy_payment_day,energy_bill_date,
-<!-- 	 energy_power_fee_date,energy_water_fee_date,energy_gas_fee_date,energy_ac_fee_date, -->
-	 energy_last_bill_date,energy_last_fee_date
-	 
-</sql>
-   
-   
-<!-- 查询条件 -->
-<sql id="Example_Where_Clause">
-where 1=1
-<trim  suffixOverrides="," >
-		<if test="condition.id != null and condition.id != ''" >
-	    and id =  #{condition.id}
-	</if>
-	
-			<if test="nocondition.id != null and nocondition.id != ''" >
-	    and id not in  (#{nocondition.id})
-	</if>
-	
-		<if test="condition.buildName != null and condition.buildName != ''" >
-	    and build_name =  #{condition.buildName}
-	</if>
-	
-			<if test="nocondition.buildName != null and nocondition.buildName != ''" >
-	    and build_name not in  (#{nocondition.buildName})
-	</if>
-	
-		<if test="condition.buildType != null and condition.buildType != ''" >
-	    and build_type =  #{condition.buildType}
-	</if>
-	
-			<if test="nocondition.buildType != null and nocondition.buildType != ''" >
-	    and build_type not in  (#{nocondition.buildType})
-	</if>
-	
-		<if test="condition.parentId != null and condition.parentId != ''" >
-	    and parent_id =  #{condition.parentId}
-	</if>
-	
-			<if test="nocondition.parentId != null and nocondition.parentId != ''" >
-	    and parent_id not in  (#{nocondition.parentId})
-	</if>
-	
-		<if test="condition.remark != null and condition.remark != ''" >
-	    and remark =  #{condition.remark}
-	</if>
-	
-			<if test="nocondition.remark != null and nocondition.remark != ''" >
-	    and remark not in  (#{nocondition.remark})
-	</if>
-	
-		<if test="condition.status != null and condition.status != ''" >
-	    and status =  #{condition.status}
-	</if>
-	
-			<if test="nocondition.status != null and nocondition.status != ''" >
-	    and status not in  (#{nocondition.status})
-	</if>
-	
-		<if test="condition.buildImg != null and condition.buildImg != ''" >
-	    and build_img =  #{condition.buildImg}
-	</if>
-	
-			<if test="nocondition.buildImg != null and nocondition.buildImg != ''" >
-	    and build_img not in  (#{nocondition.buildImg})
-	</if>
-	
-		<if test="condition.parkId != null and condition.parkId != ''" >
-	    and park_id =  #{condition.parkId}
-	</if>
-	
-			<if test="nocondition.parkId != null and nocondition.parkId != ''" >
-	    and park_id not in  (#{nocondition.parkId})
-	</if>
-	
-	<if test="condition.parkIds != null and condition.parkIds != ''" >
-	    and park_id in (#{condition.parkIds})
-	    
-	</if>
-	
-</trim>
-</sql>
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etop.management.dao.EtopFloorDao">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.etop.management.entity.EtopFloor">
+        <result column="id" property="id"/>
+        <result column="build_name" property="buildName"/>
+        <result column="build_type" property="buildType"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="remark" property="remark"/>
+        <result column="status" property="status"/>
+        <result column="build_img" property="buildImg"/>
+        <result column="park_id" property="parkId"/>
 
-<!-- 查询条件 -->
-<sql id="Example_Where_Clause_Object">
-where 1=1
-<trim  suffixOverrides="," >
-		<if test="id != null" >
-	    and id =  #{id}
-	</if>
-	
-		<if test="buildName != null" >
-	    and build_name =  #{buildName}
-	</if>
-	
-		<if test="buildType != null" >
-	    and build_type =  #{buildType}
-	</if>
-	
-		<if test="parentId != null" >
-	    and parent_id =  #{parentId}
-	</if>
-	
-		<if test="remark != null" >
-	    and remark =  #{remark}
-	</if>
-	
-		<if test="status != null" >
-	    and status =  #{status}
-	</if>
-	
-		<if test="buildImg != null" >
-	    and build_img =  #{buildImg}
-	</if>
-	
-		<if test="parkId != null" >
-	    and park_id =  #{parkId}
-	</if>
-	
-</trim>
-</sql>   
+        <result column="source_charge" property="sourceCharge"/>
 
-<!-- 插入记录 -->
-<insert id="add" parameterType="com.etop.management.entity.EtopFloor" >
-  insert into etop_floor(id,build_name,build_type,parent_id,remark,status,build_img,park_id,buildArea,sourceCharge,
-  energy_enter_type,energy_enter_day,energy_payment_day,energy_bill_date,
-<!-- 	 energy_power_fee_date,energy_water_fee_date,energy_gas_fee_date,energy_ac_fee_date, -->
-	 energy_last_bill_date,created_at
-    
-  )
- values(
- 
- #{id},#{buildName},#{buildType},#{parentId},#{remark},#{status},#{buildImg},#{parkId},#{buildArea},#{sourceCharge},
- 
- #{energyEnterType},#{energyEnterDay},#{energyPaymentDay},#{energyBillDate},
-<!--  #{energyPowerFeeDate},#{energyWaterFeeDate},#{energyGasFeeDate},#{energyAcFeeDate}, -->
- 
- #{energyLastBillDate},#{createdAt}
- 
- 
- )
-</insert>
+        <result column="energy_enter_type" property="energyEnterType"/>
+        <result column="energy_enter_day" property="energyEnterDay"/>
 
-<!-- 批量插入记录 -->
-<insert id="adds" parameterType="com.etop.management.entity.EtopFloor" >
-  insert into etop_floor(id,build_name,build_type,parent_id,remark,status,build_img,park_id,buildArea,sourceCharge,
-  energy_enter_type,energy_enter_day,energy_payment_day,energy_bill_date,
-<!-- 	 energy_power_fee_date,energy_water_fee_date,energy_gas_fee_date,energy_ac_fee_date, -->
-	 
-	 energy_last_bill_date)
-  values
-  <foreach collection="list" item="item" index="index" separator="," > 
-  	(#{item.id},#{item.buildName},#{item.buildType},#{item.parentId},#{item.remark},#{item.status},#{item.buildImg},#{item.parkId},#{item.buildArea},#{item.sourceCharge},
-  	#{energyEnterType},#{energyEnterDay},#{energyPaymentDay},#{energyBillDate},
-<!--  #{energyPowerFeeDate},#{energyWaterFeeDate},#{energyGasFeeDate},#{energyAcFeeDate}, -->
- 
- #{energyLastBillDate})
-  </foreach>
-</insert>
+        <result column="energy_payment_day" property="energyPaymentDay"/>
+        <result column="energy_bill_date" property="energyBillDate"/>
 
-<!-- 根据id，修改记录-->  
- <update id="update" parameterType="com.etop.management.entity.EtopFloor" >
-  update etop_floor set build_name=#{buildName},build_type=#{buildType},parent_id=#{parentId},
-  remark=#{remark},status=#{status},build_img=#{buildImg},park_id=#{parkId},
-  buildArea=#{buildArea},sourceCharge=#{sourceCharge},
-  
-  energy_enter_type=#{energyEnterType},energy_enter_day=#{energyEnterDay},
-  energy_payment_day=#{energyPaymentDay},energy_bill_date=#{energyBillDate},
-<!--  energy_power_fee_date=#{energyPowerFeeDate},energy_water_fee_date=#{energyWaterFeeDate}, -->
-<!--  energy_gas_fee_date=#{energyGasFeeDate},energy_ac_fee_date=#{energyAcFeeDate}, -->
- energy_last_bill_date=#{energyLastBillDate},energy_last_fee_date=#{energyLastFeeDate}
-  
-  
-  
-   where id=#{id}
- </update>
- 
- <!-- 修改记录，只修改只不为空的字段 -->
-<update id="updateBySelective" parameterType="com.etop.management.entity.EtopFloor" >
-	update etop_floor set 
-	<trim  suffixOverrides="," >
-	<if test="buildName != null  ">
-		build_name=#{buildName},
-	</if>
-	<if test="buildType != null  ">
-		build_type=#{buildType},
-	</if>
-	<if test="parentId != null  ">
-		parent_id=#{parentId},
-	</if>
-	<if test="remark != null  ">
-		remark=#{remark},
-	</if>
-<!-- 	<if test="status != null  ">
-		status=#{status},
-	</if> -->
-	<if test="buildImg != null  ">
-		build_img=#{buildImg},
-	</if>
-	<if test="buildArea!=null">
-		buildArea=#{buildArea},
-	</if>
-	<if test="sourceCharge !=null">
-		sourceCharge=#{sourceCharge},
-	</if>
-	<if test="parkId != null  ">
-		park_id=#{parkId},
-	</if>
-	<if test="energyEnterType != null  ">
-		energy_enter_type=#{energyEnterType},
-	</if>
-	<if test="energyEnterDay !=null ">
-		energy_enter_day=#{energyEnterDay},
-	</if>
-	<if test="energyPaymentDay != null">
-	    energy_payment_day=#{energyPaymentDay},
-	</if>
-	<if test="energyBillDate != null">
-		 energy_bill_date=#{energyBillDate},
-	</if>
-	</trim>
-    where id=#{id}
-</update>
+        <!-- 	<result column="energy_power_fee_date" property="energyPowerFeeDate"/> -->
+        <!-- 	<result column="energy_water_fee_date" property="energyWaterFeeDate"/> -->
+        <!-- 	<result column="energy_gas_fee_date" property="energyGasFeeDate"/> -->
+        <!-- 	<result column="energy_ac_fee_date" property="energyAcFeeDate"/> -->
+        <result column="energy_last_bill_date" property="energyLastBillDate"/>
+        <result column="energy_last_fee_date" property="energyLastFeeDate"/>
+    </resultMap>
 
-<!-- 删除记录 -->
-<delete id="delete" parameterType="com.etop.management.entity.EtopFloor">
-	delete 	 from etop_floor
-	<include refid="Example_Where_Clause_Object"/>
-</delete>
- 
-<!-- 根据id查询  -->
-<select id="queryById"  resultMap="BaseResultMap" parameterType="string">
-	select <include refid="Base_Column_List" /> 
-	 from etop_floor where id = #{id}
-</select>
+    <!-- etop_floor table all fields -->
+    <sql id="Base_Column_List">
+        id,build_name,build_type,parent_id,remark,status,build_img,park_id,buildArea,
+        sourceCharge,energy_enter_type,energy_enter_day,energy_payment_day,energy_bill_date,
+        <!-- 	 energy_power_fee_date,energy_water_fee_date,energy_gas_fee_date,energy_ac_fee_date, -->
+        energy_last_bill_date,energy_last_fee_date
 
-<select id="queryObject" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopFloor">
-	select <include refid="Base_Column_List" />
-	from etop_floor
-	<include refid="Example_Where_Clause_Object"/>
-</select>
+    </sql>
 
-<select id="getFloorEnergyInfo" resultType="Map" parameterType="String">
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause">
+        where 1=1
+        <trim suffixOverrides=",">
+            <if test="condition.id != null and condition.id != ''">
+                and id = #{condition.id}
+            </if>
+
+            <if test="nocondition.id != null and nocondition.id != ''">
+                and id not in (#{nocondition.id})
+            </if>
+
+            <if test="condition.buildName != null and condition.buildName != ''">
+                and build_name = #{condition.buildName}
+            </if>
+
+            <if test="nocondition.buildName != null and nocondition.buildName != ''">
+                and build_name not in (#{nocondition.buildName})
+            </if>
+
+            <if test="condition.buildType != null and condition.buildType != ''">
+                and build_type = #{condition.buildType}
+            </if>
+
+            <if test="nocondition.buildType != null and nocondition.buildType != ''">
+                and build_type not in (#{nocondition.buildType})
+            </if>
+
+            <if test="condition.parentId != null and condition.parentId != ''">
+                and parent_id = #{condition.parentId}
+            </if>
+
+            <if test="nocondition.parentId != null and nocondition.parentId != ''">
+                and parent_id not in (#{nocondition.parentId})
+            </if>
+
+            <if test="condition.remark != null and condition.remark != ''">
+                and remark = #{condition.remark}
+            </if>
+
+            <if test="nocondition.remark != null and nocondition.remark != ''">
+                and remark not in (#{nocondition.remark})
+            </if>
+
+            <if test="condition.status != null and condition.status != ''">
+                and status = #{condition.status}
+            </if>
+
+            <if test="nocondition.status != null and nocondition.status != ''">
+                and status not in (#{nocondition.status})
+            </if>
+
+            <if test="condition.buildImg != null and condition.buildImg != ''">
+                and build_img = #{condition.buildImg}
+            </if>
+
+            <if test="nocondition.buildImg != null and nocondition.buildImg != ''">
+                and build_img not in (#{nocondition.buildImg})
+            </if>
+
+            <if test="condition.parkId != null and condition.parkId != ''">
+                and park_id = #{condition.parkId}
+            </if>
+
+            <if test="nocondition.parkId != null and nocondition.parkId != ''">
+                and park_id not in (#{nocondition.parkId})
+            </if>
+
+            <if test="condition.parkIds != null and condition.parkIds != ''">
+                and park_id in (#{condition.parkIds})
+
+            </if>
+
+        </trim>
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause_Object">
+        where 1=1
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                and id = #{id}
+            </if>
+
+            <if test="buildName != null">
+                and build_name = #{buildName}
+            </if>
+
+            <if test="buildType != null">
+                and build_type = #{buildType}
+            </if>
+
+            <if test="parentId != null">
+                and parent_id = #{parentId}
+            </if>
+
+            <if test="remark != null">
+                and remark = #{remark}
+            </if>
+
+            <if test="status != null">
+                and status = #{status}
+            </if>
+
+            <if test="buildImg != null">
+                and build_img = #{buildImg}
+            </if>
+
+            <if test="parkId != null">
+                and park_id = #{parkId}
+            </if>
+
+        </trim>
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="add" parameterType="com.etop.management.entity.EtopFloor">
+        insert into
+        etop_floor(id,build_name,build_type,parent_id,remark,status,build_img,park_id,buildArea,sourceCharge,
+        energy_enter_type,energy_enter_day,energy_payment_day,energy_bill_date,
+        <!-- 	 energy_power_fee_date,energy_water_fee_date,energy_gas_fee_date,energy_ac_fee_date, -->
+        energy_last_bill_date,created_at
+
+        )
+        values(
+
+        #{id},#{buildName},#{buildType},#{parentId},#{remark},#{status},#{buildImg},#{parkId},#{buildArea},#{sourceCharge},
+
+        #{energyEnterType},#{energyEnterDay},#{energyPaymentDay},#{energyBillDate},
+        <!--  #{energyPowerFeeDate},#{energyWaterFeeDate},#{energyGasFeeDate},#{energyAcFeeDate}, -->
+
+        #{energyLastBillDate},#{createdAt}
+
+
+        )
+    </insert>
+
+    <!-- 批量插入记录 -->
+    <insert id="adds" parameterType="com.etop.management.entity.EtopFloor">
+        insert into
+        etop_floor(id,build_name,build_type,parent_id,remark,status,build_img,park_id,buildArea,sourceCharge,
+        energy_enter_type,energy_enter_day,energy_payment_day,energy_bill_date,
+        <!-- 	 energy_power_fee_date,energy_water_fee_date,energy_gas_fee_date,energy_ac_fee_date, -->
+
+        energy_last_bill_date)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.buildName},#{item.buildType},#{item.parentId},#{item.remark},#{item.status},#{item.buildImg},#{item.parkId},#{item.buildArea},#{item.sourceCharge},
+            #{energyEnterType},#{energyEnterDay},#{energyPaymentDay},#{energyBillDate},
+            <!--  #{energyPowerFeeDate},#{energyWaterFeeDate},#{energyGasFeeDate},#{energyAcFeeDate}, -->
+
+            #{energyLastBillDate})
+        </foreach>
+    </insert>
+
+    <!-- 根据id，修改记录-->
+    <update id="update" parameterType="com.etop.management.entity.EtopFloor">
+        update etop_floor set build_name=#{buildName},build_type=#{buildType},parent_id=#{parentId},
+        remark=#{remark},status=#{status},build_img=#{buildImg},park_id=#{parkId},
+        buildArea=#{buildArea},sourceCharge=#{sourceCharge},
+
+        energy_enter_type=#{energyEnterType},energy_enter_day=#{energyEnterDay},
+        energy_payment_day=#{energyPaymentDay},energy_bill_date=#{energyBillDate},
+        <!--  energy_power_fee_date=#{energyPowerFeeDate},energy_water_fee_date=#{energyWaterFeeDate}, -->
+        <!--  energy_gas_fee_date=#{energyGasFeeDate},energy_ac_fee_date=#{energyAcFeeDate}, -->
+        energy_last_bill_date=#{energyLastBillDate},energy_last_fee_date=#{energyLastFeeDate}
+
+
+        where id=#{id}
+    </update>
+
+    <!-- 修改记录，只修改只不为空的字段 -->
+    <update id="updateBySelective" parameterType="com.etop.management.entity.EtopFloor">
+        update etop_floor set
+        <trim suffixOverrides=",">
+            <if test="buildName != null  ">
+                build_name=#{buildName},
+            </if>
+            <if test="buildType != null  ">
+                build_type=#{buildType},
+            </if>
+            <if test="parentId != null  ">
+                parent_id=#{parentId},
+            </if>
+            <if test="remark != null  ">
+                remark=#{remark},
+            </if>
+            <!-- 	<if test="status != null  ">
+                    status=#{status},
+                </if> -->
+            <if test="buildImg != null  ">
+                build_img=#{buildImg},
+            </if>
+            <if test="buildArea!=null">
+                buildArea=#{buildArea},
+            </if>
+            <if test="sourceCharge !=null">
+                sourceCharge=#{sourceCharge},
+            </if>
+            <if test="parkId != null  ">
+                park_id=#{parkId},
+            </if>
+            <if test="energyEnterType != null  ">
+                energy_enter_type=#{energyEnterType},
+            </if>
+            <if test="energyEnterDay !=null ">
+                energy_enter_day=#{energyEnterDay},
+            </if>
+            <if test="energyPaymentDay != null">
+                energy_payment_day=#{energyPaymentDay},
+            </if>
+            <if test="energyBillDate != null">
+                energy_bill_date=#{energyBillDate},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+
+    <!-- 删除记录 -->
+    <delete id="delete" parameterType="com.etop.management.entity.EtopFloor">
+        delete from etop_floor
+        <include refid="Example_Where_Clause_Object"/>
+    </delete>
+
+    <!-- 根据id查询  -->
+    <select id="queryById" resultMap="BaseResultMap" parameterType="string">
+        select
+        <include refid="Base_Column_List"/>
+        from etop_floor where id = #{id}
+    </select>
+
+    <select id="queryObject" resultMap="BaseResultMap" parameterType="com.etop.management.entity.EtopFloor">
+        select
+        <include refid="Base_Column_List"/>
+        from etop_floor
+        <include refid="Example_Where_Clause_Object"/>
+    </select>
+
+    <select id="getFloorEnergyInfo" resultType="Map" parameterType="String">
 	select * from etop_floor_energy
 	where ref_floor_id = #{floorId}
 </select>
 
-<!--  列表总数-->
-<select id="queryByCount" resultType="java.lang.Integer"  parameterType="com.etop.management.bean.Criteria">
-	select count(1) from etop_floor 
-	<include refid="Example_Where_Clause"/>
-</select>
-  	
-<!-- 查询列表 -->
-<select id="queryByList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
-	select 
-	<include refid="Base_Column_List"/>
-	from etop_floor 
-	<include refid="Example_Where_Clause"/>
-	<if test="otherCondition != null" >
-	    #{otherCondition}
-	</if>
-	
-	<if test="orderByClause != null and orderByClause != ''" >
-       order by  ${orderByClause}
-    </if>
-    <if test="limitClause != null and limitClause != ''" >
-       ${limitClause}
-    </if>
-</select>
-
-
-<!-- 查询列表 -->
-<select id="queryListByParent" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
-	select 
-	<include refid="Base_Column_List"/>
-	from etop_floor 
-	where 1=1
-	
-	and parent_id =  #{condition.parentId}
-	
-	<if test="condition.parkId != null and condition.parkId != ''" >
-	    and park_id =  #{condition.parkId}
-	</if>	
-
-	<if test="condition.status != null and condition.status != ''" >
-	    and status =  #{condition.status}
-	</if>
-	
-	<if test="orderByClause != null and orderByClause != ''" >
-       order by  ${orderByClause}
-    </if>
-
-</select>
+    <!--  列表总数-->
+    <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.etop.management.bean.Criteria">
+        select count(1) from etop_floor
+        <include refid="Example_Where_Clause"/>
+    </select>
 
     <!-- 查询列表 -->
-    <select id="queryFloorList" resultMap="BaseResultMap"  parameterType="com.etop.management.bean.Criteria">
+    <select id="queryByList" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+        select
+        <include refid="Base_Column_List"/>
+        from etop_floor
+        <include refid="Example_Where_Clause"/>
+        <if test="otherCondition != null">
+            #{otherCondition}
+        </if>
+
+        <if test="orderByClause != null and orderByClause != ''">
+            order by ${orderByClause}
+        </if>
+        <if test="limitClause != null and limitClause != ''">
+            ${limitClause}
+        </if>
+    </select>
+
+
+    <!-- 查询列表 -->
+    <select id="queryListByParent" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
+        select
+        <include refid="Base_Column_List"/>
+        from etop_floor
+        where 1=1
+
+        and parent_id = #{condition.parentId}
+
+        <if test="condition.parkId != null and condition.parkId != ''">
+            and park_id = #{condition.parkId}
+        </if>
+
+        <if test="condition.status != null and condition.status != ''">
+            and status = #{condition.status}
+        </if>
+
+        <if test="orderByClause != null and orderByClause != ''">
+            order by ${orderByClause}
+        </if>
+
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="queryFloorList" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
         select
         <include refid="Base_Column_List"/>
         from etop_floor
@@ -337,41 +340,39 @@ where 1=1
 
         build_type = 'floor'
 
-        <if test="condition.parkId != null and condition.parkId != ''" >
-            and park_id =  #{condition.parkId}
+        <if test="condition.parkId != null and condition.parkId != ''">
+            and park_id = #{condition.parkId}
         </if>
 
-        <if test="condition.status != null and condition.status != ''" >
-            and status =  #{condition.status}
+        <if test="condition.status != null and condition.status != ''">
+            and status = #{condition.status}
         </if>
 
-        <if test="orderByClause != null and orderByClause != ''" >
-            order by  ${orderByClause}
+        <if test="orderByClause != null and orderByClause != ''">
+            order by ${orderByClause}
         </if>
 
     </select>
-
-
 
 
     <select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">
 	${myDefinedSql}
 </select>
 
-<insert id="myDefinedAdd" parameterType="com.etop.management.bean.Criteria">
+    <insert id="myDefinedAdd" parameterType="com.etop.management.bean.Criteria">
 	${myDefinedSql}
 </insert>
 
-<update id="myDefinedUpdate" parameterType="com.etop.management.bean.Criteria">
+    <update id="myDefinedUpdate" parameterType="com.etop.management.bean.Criteria">
 	${myDefinedSql}
-</update>  	
+</update>
 
-<delete id="myDefinedDelete" parameterType="com.etop.management.bean.Criteria">
+    <delete id="myDefinedDelete" parameterType="com.etop.management.bean.Criteria">
 	${myDefinedSql}
-</delete>  	
+</delete>
 
-<!-- 插入记录 -->
-<insert id="addFloorEnergy" parameterType="Map" >
+    <!-- 插入记录 -->
+    <insert id="addFloorEnergy" parameterType="Map">
  	insert into etop_floor_energy 
  	(id,ref_floor_id,energy_type,share_type,room_amount_used
  	)values(
@@ -379,28 +380,28 @@ where 1=1
  	)
 </insert>
 
-<delete id="delFloorEnergy" parameterType="String">
+    <delete id="delFloorEnergy" parameterType="String">
 	delete  from etop_floor_energy  
 	where ref_floor_id=#{value}
 </delete>
 
-<update id="updateFloorEnergy" parameterType="Map" >
+    <update id="updateFloorEnergy" parameterType="Map">
 	update etop_floor_energy set 
 	share_type = #{shareType},
 	room_amount_used = #{roomAmountUsed}
     where id=#{id}
 </update>
 
-<delete id="deleteAll" parameterType="string">
+    <delete id="deleteAll" parameterType="string">
 
-	delete from  etop_floor where id in 
-	<foreach collection="list" open="(" close=")" separator="," item="id">
-		#{id}
-	</foreach>
+        delete from etop_floor where id in
+        <foreach collection="list" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
 
-</delete>
+    </delete>
 
-	<select id="queryByParentId"  resultMap="BaseResultMap" parameterType="string">
+    <select id="queryByParentId" resultMap="BaseResultMap" parameterType="string">
 	SELECT
 		*
 	FROM
@@ -408,10 +409,36 @@ where 1=1
 	where 
 	  parent_id =#{parentId}
 	  </select>
-	  
-	   <update id="updateByParentId" parameterType="com.etop.management.entity.EtopFloor" >
+
+    <update id="updateByParentId" parameterType="com.etop.management.entity.EtopFloor">
 		  update etop_floor set 
 			status=#{status}
 		   where id=#{id}
 		 </update>
-</mapper>   
+
+
+    <!-- 插入记录 -->
+    <insert id="insertFloorFz" parameterType="com.etop.management.entity.EtopFloor">
+        insert into etop_floor_fz(floorId,floormj,roomdj,roomyj)
+        values(
+        #{id},#{floormj},#{roomdj},#{roomyj}
+        )
+    </insert>
+
+    <select id="queryFloorFz" resultType="Map" parameterType="string">
+        SELECT
+        *
+        FROM
+        etop_floor_fz
+        where
+        floorId =#{floorId}
+    </select>
+
+    <update id="updateFloorFz" parameterType="com.etop.management.entity.EtopFloor">
+        update etop_floor_fz set
+        floormj=#{floormj},
+        roomdj=#{roomdj},
+        roomyj=#{roomyj},
+        where floorId=#{id}
+    </update>
+</mapper>
