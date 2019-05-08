@@ -41,7 +41,7 @@ public interface NewEtopFloorService {
      * @param type
      * @return
      */
-    List<Map> getRoomCount(String id, String type);
+    Map getRoomCount(String id, String type);
 
     /**
      * 楼的详情

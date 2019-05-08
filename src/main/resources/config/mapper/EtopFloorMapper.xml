@@ -438,7 +438,7 @@
         update etop_floor_fz set
         floormj=#{floormj},
         roomdj=#{roomdj},
-        roomyj=#{roomyj},
+        roomyj=#{roomyj}
         where floorId=#{id}
     </update>
 </mapper>

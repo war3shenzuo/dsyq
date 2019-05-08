@@ -218,11 +218,11 @@ public class NewEtopFloorResource extends BaseAppController {
     public ResultType roomNum(String areaId, String storeyId) {
 
         if (StringUtils.isNotBlank(areaId)) {
-            List<Map> floor = newEtopFloorService.getRoomCount(areaId, EtopFloor.TYPE_AREA);
+            Map floor = newEtopFloorService.getRoomCount(areaId, EtopFloor.TYPE_AREA);
             return ResultType.getSuccess("获取成功", floor);
         } else {
             if (StringUtils.isNotBlank(storeyId)) {
-                List<Map> floor = newEtopFloorService.getRoomCount(storeyId, EtopFloor.TYPE_STOREY);
+                Map floor = newEtopFloorService.getRoomCount(storeyId, EtopFloor.TYPE_STOREY);
                 return ResultType.getSuccess("获取成功", floor);
             } else {
                 return ResultType.getFail("参数错误");

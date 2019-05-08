@@ -111,8 +111,18 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
     }
 
     @Override
-    public List<Map> getRoomCount(String id, String type) {
-        return etopFloorRoomDao.getRoomCount(new Criteria().put("id", id).put("idType", type));
+    public Map getRoomCount(String id, String type) {
+        Map map = new HashMap();
+        map.put("0", 0);
+        map.put("1", 0);
+        map.put("2", 0);
+        map.put("3", 0);
+
+        List<Map> list = etopFloorRoomDao.getRoomCount(new Criteria().put("id", id).put("idType", type));
+        for (Map m : list) {
+            map.put(m.get("floorStatus"), m.get("count"));
+        }
+        return map;
     }
 
     @Override
