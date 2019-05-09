@@ -74,5 +74,11 @@ public interface NewEtopFloorService {
      */
     void updateFloor(EtopFloor floor) throws Exception;
 
+    /**
+     * 修改楼
+     * @param floor
+     */
+    void updateStorey(EtopFloor floor);
 
+    void updateRoom(EtopFloorRoom rooom) throws Exception;
 }

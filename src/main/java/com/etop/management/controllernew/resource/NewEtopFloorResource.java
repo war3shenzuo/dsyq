@@ -260,7 +260,29 @@ public class NewEtopFloorResource extends BaseAppController {
         }
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/updateStorey.do", method = RequestMethod.PUT)
+    public ResultType updateStorey(EtopFloor floor) throws Exception {
+        try {
+            newEtopFloorService.updateStorey(floor);
+            return ResultType.getSuccess("操作成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultType.getFail(e.getMessage());
+        }
+    }
 
+    @ResponseBody
+    @RequestMapping(value = "/updateRoom.do", method = RequestMethod.PUT)
+    public ResultType updateRoom(EtopFloorRoom rooom) throws Exception {
+        try {
+            newEtopFloorService.updateRoom(rooom);
+            return ResultType.getSuccess("操作成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultType.getFail(e.getMessage());
+        }
+    }
 
 
 }

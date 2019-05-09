@@ -124,4 +124,6 @@ public interface EtopFloorRoomDao {
     int updateToLet(String id);
 
     List<Map> getRoomCount(Criteria criteria);
+
+    int getRoomAreaSumTotal(String refFloorId);
 }

@@ -725,4 +725,9 @@
         </where>
         group by f.`floor_status`
     </select>
+
+
+    <select id="getRoomAreaSumTotal" resultType="int" parameterType="string">
+       select sum(e.build_area) from etop_floor_room e
+    </select>
 </mapper>   

@@ -200,9 +200,48 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
         etopFloorDao.updateFloorFz(floor);
     }
 
+    @Override
+    public void updateStorey(EtopFloor floor) {
+        updateAllFloor(floor);
+    }
+
+    @Override
+    public void updateRoom(EtopFloorRoom room) throws Exception {
+
+        //楼设置的阀值检测
+        checkFz(room);
+
+        etopFloorRoomDao.updateBySelective(room);
+
+    }
+
 
     public void updateAllFloor(EtopFloor floor) {
         etopFloorDao.updateBySelective(floor);
+    }
+
+
+    public void checkFz(EtopFloorRoom room) throws Exception {
+        //获取阀值
+        Map<String, Integer> fz = etopFloorDao.queryFloorFz(room.getRefFloorId());
+        if(fz==null){
+            throw new RuntimeException("找不到房间所在的楼");
+        }
+        //房间单价是否合规
+        if (Integer.parseInt(room.getDayPrice()) < fz.get("roomdj")) {
+            throw new RuntimeException("房间单价不能小于楼房设定的单价");
+        }
+        //房间面积是否大于楼的总面积
+        int total = etopFloorRoomDao.getRoomAreaSumTotal(room.getRefFloorId());
+
+        if (total + room.getBuildArea() <= fz.get("floormj")) {
+            throw new RuntimeException("所有房间总面积啊小于楼房设定的面积");
+        }
+        //房间押金是否大于规定
+        if (Integer.parseInt(room.getYj()) < fz.get("roomyj")) {
+            throw new RuntimeException("房间押金不能小于楼房设定的押金");
+
+        }
     }
 
 
