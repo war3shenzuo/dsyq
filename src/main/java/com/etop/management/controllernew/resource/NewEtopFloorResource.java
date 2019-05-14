@@ -249,6 +249,23 @@ public class NewEtopFloorResource extends BaseAppController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/delArea.do", method = RequestMethod.DELETE)
+    public ResultType delArea(String areaId) throws Exception {
+        if (StringUtils.isNotBlank(areaId)) {
+            try {
+                newEtopFloorService.delArea(areaId);
+                return ResultType.getSuccess("操作成功");
+
+            } catch (Exception e) {
+                return ResultType.getFail(e.getMessage());
+            }
+        } else {
+            return ResultType.getFail("参数错误");
+        }
+
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/updateFloor.do", method = RequestMethod.PUT)
     public ResultType updateFloor(EtopFloor floor) throws Exception {
         try {
