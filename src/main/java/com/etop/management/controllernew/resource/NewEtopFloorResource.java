@@ -105,7 +105,7 @@ public class NewEtopFloorResource extends BaseAppController {
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             e.printStackTrace();
-            return ResultType.getFail("服务器出错");
+            return ResultType.getFail(e.getMessage());
         }
 
     }
