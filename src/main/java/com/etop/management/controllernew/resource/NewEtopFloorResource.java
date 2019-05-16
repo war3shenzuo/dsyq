@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +35,8 @@ public class NewEtopFloorResource extends BaseAppController {
     @RequestMapping(value = "/addFloor.do", method = RequestMethod.POST)
     public ResultType addFloor(EtopFloor floor) {
         try {
-            newEtopFloorService.addFloor(floor);
-            return ResultType.getSuccess("新增成功");
+            String floorId = newEtopFloorService.addFloor(floor);
+            return ResultType.getSuccess("新增成功", floorId);
 
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -197,28 +198,36 @@ public class NewEtopFloorResource extends BaseAppController {
 
     @ResponseBody
     @RequestMapping(value = "/roomList.do", method = RequestMethod.GET)
-    public ResultType getRoomList(String areaId) {
+    public ResultType getRoomList(String refAreaId, String storeyId, String param) {
 
-        if (StringUtils.isNotBlank(areaId)) {
-            try {
-                List<EtopFloorRoom> floor = newEtopFloorService.getRoomListByAreaId(areaId);
-                return ResultType.getSuccess("获取成功", floor);
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage(), e);
-                e.printStackTrace();
-                return ResultType.getFail("服务器出错");
+        List<EtopFloorRoom> floor = new ArrayList<>();
+
+        try {
+            if (StringUtils.isNotBlank(refAreaId)) {
+                floor = newEtopFloorService.getRoomListByAreaId(refAreaId, param, EtopFloor.TYPE_AREA);
             }
-        } else {
-            return ResultType.getFail("参数错误");
+
+            if (StringUtils.isNotBlank(storeyId)) {
+                floor = newEtopFloorService.getRoomListByAreaId(refAreaId, param, EtopFloor.TYPE_STOREY);
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            e.printStackTrace();
+            return ResultType.getFail("服务器出错");
         }
+
+        return ResultType.getSuccess("获取成功", floor);
+
     }
+
+
 
     @ResponseBody
     @RequestMapping(value = "/room/count.do", method = RequestMethod.GET)
-    public ResultType roomNum(String areaId, String storeyId) {
+    public ResultType roomNum(String refAreaId, String storeyId) {
 
-        if (StringUtils.isNotBlank(areaId)) {
-            Map floor = newEtopFloorService.getRoomCount(areaId, EtopFloor.TYPE_AREA);
+        if (StringUtils.isNotBlank(refAreaId)) {
+            Map floor = newEtopFloorService.getRoomCount(refAreaId, EtopFloor.TYPE_AREA);
             return ResultType.getSuccess("获取成功", floor);
         } else {
             if (StringUtils.isNotBlank(storeyId)) {

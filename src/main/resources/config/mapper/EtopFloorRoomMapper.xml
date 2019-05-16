@@ -296,8 +296,8 @@
 
     <!-- 插入记录 -->
     <insert id="add" parameterType="com.etop.management.entity.EtopFloorRoom">
-  insert into etop_floor_room(id,room_num,orientation,build_area,user_area,layer_high,located,renovation,month_price,day_price,floor_status,remark,contract_num,room_img,companyId,constract_id,ref_floor_id,ref_storey_id,ref_area_id,activated,created_at,showOut)
- values(#{id},#{roomNum},#{orientation},#{buildArea},#{userArea},#{layerHigh},#{located},#{renovation},#{monthPrice},#{dayPrice},#{floorStatus},#{remark},#{contractNum},#{roomImg},#{companyId},#{constractId},#{refFloorId},#{refStoreyId},#{refAreaId},'1',#{createdAt},#{showOut})
+  insert into etop_floor_room(id,room_num,orientation,build_area,user_area,layer_high,located,renovation,month_price,day_price,floor_status,remark,contract_num,room_img,companyId,constract_id,ref_floor_id,ref_storey_id,ref_area_id,activated,created_at,showOut,yj)
+ values(#{id},#{roomNum},#{orientation},#{buildArea},#{userArea},#{layerHigh},#{located},#{renovation},#{monthPrice},#{dayPrice},#{floorStatus},#{remark},#{contractNum},#{roomImg},#{companyId},#{constractId},#{refFloorId},#{refStoreyId},#{refAreaId},'1',#{createdAt},#{showOut},#{yj})
 </insert>
 
     <!-- 批量插入记录 -->
@@ -523,6 +523,33 @@
         order by room_num asc
 
 
+    </select>
+
+    <select id="queryAllRooms" resultMap="BaseResultMap" parameterType="String">
+        select
+        <include refid="Base_Column_List"/>,activated
+        from
+        etop_floor_room
+        where 1=1
+        <if test="type == 'area' ">
+
+            and ref_area_id = #{areaId}
+
+        </if>
+
+        <if test="type == 'storey' ">
+
+            and ref_storey_id = #{areaId}
+
+        </if>
+
+        <if test="param != null and param != ''">
+
+            and (room_num like '%${param}%'
+            or build_area like '%${param}%' )
+
+        </if>
+        order by room_num asc
     </select>
 
     <select id="myDefinedSelect" resultMap="BaseResultMap" parameterType="com.etop.management.bean.Criteria">

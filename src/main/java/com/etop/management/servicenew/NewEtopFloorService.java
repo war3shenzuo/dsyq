@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface NewEtopFloorService {
 
-    void addFloor(EtopFloor floor) throws Exception;
+    String addFloor(EtopFloor floor) throws Exception;
 
     //层
     void addStorey(EtopFloor storey) throws Exception;
@@ -29,10 +29,9 @@ public interface NewEtopFloorService {
     /**
      * 获取房间
      *
-     * @param areaId
      * @return
      */
-    List<EtopFloorRoom> getRoomListByAreaId(String areaId);
+    List<EtopFloorRoom> getRoomListByAreaId(String areaId,String param,String type);
 
     /**
      * 查询房间统计

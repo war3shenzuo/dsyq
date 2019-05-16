@@ -162,7 +162,6 @@ public class UploadUtil{
     /**
      * 上传图片
      * @param request
-     * @param response
      * @throws ServletException
      * @throws IOException
      * 

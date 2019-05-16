@@ -97,6 +97,9 @@ public interface EtopFloorRoomDao {
      */
     List<EtopFloorRoom> queryRooms(@Param("refBuildingId") String refBuildingId, @Param("areaId") String areaId, @Param("floorStatus") String floorStatus, @Param("activated") String activated);
 
+    List<EtopFloorRoom> queryAllRooms( @Param("areaId") String areaId,@Param("param") String param,@Param("type") String type);
+
+
     List<EtopFloorRoom> getRooms(@Param("areaIds") List<String> areaIds, @Param("parkId") String parkId);
 
     float getSumOfBuildArea(@Param("refBuildingId") String refBuildingId);

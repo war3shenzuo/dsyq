@@ -9,6 +9,7 @@ import com.etop.management.entity.EtopFloorRoom;
 import com.etop.management.servicenew.NewEtopFloorService;
 import com.etop.management.service.impl.EtopFloorServiceImpl;
 import com.etop.management.util.UserInfoUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,8 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
     private final static Logger LOGGER = Logger.getLogger(EtopFloorServiceImpl.class);
 
     @Override
-    public void addFloor(EtopFloor floor) throws Exception {
+    public String addFloor(EtopFloor floor) throws Exception {
+        floor.setId(UUID.randomUUID().toString());
         addfloor(floor);
         floor.setFloormj(floor.getBuildArea());
         etopFloorDao.insertFloorFz(floor);
@@ -60,6 +62,8 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
             m.put("roomAmountUsed", s.substring(2, 3));
             etopFloorDao.addFloorEnergy(m);
         }
+
+        return floor.getId();
     }
 
     @Override
@@ -74,8 +78,10 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
 
 
     private void addfloor(EtopFloor data) throws Exception {
+        if (StringUtils.isBlank(data.getId())) {
+            data.setId(UUID.randomUUID().toString());
+        }
         data.setParkId(UserInfoUtil.getUserInfo().getParkId());
-        data.setId(UUID.randomUUID().toString());
         data.setEnergyLastBillDate(new Date());
         data.setCreatedAt(new Date());
         etopFloorDao.add(data);
@@ -106,8 +112,9 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
     }
 
     @Override
-    public List<EtopFloorRoom> getRoomListByAreaId(String areaId) {
-        return etopFloorRoomDao.queryRooms(null, areaId, null, "1");
+    public List<EtopFloorRoom> getRoomListByAreaId(String areaId, String param, String type) {
+
+        return etopFloorRoomDao.queryAllRooms(areaId, param, type);
     }
 
     @Override
@@ -223,22 +230,22 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
 
     public void checkFz(EtopFloorRoom room) throws Exception {
         //获取阀值
-        Map<String, Integer> fz = etopFloorDao.queryFloorFz(room.getRefFloorId());
-        if(fz==null){
+        Map<String, String> fz = etopFloorDao.queryFloorFz(room.getRefFloorId());
+        if (fz == null) {
             throw new RuntimeException("找不到房间所在的楼");
         }
         //房间单价是否合规
-        if (Integer.parseInt(room.getDayPrice()) < fz.get("roomdj")) {
+        if (Integer.parseInt(room.getDayPrice()) < Integer.parseInt(fz.get("roomdj"))) {
             throw new RuntimeException("房间单价不能小于楼房设定的单价");
         }
         //房间面积是否大于楼的总面积
         int total = etopFloorRoomDao.getRoomAreaSumTotal(room.getRefFloorId());
 
-        if (total + room.getBuildArea() <= fz.get("floormj")) {
+        if (total + room.getBuildArea() <= Integer.parseInt(fz.get("floormj"))) {
             throw new RuntimeException("所有房间总面积啊小于楼房设定的面积");
         }
         //房间押金是否大于规定
-        if (Integer.parseInt(room.getYj()) < fz.get("roomyj")) {
+        if (Integer.parseInt(room.getYj()) < Integer.parseInt(fz.get("roomyj"))) {
             throw new RuntimeException("房间押金不能小于楼房设定的押金");
 
         }
