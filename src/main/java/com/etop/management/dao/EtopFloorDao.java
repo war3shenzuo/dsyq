@@ -105,6 +105,9 @@ public interface EtopFloorDao {
      */
     public void updateFloorEnergy(Map<String, String> m);
 
+    public void updateFloorEnergyNew(Map<String, String> m);
+
+
     public void deleteAll(List<String> ids);
 
     //	public EtopFloor queryByParentId(String parentId);

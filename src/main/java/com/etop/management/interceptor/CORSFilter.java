@@ -1,6 +1,7 @@
 package com.etop.management.interceptor;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -22,11 +23,20 @@ public class CORSFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         System.out.println("work");
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        response.setHeader("Access-Control-Allow-Origin", "*");
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        String origin = request.getHeader("Origin");
+        response.setHeader("Access-Control-Allow-Origin", origin);
         response.setHeader("Access-Control-Allow-Methods", "POST, GET");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-        filterChain.doFilter(servletRequest, servletResponse);
+        response.setHeader("Access-Control-Allow-Headers", "x-requested-with,Authorization");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
+        String method = request.getMethod();
+        if (method.equalsIgnoreCase("OPTIONS")) {
+            servletResponse.getOutputStream().write("Success".getBytes("utf-8"));
+        } else {
+            filterChain.doFilter(servletRequest, servletResponse);
+        }
     }
 
     @Override

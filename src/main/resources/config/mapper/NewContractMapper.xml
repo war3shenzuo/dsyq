@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.etop.management.dao.NewContractDao">
+
+    <!-- etop_park table all fields -->
+    <sql id="Base_Column_List">
+        id,contract_no,paper_no,
+        ref_company_id,company_name,company_contacts_name,company_contacts_phone,
+        ref_park_id,park,building,floor,block,room,ref_room_id,
+        contract_category,contract_type,contract_status,
+        <!-- 	 audit_status, -->
+        terminate_reason,terminate_date,
+        contract_start_date,contract_end_date,contract_sign_date,
+        contract_notes,jf_date,deposit,builarea,
+        <include refid="com.etop.management.dao.CommonsDao.AUDIT_INFO_COLUMNS"/>
+    </sql>
+
+    <sql id="insert_value">
+
+        #{contractNo},#{paperNo},
+        #{refCompanyId},#{companyName},#{companyContactsName},#{companyContactsPhone},
+        #{refParkId},#{park},#{building},#{floor},#{block},#{room},#{refRoomId},
+        #{contractCategory},#{contractType},#{contractStatus},
+        <!-- #{auditStatus}, -->
+        #{terminateReason},#{terminateDate},
+        #{contractStartDate},#{contractEndDate},#{contractSignDate},
+        #{contractNotes},#{jfDate},#{deposit},#{builarea},
+        <include refid="com.etop.management.dao.CommonsDao.INSERT_WITH_AUDIT_INFO_COLUMNS"/>
+
+    </sql>
+
+    <insert id="createContract" parameterType="com.etop.management.model.NewContractModel">
+
+        insert into etop_new_contract (<include refid="Base_Column_List"/>)
+        values
+        (#{id},<include refid="insert_value"/>)
+
+    </insert>
+
+
+    <insert id="saveItem" parameterType="com.etop.management.bean.NewContractItem">
+
+        insert into etop_new_contract_item (id,ref_contract_id,start_date,end_date,unit_price,unit_type,total_amount,wy_price,isBill,created_by,updated_by,created_at,updated_at)
+        values
+        (#{id},#{refContractId},#{startDate},#{endDate},#{unitPrice},#{unitType},#{totalAmount},#{wyPrice}, #{isBill},#{createdBy} ,#{updatedBy}, #{createdAt}, #{updatedAt})
+
+    </insert>
+
+    <select id="getContractInfoById" resultType="com.etop.management.model.NewContractModel" parameterType="String">
+
+      select * from `etop_new_contract` c
+      where c.id= #{value}
+    </select>
+
+    <delete id="delItem" parameterType="string">
+
+        delete from etop_new_contract_item
+        where  id = #{value}
+
+    </delete>
+
+
+    <update id="updateItem" parameterType="com.etop.management.bean.NewContractItem">
+
+        update   etop_new_contract_item SET
+        <if test="startDate!=null or startDate!=''">
+            contract_no = #{startDate},
+        </if>
+        <if test="endDate!=null or endDate!=''">
+        end_date= #{endDate},
+        </if>
+        <if test="unitPrice!=null or unitPrice!=''">
+        unit_price= #{unitPrice},
+        </if>
+        <if test="unitType!=null or unitType!=''">
+        unit_type= #{unitType},
+        </if>
+        <if test="totalAmount!=null or totalAmount!=''">
+        total_amount= #{totalAmount},
+        </if>
+        <if test="wyPrice!=null or wyPrice!=''">
+        wy_price= #{wyPrice},
+        </if>
+        updated_by = #{updatedBy},
+        updated_at =#{updatedAt}
+        where  id = #{id}
+
+    </update>
+
+
+
+    <update id="updateContract" parameterType="com.etop.management.model.NewContractModel">
+
+            UPDATE etop_new_contract
+            <set>
+                <if test ='null != paperNo'>paper_no = #{paperNo},</if>
+                <if test ='null != refCompanyId'>ref_company_id = #{refCompanyId},</if>
+                <if test ='null != companyName'>company_name = #{companyName},</if>
+                <if test ='null != companyContactsName'>company_contacts_name = #{companyContactsName},</if>
+                <if test ='null != companyContactsPhone'>company_contacts_phone = #{companyContactsPhone},</if>
+                <if test ='null != refParkId'>ref_park_id = #{refParkId},</if>
+                <if test ='null != park'>park = #{park},</if>
+                <if test ='null != building'>building = #{building},</if>
+                <if test ='null != floor'>floor = #{floor},</if>
+                <if test ='null != block'>block = #{block},</if>
+                <if test ='null != room'>room = #{room},</if>
+                <if test ='null != refRoomId'>ref_room_id = #{refRoomId},</if>
+                <if test ='null != deposit'>deposit = #{deposit},</if>
+                <if test ='null != builarea'>builarea = #{builarea},</if>
+                <if test ='null != contractCategory'>contract_category = #{contractCategory},</if>
+                <if test ='null != contractType'>contract_type = #{contractType},</if>
+                <if test ='null != contractStatus'>contract_status = #{contractStatus},</if>
+                <if test ='null != contractStartDate'>contract_start_date = #{contractStartDate},</if>
+                <if test ='null != contractEndDate'>contract_end_date = #{contractEndDate},</if>
+                <if test ='null != contractSignDate'>contract_sign_date = #{contractSignDate},</if>
+                <if test ='null != jfDate'>jf_date = #{jfDate},</if>
+                <if test ='null != contractNotes'>contract_notes = #{contractNotes},</if>
+                <if test ='null != updatedAt'>updated_at = #{updatedAt},</if>
+                <if test ='null != updatedBy'>updated_by = #{updatedBy}</if>
+            </set>
+            WHERE `id` = #{id}
+
+
+    </update>
+
+
+</mapper>
+

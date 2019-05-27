@@ -204,6 +204,28 @@ public class NewEtopFloorServiceImpl implements NewEtopFloorService {
     @Override
     public void updateFloor(EtopFloor floor) throws Exception {
         updateAllFloor(floor);
+
+        //添加房源能源
+        for (int i = 0; i < 4; i++) {
+            String s ;
+            Map<String, String> m = new HashMap<String, String>();
+            if (i == 0) {
+                s = floor.getDian();
+            } else if (i == 1) {
+                s = floor.getShui();
+            } else if (i == 2) {
+                s = floor.getRanqi();
+            } else {
+                s = floor.getKongtiao();
+            }
+            m.put("floorId", floor.getId());
+            m.put("energyType", s.substring(0, 1));
+            m.put("shareType", s.substring(1, 2));
+            m.put("roomAmountUsed", s.substring(2, 3));
+            etopFloorDao.updateFloorEnergyNew(m);
+        }
+
+
         etopFloorDao.updateFloorFz(floor);
     }
 

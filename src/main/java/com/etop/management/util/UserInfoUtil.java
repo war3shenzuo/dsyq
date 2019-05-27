@@ -69,7 +69,18 @@ public class UserInfoUtil {
 
     public static Park getUserParkInfo() {
 
-        return (Park) getSession().getAttribute("parkInfo");
+        Park park = (Park) getSession().getAttribute("parkInfo");
+
+
+        if (park == null) {
+            park = new Park();
+            park.setId("testprak");
+            park.setParkName("测试园区");
+            park.setParkGroupId("testprakGroup");
+            park.setParkCode("testprakCode");
+        }
+
+        return park;
     }
 
 

@@ -208,7 +208,7 @@ public class NewEtopFloorResource extends BaseAppController {
             }
 
             if (StringUtils.isNotBlank(storeyId)) {
-                floor = newEtopFloorService.getRoomListByAreaId(refAreaId, param, EtopFloor.TYPE_STOREY);
+                floor = newEtopFloorService.getRoomListByAreaId(storeyId, param, EtopFloor.TYPE_STOREY);
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

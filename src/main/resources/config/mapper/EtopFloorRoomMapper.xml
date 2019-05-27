@@ -34,7 +34,7 @@
     <!-- etop_floor_room table all fields -->
     <sql id="Base_Column_List">
 	 id,room_num,orientation,build_area,user_area,layer_high,located,renovation,month_price,day_price,floor_status,remark,contract_num,room_img,
-	 companyId,constract_id,ref_floor_id,ref_storey_id,ref_area_id,activated,created_at,showOut
+	 companyId,constract_id,ref_floor_id,ref_storey_id,ref_area_id,activated,created_at,showOut,yj
 </sql>
 
     <sql id="Base_Column_List_Object">
@@ -375,6 +375,9 @@
             </if>
             <if test="showOut != null  ">
                 showOut=#{showOut},
+            </if>
+            <if test="yj != null  ">
+                yj=#{yj},
             </if>
         </trim>
         where id=#{id}

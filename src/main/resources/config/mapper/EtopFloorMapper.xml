@@ -392,6 +392,14 @@
     where id=#{id}
 </update>
 
+    <update id="updateFloorEnergyNew" parameterType="Map">
+        update etop_floor_energy set
+        share_type = #{shareType},
+        room_amount_used = #{roomAmountUsed}
+        where energy_type=#{energyType}
+        and ref_floor_id=#{floorId}
+    </update>
+
     <delete id="deleteAll" parameterType="string">
 
         delete from etop_floor where id in
