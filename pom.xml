@@ -36,7 +36,7 @@
 		<!-- commons-codec版本号 -->
 		<commons-codec.version>1.9</commons-codec.version>
 		<!-- commons-collections版本号 -->
-		<commons-collections.version>3.2.1</commons-collections.version>
+		<commons-collections.version>3.2.2</commons-collections.version>
 		<!-- commons-net版本号 -->
 		<commons-net.version>3.3</commons-net.version>
 		<!-- quartz版本号 -->
