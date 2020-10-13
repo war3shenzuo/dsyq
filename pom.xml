@@ -8,7 +8,7 @@
 
 	<properties>
 		<!-- junit版本号 -->
-		<junit.version>4.11</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<!-- javax版本号 -->
 		<javax.version>7.0</javax.version>
 		<!-- spring版本号 -->
