@@ -45,7 +45,7 @@
 		<pagehelper.version>4.1.6</pagehelper.version>
 		
 		<!-- log4j2日志文件管理包版本 -->
-		<log4j2.version>2.4.1</log4j2.version>
+		<log4j2.version>2.15.0</log4j2.version>
 		
 		
 	</properties>
