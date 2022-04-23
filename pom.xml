@@ -12,7 +12,7 @@
 		<!-- javax版本号 -->
 		<javax.version>7.0</javax.version>
 		<!-- spring版本号 -->
-		<spring.version>4.2.9.RELEASE</spring.version>
+		<spring.version>5.3.19</spring.version>
 		<!-- mybatis-spring版本号 -->
 		<mybatis-spring.version>1.2.2</mybatis-spring.version>
 		<!-- mybatis版本号 -->
