@@ -21,7 +21,7 @@
 		<slf4j.version>1.7.7</slf4j.version>
 		<log4j.version>1.2.17</log4j.version>
 		<!-- mysql版本号 -->
-		<mysql.version>5.1.35</mysql.version>
+		<mysql.version>8.0.28</mysql.version>
 		<!-- commons-dbcp版本号 -->
 		<commons-dbcp.version>1.2.2</commons-dbcp.version>
 		<!-- jstl版本号 -->
